@@ -19,7 +19,7 @@ JAVAC_OPT  += -d $(CLASS_PATH)
 CLASS       = lille1/car2014/durieux_toulet/logs/*.class
 CLASS      += lille1/car2014/durieux_toulet/common/*.class
 CLASS      += lille1/car2014/durieux_toulet/ftp_server/*.class
-#CLASS      += lille1/car2014/durieux_toulet/exception/*.class
+CLASS      += lille1/car2014/durieux_toulet/exception/*.class
 CLASS      += lille1/car2014/durieux_toulet/ftp_server/*.class
 
 JAR         = ftp_server.jar
@@ -37,13 +37,9 @@ lille1/car2014/durieux_toulet/%.class: $(SRC_PATH)/lille1/car2014/durieux_toulet
 
 # Specific
 ftp_server.jar: $(CLASS)
-	#$(JARC) cfm $@ $(MANIFEST) -C $(CLASS_PATH) $^
-	#$(JARC) cfm $@ $(MANIFEST)
-	#$(JARC) uf $@ -C $(SRC_PATH) $(CONFIG)
-
-	for number in $^ ; do \
-		echo $$number ; \
-	done
+	$(JARC) cfm $@ $(MANIFEST)
+	cd $(CLASS_PATH) && $(JARC) uf ../$@ $^
+	cd $(SRC_PATH) && $(JARC) uf ../$@ $(CONFIG)
 
 # Phony
 .PHONY: clean mrproper
