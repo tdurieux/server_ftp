@@ -38,9 +38,12 @@ lille1/car2014/durieux_toulet/%.class: $(SRC_PATH)/lille1/car2014/durieux_toulet
 # Specific
 ftp_server.jar: $(CLASS)
 	#$(JARC) cfm $@ $(MANIFEST) -C $(CLASS_PATH) $^
-	$(JARC) cfm $@ $(MANIFEST)
-	#TODO Add files to archive
+	#$(JARC) cfm $@ $(MANIFEST)
 	#$(JARC) uf $@ -C $(SRC_PATH) $(CONFIG)
+
+	for number in $^ ; do \
+		echo $$number ; \
+	done
 
 # Phony
 .PHONY: clean mrproper
