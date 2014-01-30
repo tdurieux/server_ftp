@@ -9,38 +9,44 @@
 # Config
 SRC_PATH    = src
 CLASS_PATH  = class
-
-MANIFEST    = MANIFEST.mf
-
 JAVAC       = javac
 JARC        = jar
-
-JAVAC_OPT  += -sourcepath $(SRC_PATH)
-JAVAC_OPT   = -classpath $(CLASS_PATH)
+JAVAC_OPT   = -sourcepath $(SRC_PATH)
+JAVAC_OPT  += -classpath $(CLASS_PATH)
 JAVAC_OPT  += -d $(CLASS_PATH)
 
 # Groups
-CLASS       = ftp_server/Main.class
+CLASS       = lille1/car2014/durieux_toulet/logs/*.class
+CLASS      += lille1/car2014/durieux_toulet/common/*.class
+CLASS      += lille1/car2014/durieux_toulet/ftp_server/*.class
+#CLASS      += lille1/car2014/durieux_toulet/exception/*.class
+CLASS      += lille1/car2014/durieux_toulet/ftp_server/*.class
+
 JAR         = ftp_server.jar
 
+CONFIG      = lille1/car2014/durieux_toulet/config/*.ini
+
+MANIFEST    = MANIFEST.mf
 
 # All
 all: $(CLASS) $(JAR)
 
-# Subs
-ftp_server/Main.class: $(SRC_PATH)/ftp_server/Main.java
+# Generic
+lille1/car2014/durieux_toulet/%.class: $(SRC_PATH)/lille1/car2014/durieux_toulet/%.java
 	$(JAVAC) $(JAVAC_OPT) $^
 
+# Specific
 ftp_server.jar: $(CLASS)
-	$(JARC) cfm $@ $(MANIFEST) -C $(CLASS_PATH) $^
-
+	#$(JARC) cfm $@ $(MANIFEST) -C $(CLASS_PATH) $^
+	$(JARC) cfm $@ $(MANIFEST)
+	#TODO Add files to archive
+	#$(JARC) uf $@ -C $(SRC_PATH) $(CONFIG)
 
 # Phony
-
 .PHONY: clean mrproper
 
 clean:
-	rm -f $(CLASS_PATH)/$(CLASS)
+	cd $(CLASS_PATH) && rm -f $(CLASS)
 
 mrproper: clean
 	rm -f $(JAR)
