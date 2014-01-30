@@ -29,6 +29,7 @@ public class Configuration {
 				Logger.getLogger(Configuration.class.getName()).log(
 						Level.SEVERE, null, ex);
 			}
+		} else {
 			try {
 				// load a properties file
 				configurationProperties.load(new FileInputStream(f));
