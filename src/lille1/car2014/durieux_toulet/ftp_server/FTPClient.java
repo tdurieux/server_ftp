@@ -8,6 +8,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
@@ -20,10 +23,14 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 public class FTPClient {
 	private final Socket clientSocket;
 	private RequestHandler requestHandler;
+	private BufferedReader in;
 	private boolean isConnected = false;
 	private String typeCharactor;
 	private String username;
+	
+	private Map<String, String> options = new HashMap<String, String>();
 
+	
 	public FTPClient(Socket clientSocket) {
 		this.clientSocket = clientSocket;
 		requestHandler = new RequestHandler(this);
@@ -49,9 +56,10 @@ public class FTPClient {
 	 */
 	private void readMessage() {
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(
+			in = new BufferedReader(new InputStreamReader(
 					clientSocket.getInputStream()));
 			String userInput;
+			
 			while ((userInput = in.readLine()) != null) {
 				System.out.println(userInput);
 				try {
@@ -71,8 +79,9 @@ public class FTPClient {
 	}
 
 	public void close() {
-		this.writeMessage("QUIT");
+		this.writeMessage("426");
 		try {
+			this.in.close();
 			this.clientSocket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -98,5 +107,9 @@ public class FTPClient {
 			this.isConnected = false;
 			return false;
 		}
+	}
+	
+	public Map<String, String> getOptions() {
+		return options;
 	}
 }

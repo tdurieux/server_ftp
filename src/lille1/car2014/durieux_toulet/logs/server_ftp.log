@@ -1,30 +1,72 @@
-janv. 31, 2014 1:09:12 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
+janv. 31, 2014 6:52:24 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
 Grave: null
-lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found TYPE
-	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:67)
-	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:26)
-	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:56)
-	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:29)
+java.io.IOException: Stream closed
+	at java.io.BufferedReader.ensureOpen(BufferedReader.java:115)
+	at java.io.BufferedReader.readLine(BufferedReader.java:310)
+	at java.io.BufferedReader.readLine(BufferedReader.java:382)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:63)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:38)
 	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:28)
 	at lille1.car2014.durieux_toulet.ftp_server.Main.main(Main.java:17)
 
-janv. 31, 2014 1:09:12 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
+janv. 31, 2014 6:53:31 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
 Grave: null
-lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found TYPE
-	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:67)
-	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:26)
-	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:56)
-	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:29)
+lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found PASV
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:76)
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:29)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:66)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:38)
 	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:28)
 	at lille1.car2014.durieux_toulet.ftp_server.Main.main(Main.java:17)
 
-janv. 31, 2014 1:09:12 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
+janv. 31, 2014 6:53:31 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
 Grave: null
-lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found TYPE
-	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:67)
-	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:26)
-	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:56)
-	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:29)
+lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found PASV
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:76)
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:29)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:66)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:38)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:28)
+	at lille1.car2014.durieux_toulet.ftp_server.Main.main(Main.java:17)
+
+janv. 31, 2014 6:53:31 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
+Grave: null
+lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found PASV
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:76)
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:29)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:66)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:38)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:28)
+	at lille1.car2014.durieux_toulet.ftp_server.Main.main(Main.java:17)
+
+janv. 31, 2014 6:53:31 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
+Grave: null
+lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found PASV
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:76)
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:29)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:66)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:38)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:28)
+	at lille1.car2014.durieux_toulet.ftp_server.Main.main(Main.java:17)
+
+janv. 31, 2014 6:53:31 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
+Grave: null
+lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found PASV
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:76)
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:29)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:66)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:38)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:28)
+	at lille1.car2014.durieux_toulet.ftp_server.Main.main(Main.java:17)
+
+janv. 31, 2014 6:55:24 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
+Grave: null
+java.io.IOException: Stream closed
+	at java.io.BufferedReader.ensureOpen(BufferedReader.java:115)
+	at java.io.BufferedReader.readLine(BufferedReader.java:310)
+	at java.io.BufferedReader.readLine(BufferedReader.java:382)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:63)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:38)
 	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:28)
 	at lille1.car2014.durieux_toulet.ftp_server.Main.main(Main.java:17)
 
