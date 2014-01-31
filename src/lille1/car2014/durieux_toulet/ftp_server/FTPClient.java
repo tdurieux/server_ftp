@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
+import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**
@@ -18,15 +19,19 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  */
 public class FTPClient {
 	private final Socket clientSocket;
-	private final boolean isConnected = false;
+	private RequestHandler requestHandler;
+	private boolean isConnected = false;
+	private String typeCharactor;
+	private String username;
 
 	public FTPClient(Socket clientSocket) {
 		this.clientSocket = clientSocket;
+		requestHandler = new RequestHandler(this);
 		writeMessage("200");
 		readMessage();
 	}
 
-	private void writeMessage(String message) {
+	public void writeMessage(String message) {
 		OutputStreamWriter writer;
 		try {
 			writer = new OutputStreamWriter(clientSocket.getOutputStream(),
@@ -49,29 +54,11 @@ public class FTPClient {
 			String userInput;
 			while ((userInput = in.readLine()) != null) {
 				System.out.println(userInput);
-				String[] clientCommandeArray = userInput.split(" ");
-				String command = clientCommandeArray[0];
-
 				try {
-					Method[] methods = this.getClass().getMethods();
-					this.getClass()
-							.getMethod(command.toLowerCase(), String[].class)
-							.invoke(this, clientCommandeArray);
-				} catch (IllegalAccessException e) {
-					System.out.println(userInput + " IllegalAccessException");
-					writeMessage("421 IllegalAccessException");
-				} catch (IllegalArgumentException e) {
-					System.out.println(userInput + " IllegalArgumentException");
-					writeMessage("421 IllegalAccessException");
-				} catch (InvocationTargetException e) {
-					System.out.println(userInput + " IllegalAccessException");
-					writeMessage("421 InvocationTargetException");
-				} catch (NoSuchMethodException e) {
-					System.out.println(userInput + " IllegalAccessException");
-					writeMessage("421 NoSuchMethodException");
-				} catch (SecurityException e) {
-					System.out.println(userInput + " IllegalAccessException");
-					writeMessage("421 SecurityException");
+					requestHandler.parseStringRequest(userInput);
+				} catch (RequestHandlerException e) {
+					LoggerUtilities.error(e);
+					this.writeMessage("421 " + e.getMessage());
 				}
 			}
 		} catch (IOException e) {
@@ -79,13 +66,37 @@ public class FTPClient {
 		}
 	}
 
-	/**
-	 * Check the login of the user
-	 * 
-	 * @param args
-	 *            username
-	 */
-	public void user(String[] args) {
-		System.out.println("user");
+	public boolean isConnected() {
+		return isConnected;
+	}
+
+	public void close() {
+		this.writeMessage("QUIT");
+		try {
+			this.clientSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void setTypeCharactor(String typeCharactor) {
+		this.typeCharactor = typeCharactor;
+
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public boolean connect(String password) {
+		if (password.compareTo("pass") == 0) {
+			this.isConnected = true;
+			return true;
+		} else {
+			this.username = null;
+			this.isConnected = false;
+			return false;
+		}
 	}
 }

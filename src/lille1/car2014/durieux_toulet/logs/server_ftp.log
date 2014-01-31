@@ -1,11 +1,30 @@
-janv. 30, 2014 1:27:14 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
-SEVERE: null
-java.net.BindException: Adresse déjà utilisée
-	at java.net.PlainSocketImpl.socketBind(Native Method)
-	at java.net.AbstractPlainSocketImpl.bind(AbstractPlainSocketImpl.java:376)
-	at java.net.ServerSocket.bind(ServerSocket.java:376)
-	at java.net.ServerSocket.<init>(ServerSocket.java:237)
-	at java.net.ServerSocket.<init>(ServerSocket.java:128)
-	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:25)
+janv. 31, 2014 1:09:12 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
+Grave: null
+lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found TYPE
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:67)
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:26)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:56)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:29)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:28)
+	at lille1.car2014.durieux_toulet.ftp_server.Main.main(Main.java:17)
+
+janv. 31, 2014 1:09:12 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
+Grave: null
+lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found TYPE
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:67)
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:26)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:56)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:29)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:28)
+	at lille1.car2014.durieux_toulet.ftp_server.Main.main(Main.java:17)
+
+janv. 31, 2014 1:09:12 PM lille1.car2014.durieux_toulet.logs.LoggerUtilities error
+Grave: null
+lille1.car2014.durieux_toulet.exception.RequestHandlerException: Command not found TYPE
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.executeRquest(RequestHandler.java:67)
+	at lille1.car2014.durieux_toulet.ftp_server.RequestHandler.parseStringRequest(RequestHandler.java:26)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.readMessage(FTPClient.java:56)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPClient.<init>(FTPClient.java:29)
+	at lille1.car2014.durieux_toulet.ftp_server.FTPServer.startServer(FTPServer.java:28)
 	at lille1.car2014.durieux_toulet.ftp_server.Main.main(Main.java:17)
 
