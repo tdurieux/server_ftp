@@ -25,7 +25,7 @@ public class FTPServer {
 			serverSocket = new ServerSocket(port);
 			while (true) {
 				Socket clientSocket = serverSocket.accept();
-				new FTPClient(clientSocket);
+				new FTPClientImpl(clientSocket);
 			}
 
 		} catch (IOException e) {
