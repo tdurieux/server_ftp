@@ -25,6 +25,7 @@ public class TransfertServer {
 	 */
 	public TransfertServer() throws SocketException {
 		try {
+			// Create socket
 			this.transfertServerSocket = new ServerSocket(0);
 		} catch (final IOException e) {
 			throw new SocketException("Unable to create transfert socket", e);
@@ -37,6 +38,8 @@ public class TransfertServer {
 	private void startServer() {
 		try {
 			final Socket tranfsertSocket = this.transfertServerSocket.accept();
+
+			// Create transfert client
 			TransfertServer.this.transfertClient = new TransfertClient(
 					tranfsertSocket);
 		} catch (final IOException e) {
@@ -71,13 +74,17 @@ public class TransfertServer {
 	 */
 	public void writeContent(final String content)
 			throws RequestHandlerException {
+		// Start server if it's stopped
 		if (this.transfertClient == null) {
 			this.startServer();
 		}
+
 		try {
+			// Write message with ASCII encodding
 			TransfertServer.this.transfertClient.writeMessage(content
 					.getBytes("US-ASCII"));
 		} catch (final UnsupportedEncodingException e) {
+			// Write message without encodding
 			TransfertServer.this.transfertClient.writeMessage(content
 					.getBytes());
 		}
@@ -91,9 +98,12 @@ public class TransfertServer {
 	 */
 	public void writeContent(final byte[] content)
 			throws RequestHandlerException {
+		// Start server if it's stopped
 		if (this.transfertClient == null) {
 			this.startServer();
 		}
+
+		// Write bytes
 		TransfertServer.this.transfertClient.writeMessage(content);
 	}
 
@@ -103,9 +113,12 @@ public class TransfertServer {
 	 * @return Content
 	 */
 	public String readContent() {
+		// Start server if it's stopped
 		if (this.transfertClient == null) {
 			this.startServer();
 		}
+
+		// Return content read
 		return new String(TransfertServer.this.transfertClient.readMessage());
 	}
 
@@ -114,6 +127,7 @@ public class TransfertServer {
 	 */
 	public void close() {
 		try {
+			// Close socket
 			this.transfertServerSocket.close();
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block
