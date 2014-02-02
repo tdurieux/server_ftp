@@ -8,10 +8,21 @@ import java.net.Socket;
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 
+/**
+ * Transfert Server
+ *
+ * @author Durieux Thomas
+ * @author Toulet Cyrille
+ */
 public class TransfertServer {
 	private final ServerSocket transfertServerSocket;
 	private TransfertClient transfertClient;
 
+	/**
+	 * Constructor
+	 *
+	 * @throws SocketException If unable to create the transfert server socket
+	 */
 	public TransfertServer() throws SocketException {
 		try {
 			this.transfertServerSocket = new ServerSocket(0);
@@ -20,6 +31,9 @@ public class TransfertServer {
 		}
 	}
 
+	/**
+	 * Start the transfert server
+	 */
 	private void startServer() {
 		try {
 			final Socket tranfsertSocket = this.transfertServerSocket.accept();
@@ -31,14 +45,30 @@ public class TransfertServer {
 		}
 	}
 
+	/**
+	 * Get the public transfert server port
+	 *
+	 * @return The transfer server port
+	 */
 	public int getPublicPort() {
 		return this.transfertServerSocket.getLocalPort();
 	}
 
+	/**
+	 * Get the transfert client
+	 *
+	 * @return The transfer client
+	 */
 	public TransfertClient getTransfertClient() {
 		return this.transfertClient;
 	}
 
+	/**
+	 * Write content
+	 *
+	 * @param content Content to write
+	 * @throws RequestHandlerException
+	 */
 	public void writeContent(final String content)
 			throws RequestHandlerException {
 		if (this.transfertClient == null) {
@@ -53,13 +83,12 @@ public class TransfertServer {
 		}
 	}
 
-	public String readContent() {
-		if (this.transfertClient == null) {
-			this.startServer();
-		}
-		return new String(TransfertServer.this.transfertClient.readMessage());
-	}
-
+	/**
+	 * Write content
+	 *
+	 * @param content Content to write
+	 * @throws RequestHandlerException
+	 */
 	public void writeContent(final byte[] content)
 			throws RequestHandlerException {
 		if (this.transfertClient == null) {
@@ -68,6 +97,21 @@ public class TransfertServer {
 		TransfertServer.this.transfertClient.writeMessage(content);
 	}
 
+	/**
+	 * Read content
+	 *
+	 * @return Content
+	 */
+	public String readContent() {
+		if (this.transfertClient == null) {
+			this.startServer();
+		}
+		return new String(TransfertServer.this.transfertClient.readMessage());
+	}
+
+	/**
+	 * Close transfert server
+	 */
 	public void close() {
 		try {
 			this.transfertServerSocket.close();
