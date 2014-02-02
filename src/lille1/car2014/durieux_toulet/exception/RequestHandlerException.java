@@ -5,15 +5,15 @@ public class RequestHandlerException extends Exception {
 		super();
 	}
 
-	public RequestHandlerException(String message) {
+	public RequestHandlerException(final String message) {
 		super(message);
 	}
 
-	public RequestHandlerException(Throwable t) {
+	public RequestHandlerException(final Throwable t) {
 		super(t);
 	}
 
-	public RequestHandlerException(String message, Throwable t) {
+	public RequestHandlerException(final String message, final Throwable t) {
 		super(message, t);
 	}
 }

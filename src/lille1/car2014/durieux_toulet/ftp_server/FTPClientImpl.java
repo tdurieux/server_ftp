@@ -4,13 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +20,7 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  * 
  * @author Durieux Thomas
  */
-public class FTPClientImpl implements FTPClient{
+public class FTPClientImpl implements FTPClient, Runnable {
 	private final Socket clientSocket;
 	private RequestHandler requestHandler;
 	private BufferedReader in;
@@ -32,79 +29,78 @@ public class FTPClientImpl implements FTPClient{
 	private String typeCharactor;
 	private String username;
 	private String currentDir;
-	
-	private Map<String, String> options = new HashMap<String, String>();
 
-	
-	public FTPClientImpl(Socket clientSocket) {
+	private final Map<String, String> options = new HashMap<String, String>();
+
+	public FTPClientImpl(final Socket clientSocket) {
 		this.clientSocket = clientSocket;
-		requestHandler = new RequestHandler(this);
-		Path currentRelativePath = Paths.get("");
-		currentDir = currentRelativePath.toAbsolutePath().toString();
-		writeMessage("200");
-		readMessage();
 	}
 
-	public void writeMessage(String message) {
+	@Override
+	public void writeMessage(final String message) {
 		OutputStreamWriter writer;
 		try {
-			writer = new OutputStreamWriter(clientSocket.getOutputStream(),
+			writer = new OutputStreamWriter(
+					this.clientSocket.getOutputStream(),
 					Charset.forName("UTF-8"));
 			writer.write(message + " \n");
 			writer.flush();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			LoggerUtilities.error(e);
-			//throw new SocketException("Unable to write message", e);
+			// throw new SocketException("Unable to write message", e);
 		}
 	}
 
 	/**
 	 * Parse client message and call the function associate to command
 	 */
+	@Override
 	public void readMessage() {
 		try {
-			in = new BufferedReader(new InputStreamReader(
-					clientSocket.getInputStream()));
+			this.in = new BufferedReader(new InputStreamReader(
+					this.clientSocket.getInputStream()));
 			String userInput;
-			
-			while ((userInput = in.readLine()) != null) {
-				System.out.println(userInput);
+
+			while ((userInput = this.in.readLine()) != null) {
 				try {
-					requestHandler.parseStringRequest(userInput);
-				} catch (RequestHandlerException e) {
+					System.out.println(userInput);
+					this.requestHandler.parseStringRequest(userInput);
+				} catch (final RequestHandlerException e) {
 					LoggerUtilities.error(e);
-					this.writeMessage("421 " + e.getMessage());
+					this.writeMessage("202 " + e.getMessage());
 				}
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			LoggerUtilities.error(e);
 		}
 	}
 
 	public boolean isConnected() {
-		return isConnected;
+		return this.isConnected;
 	}
 
+	@Override
 	public void close() {
+		System.out.println("quit quit");
 		this.writeMessage("426 Close connection");
 		try {
 			this.in.close();
 			this.clientSocket.close();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			LoggerUtilities.error(e);
 		}
 	}
 
-	public void setTypeCharactor(String typeCharactor) {
+	public void setTypeCharactor(final String typeCharactor) {
 		this.typeCharactor = typeCharactor;
 
 	}
 
-	public void setUsername(String username) {
+	public void setUsername(final String username) {
 		this.username = username;
 	}
 
-	public boolean connect(String password) {
+	public boolean connect(final String password) {
 		if (password.compareTo("pass") == 0) {
 			this.isConnected = true;
 			return true;
@@ -114,24 +110,36 @@ public class FTPClientImpl implements FTPClient{
 			return false;
 		}
 	}
-	
+
 	public Map<String, String> getOptions() {
-		return options;
+		return this.options;
 	}
 
 	public int createNewTransfert() throws SocketException {
-		TransfertServer transfertHandler = new TransfertServer();
+		final TransfertServer transfertHandler = new TransfertServer();
 		this.transfertServer = transfertHandler;
 		return transfertHandler.getPublicPort();
 	}
-	
+
 	public TransfertServer getTransfertServer() {
-		return transfertServer;
+		return this.transfertServer;
 	}
+
 	public String getCurrentDir() {
-		return currentDir;
+		return this.currentDir;
 	}
-	public void setCurrentDir(String currentDir) {
+
+	public void setCurrentDir(final String currentDir) {
 		this.currentDir = currentDir;
+	}
+
+	@Override
+	public void run() {
+		LoggerUtilities.log("New client "+clientSocket.getRemoteSocketAddress());
+		this.requestHandler = new RequestHandler(this);
+		final Path currentRelativePath = Paths.get("/");
+		this.currentDir = currentRelativePath.toAbsolutePath().toString();
+		this.writeMessage("200");
+		this.readMessage();
 	}
 }

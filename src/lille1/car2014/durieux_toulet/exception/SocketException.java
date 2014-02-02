@@ -11,15 +11,15 @@ public class SocketException extends Exception {
 		super();
 	}
 
-	public SocketException(String message) {
+	public SocketException(final String message) {
 		super(message);
 	}
 
-	public SocketException(Throwable t) {
+	public SocketException(final Throwable t) {
 		super(t);
 	}
 
-	public SocketException(String message, Throwable t) {
+	public SocketException(final String message, final Throwable t) {
 		super(message, t);
 	}
 }
