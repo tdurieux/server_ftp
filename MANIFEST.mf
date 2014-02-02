@@ -1,1 +1,1 @@
-Main-Class: ftp_server.Main
+Main-Class: lille1.car2014.durieux_toulet.ftp_server.Main

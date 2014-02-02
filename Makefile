@@ -1,7 +1,7 @@
 # FTP Server
 #
 # Since january 30th, 2014
-# Version 1.0
+# Version february 2nd, 2014
 # Durieux Thomas
 # Toulet Cyrille
 
@@ -17,14 +17,14 @@ JAVAC_OPT  += -d $(CLASS_PATH)
 
 # Groups
 CLASS       = lille1/car2014/durieux_toulet/logs/*.class
-CLASS      += lille1/car2014/durieux_toulet/common/*.class
 CLASS      += lille1/car2014/durieux_toulet/ftp_server/*.class
 CLASS      += lille1/car2014/durieux_toulet/exception/*.class
-CLASS      += lille1/car2014/durieux_toulet/ftp_server/*.class
+CLASS      += lille1/car2014/durieux_toulet/config/*.class
 
 JAR         = ftp_server.jar
 
-CONFIG      = lille1/car2014/durieux_toulet/config/*.ini
+FILES       = lille1/car2014/durieux_toulet/config/*.ini
+FILES      += lille1/car2014/durieux_toulet/logs/server_ftp.*
 
 MANIFEST    = MANIFEST.mf
 
@@ -39,7 +39,7 @@ lille1/car2014/durieux_toulet/%.class: $(SRC_PATH)/lille1/car2014/durieux_toulet
 ftp_server.jar: $(CLASS)
 	$(JARC) cfm $@ $(MANIFEST)
 	cd $(CLASS_PATH) && $(JARC) uf ../$@ $^
-	cd $(SRC_PATH) && $(JARC) uf ../$@ $(CONFIG)
+	cd $(SRC_PATH) && $(JARC) uf ../$@ $(FILES)
 
 # Phony
 .PHONY: clean mrproper
