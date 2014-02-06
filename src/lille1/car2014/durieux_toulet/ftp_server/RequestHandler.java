@@ -250,6 +250,24 @@ public class RequestHandler {
 	}
 
 	/**
+	 * Change the current directory to parent directory
+	 * 
+	 * @param dir
+	 *            the new current direcotry
+	 */
+	@FtpRequestAnnotation(name = "CDUP", connected = true)
+	private void requestUpCurrentDirecory() {
+		File f = new File(ftpClient.getCurrentDir() + "/..");
+		if (!f.exists() || !f.isDirectory()) {
+			ftpClient
+					.writeMessage("550 Can't change directory to test: No such file or directory");
+		}
+		ftpClient.setCurrentDir(f.getAbsolutePath());
+		ftpClient.writeMessage("250 OK. Current directory is "
+				+ f.getAbsolutePath());
+	}
+
+	/**
 	 * Send the port of the data connection (passive mode)
 	 */
 	@FtpRequestAnnotation(name = "PASV", connected = true)
