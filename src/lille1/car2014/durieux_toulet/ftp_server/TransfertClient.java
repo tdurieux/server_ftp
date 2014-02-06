@@ -2,16 +2,15 @@ package lille1.car2014.durieux_toulet.ftp_server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**
  * Transfert Client
- *
+ * 
  * @author Durieux Thomas
  * @author Toulet Cyrille
  */
@@ -20,8 +19,9 @@ public class TransfertClient {
 
 	/**
 	 * Constructor
-	 *
-	 * @param transfertSocket Socket to use for connection
+	 * 
+	 * @param transfertSocket
+	 *            Socket to use for connection
 	 */
 	public TransfertClient(final Socket tranfsertSocket) {
 		// Copy socket to use
@@ -30,13 +30,13 @@ public class TransfertClient {
 
 	/**
 	 * Write message
-	 *
+	 * 
 	 * @param byte Bytes of message to write
 	 */
 	public void writeMessage(final byte[] bytes) {
 		try {
 			final BufferedOutputStream bo = new BufferedOutputStream(
-					this.tranfsertSocket.getOutputStream());
+					tranfsertSocket.getOutputStream());
 
 			// Send bytes
 			bo.write(bytes);
@@ -54,35 +54,24 @@ public class TransfertClient {
 
 	/**
 	 * Read message
-	 *
+	 * 
 	 * @return Bytes of message read
 	 */
 	public byte[] readMessage() {
-		final ArrayList<Integer> bytes = new ArrayList<Integer>();
-
 		try {
 			final BufferedInputStream bi = new BufferedInputStream(
-					this.tranfsertSocket.getInputStream());
-			int b;
+					tranfsertSocket.getInputStream());
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 			// Read data
-			while ((b = bi.read()) != -1) {
-				bytes.add(b);
+			byte[] buffer = new byte[65536];
+			int l;
+			while ((l = bi.read(buffer)) > 0) {
+				output.write(buffer);
 			}
-
-			final byte[] bytesB = new byte[bytes.size()];
-
-			// Convert buffer
-			for (int i = 0; i < bytes.size(); i++) {
-				final int a = bytes.get(i);
-				bytesB[i] = (byte) a;
-			}
-
-			// Print buffered message
-			System.out.println(new String(bytesB));
 
 			// Return it
-			return bytesB;
+			return output.toByteArray();
 		} catch (final IOException e) {
 			// Log errors
 			LoggerUtilities.error(e);
@@ -97,7 +86,7 @@ public class TransfertClient {
 	public void close() {
 		try {
 			// Close socket
-			this.tranfsertSocket.close();
+			tranfsertSocket.close();
 		} catch (final IOException e) {
 			// Log errors
 			LoggerUtilities.error(e);
