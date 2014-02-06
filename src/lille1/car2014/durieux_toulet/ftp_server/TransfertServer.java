@@ -10,7 +10,7 @@ import lille1.car2014.durieux_toulet.exception.SocketException;
 
 /**
  * Transfert Server
- *
+ * 
  * @author Durieux Thomas
  * @author Toulet Cyrille
  */
@@ -20,13 +20,14 @@ public class TransfertServer {
 
 	/**
 	 * Constructor
-	 *
-	 * @throws SocketException If unable to create the transfert server socket
+	 * 
+	 * @throws SocketException
+	 *             If unable to create the transfert server socket
 	 */
 	public TransfertServer() throws SocketException {
 		try {
 			// Create socket
-			this.transfertServerSocket = new ServerSocket(0);
+			transfertServerSocket = new ServerSocket(0);
 		} catch (final IOException e) {
 			throw new SocketException("Unable to create transfert socket", e);
 		}
@@ -37,7 +38,7 @@ public class TransfertServer {
 	 */
 	private void startServer() {
 		try {
-			final Socket tranfsertSocket = this.transfertServerSocket.accept();
+			final Socket tranfsertSocket = transfertServerSocket.accept();
 
 			// Create transfert client
 			TransfertServer.this.transfertClient = new TransfertClient(
@@ -50,32 +51,33 @@ public class TransfertServer {
 
 	/**
 	 * Get the public transfert server port
-	 *
+	 * 
 	 * @return The transfer server port
 	 */
 	public int getPublicPort() {
-		return this.transfertServerSocket.getLocalPort();
+		return transfertServerSocket.getLocalPort();
 	}
 
 	/**
 	 * Get the transfert client
-	 *
+	 * 
 	 * @return The transfer client
 	 */
 	public TransfertClient getTransfertClient() {
-		return this.transfertClient;
+		return transfertClient;
 	}
 
 	/**
 	 * Write content
-	 *
-	 * @param content Content to write
+	 * 
+	 * @param content
+	 *            Content to write
 	 * @throws RequestHandlerException
 	 */
 	public void writeContent(final String content)
 			throws RequestHandlerException {
 		// Start server if it's stopped
-		if (this.transfertClient == null) {
+		if (transfertClient == null) {
 			this.startServer();
 		}
 
@@ -92,14 +94,15 @@ public class TransfertServer {
 
 	/**
 	 * Write content
-	 *
-	 * @param content Content to write
+	 * 
+	 * @param content
+	 *            Content to write
 	 * @throws RequestHandlerException
 	 */
 	public void writeContent(final byte[] content)
 			throws RequestHandlerException {
 		// Start server if it's stopped
-		if (this.transfertClient == null) {
+		if (transfertClient == null) {
 			this.startServer();
 		}
 
@@ -109,12 +112,12 @@ public class TransfertServer {
 
 	/**
 	 * Read content
-	 *
+	 * 
 	 * @return Content
 	 */
-	public String readContent() {
+	public String readStringContent() {
 		// Start server if it's stopped
-		if (this.transfertClient == null) {
+		if (transfertClient == null) {
 			this.startServer();
 		}
 
@@ -123,12 +126,27 @@ public class TransfertServer {
 	}
 
 	/**
+	 * Read content
+	 * 
+	 * @return Content
+	 */
+	public byte[] readContent() {
+		// Start server if it's stopped
+		if (transfertClient == null) {
+			this.startServer();
+		}
+
+		// Return content read
+		return TransfertServer.this.transfertClient.readMessage();
+	}
+
+	/**
 	 * Close transfert server
 	 */
 	public void close() {
 		try {
 			// Close socket
-			this.transfertServerSocket.close();
+			transfertServerSocket.close();
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
