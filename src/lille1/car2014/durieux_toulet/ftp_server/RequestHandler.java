@@ -9,13 +9,10 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
@@ -82,8 +79,8 @@ public class RequestHandler {
 					}
 				}
 				// if the user must be connected before doing an command
-				if (annotation.connected() && !this.ftpClient.isConnected()) {
-					this.ftpClient.writeMessage("530 Not logged in.");
+				if (annotation.connected() && !ftpClient.isConnected()) {
+					ftpClient.writeMessage("530 Not logged in.");
 					return;
 				}
 				// invoke the methos
@@ -112,16 +109,16 @@ public class RequestHandler {
 	private void setPrimaryTypeCaracter(final String typeCharacter) {
 		switch (typeCharacter) {
 		case "A":
-			this.ftpClient.setTypeCharactor("ASCII");
+			ftpClient.setTypeCharactor("ASCII");
 			break;
 		case "E":
-			this.ftpClient.setTypeCharactor("EBCDIC");
+			ftpClient.setTypeCharactor("EBCDIC");
 			break;
 		case "I":
-			this.ftpClient.setTypeCharactor("image");
+			ftpClient.setTypeCharactor("image");
 			break;
 		case "L":
-			this.ftpClient.setTypeCharactor("local");
+			ftpClient.setTypeCharactor("local");
 			break;
 		default:
 
@@ -138,7 +135,7 @@ public class RequestHandler {
 	@FtpRequestAnnotation(name = "TYPE", connected = true)
 	private void requestType(final String typeCharacter) {
 		this.setPrimaryTypeCaracter(typeCharacter);
-		this.ftpClient.writeMessage("200 Type accepted");
+		ftpClient.writeMessage("200 Type accepted");
 	}
 
 	@FtpRequestAnnotation(name = "TYPE", connected = true)
@@ -148,19 +145,19 @@ public class RequestHandler {
 
 		switch (secondTypeCharacter) {
 		case "N":
-			this.ftpClient.setTypeCharactor("Non-print");
+			ftpClient.setTypeCharactor("Non-print");
 			break;
 		case "T":
-			this.ftpClient.setTypeCharactor("Telnet");
+			ftpClient.setTypeCharactor("Telnet");
 			break;
 		case "C":
-			this.ftpClient.setTypeCharactor("ASA");
+			ftpClient.setTypeCharactor("ASA");
 			break;
 		default:
 
 			break;
 		}
-		this.ftpClient.writeMessage("200 Type accepted");
+		ftpClient.writeMessage("200 Type accepted");
 	}
 
 	/**
@@ -172,10 +169,10 @@ public class RequestHandler {
 	@FtpRequestAnnotation(name = "PASS", connected = false)
 	private void requestConnect(final String password) {
 		// connect the user
-		if (this.ftpClient.connect(password)) {
-			this.ftpClient.writeMessage("230 Connected");
+		if (ftpClient.connect(password)) {
+			ftpClient.writeMessage("230 Connected");
 		} else {
-			this.ftpClient.writeMessage("430 Invalid username/password");
+			ftpClient.writeMessage("430 Invalid username/password");
 		}
 	}
 
@@ -187,8 +184,8 @@ public class RequestHandler {
 	 */
 	@FtpRequestAnnotation(name = "USER", connected = false)
 	private void requestUser(final String username) {
-		this.ftpClient.setUsername(username);
-		this.ftpClient.writeMessage("331 User accepted");
+		ftpClient.setUsername(username);
+		ftpClient.writeMessage("331 User accepted");
 	}
 
 	/**
@@ -196,7 +193,7 @@ public class RequestHandler {
 	 */
 	@FtpRequestAnnotation(name = "QUIT", connected = false)
 	private void closeConnection() {
-		this.ftpClient.close();
+		ftpClient.close();
 	}
 
 	/**
@@ -206,7 +203,7 @@ public class RequestHandler {
 	private void requestSYST() {
 		// final String OS = System.getProperty("os.name").toLowerCase();
 		// this.ftpClient.writeMessage("215 " + OS);
-		this.ftpClient.writeMessage("215 UNIX Type: L8");
+		ftpClient.writeMessage("215 UNIX Type: L8");
 	}
 
 	/**
@@ -219,8 +216,8 @@ public class RequestHandler {
 	 */
 	@FtpRequestAnnotation(name = "OPTS", connected = true)
 	private void requestOptions(final String key, final String value) {
-		this.ftpClient.getOptions().put(key, value);
-		this.ftpClient.writeMessage("200 Accept option");
+		ftpClient.getOptions().put(key, value);
+		ftpClient.writeMessage("200 Accept option");
 	}
 
 	/**
@@ -228,8 +225,7 @@ public class RequestHandler {
 	 */
 	@FtpRequestAnnotation(name = "PWD", connected = true)
 	private void requestCurrentDirectory() {
-		this.ftpClient.writeMessage("257 " + '"'
-				+ this.ftpClient.getCurrentDir() + '"');
+		ftpClient.writeMessage("257 " + '"' + ftpClient.getCurrentDir() + '"');
 	}
 
 	/**
@@ -240,14 +236,17 @@ public class RequestHandler {
 	 */
 	@FtpRequestAnnotation(name = "CWD", connected = true)
 	private void requestSetCurrentDirecory(String dir) {
-		final File f = new File(dir);
+		File f = new File(dir);
 		if (!f.exists() || !f.isDirectory()) {
-			this.ftpClient
-					.writeMessage("550 Can't change directory to test: No such file or directory");
-		} else {
-			this.ftpClient.setCurrentDir(f.getAbsolutePath());
-			this.ftpClient.writeMessage("250 OK. Current directory is " + f.getAbsolutePath());
+			f = new File(ftpClient.getCurrentDir() + "/" + dir);
+			if (!f.exists() || !f.isDirectory()) {
+				ftpClient
+						.writeMessage("550 Can't change directory to test: No such file or directory");
+			}
 		}
+		ftpClient.setCurrentDir(f.getAbsolutePath());
+		ftpClient.writeMessage("250 OK. Current directory is "
+				+ f.getAbsolutePath());
 	}
 
 	/**
@@ -256,14 +255,14 @@ public class RequestHandler {
 	@FtpRequestAnnotation(name = "PASV", connected = true)
 	private void requestPassiveMode() {
 		try {
-			final int port = this.ftpClient.createNewTransfert();
+			final int port = ftpClient.createNewTransfert();
 			final int p1 = (port / 256);
 			final int p2 = port - p1 * 256;
-			this.ftpClient.writeMessage("227 Entering Passive Mode (127,0,0,1,"
-					+ p1 + "," + p2 + ")");
+			ftpClient.writeMessage("227 Entering Passive Mode (127,0,0,1," + p1
+					+ "," + p2 + ")");
 		} catch (final SocketException e) {
 			LoggerUtilities.error(e);
-			this.ftpClient.writeMessage("425 Can't open data connection.");
+			ftpClient.writeMessage("425 Can't open data connection.");
 		}
 	}
 
@@ -273,13 +272,12 @@ public class RequestHandler {
 	@FtpRequestAnnotation(name = "EPSV", connected = true)
 	private void requestExtendedPassiveMode() {
 		try {
-			final int port = this.ftpClient.createNewTransfert();
-			this.ftpClient
-					.writeMessage("229 Entering Extended Passive Mode (|||"
-							+ port + "|)");
+			final int port = ftpClient.createNewTransfert();
+			ftpClient.writeMessage("229 Entering Extended Passive Mode (|||"
+					+ port + "|)");
 		} catch (final SocketException e) {
 			LoggerUtilities.error(e);
-			this.ftpClient.writeMessage("425 Can't open data connection.");
+			ftpClient.writeMessage("425 Can't open data connection.");
 		}
 	}
 
@@ -294,18 +292,17 @@ public class RequestHandler {
 		if (dir.compareTo("-a") == 0) {
 			dir = "";
 		}
-		if (this.ftpClient.getTransfertServer() == null) {
-			this.ftpClient.writeMessage("443 No data connection");
+		if (ftpClient.getTransfertServer() == null) {
+			ftpClient.writeMessage("443 No data connection");
 		} else {
-			this.ftpClient.writeMessage("150 Accepted data connection");
+			ftpClient.writeMessage("150 Accepted data connection");
 			try {
-				this.ftpClient.getTransfertServer().writeContent(
-						this.createList(this.ftpClient.getCurrentDir() + "/"
-								+ dir));
-				this.ftpClient.writeMessage("226");
+				ftpClient.getTransfertServer().writeContent(
+						this.createList(ftpClient.getCurrentDir() + "/" + dir));
+				ftpClient.writeMessage("226");
 			} catch (final RequestHandlerException e) {
 				LoggerUtilities.error(e);
-				this.ftpClient.getTransfertServer().close();
+				ftpClient.getTransfertServer().close();
 			}
 		}
 	}
@@ -323,16 +320,16 @@ public class RequestHandler {
 	 */
 	@FtpRequestAnnotation(name = "NLST", connected = true)
 	private void requestListFileName(final String dir) {
-		if (this.ftpClient.getTransfertServer() == null) {
-			this.ftpClient.writeMessage("443 No data connection");
+		if (ftpClient.getTransfertServer() == null) {
+			ftpClient.writeMessage("443 No data connection");
 		} else {
 			try {
-				final File folder = new File(this.ftpClient.getCurrentDir()
-						+ "/" + dir);
+				final File folder = new File(ftpClient.getCurrentDir() + "/"
+						+ dir);
 				if (!folder.exists() || !folder.isDirectory()) {
-					this.ftpClient.writeMessage("504 Only accept folder");
+					ftpClient.writeMessage("504 Only accept folder");
 				} else {
-					this.ftpClient.writeMessage("150 Accepted data connection");
+					ftpClient.writeMessage("150 Accepted data connection");
 					final String[] files = folder.list();
 					String listFilename = "";
 					for (int i = 0; i < files.length; i++) {
@@ -340,15 +337,14 @@ public class RequestHandler {
 								+ ((i != files.length - 1) ? "\n" : "");
 
 					}
-					this.ftpClient.getTransfertServer().writeContent(
-							listFilename);
-					this.ftpClient.writeMessage("226 " + files.length
+					ftpClient.getTransfertServer().writeContent(listFilename);
+					ftpClient.writeMessage("226 " + files.length
 							+ " matches total");
 				}
 			} catch (final RequestHandlerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				this.ftpClient.getTransfertServer().close();
+				ftpClient.getTransfertServer().close();
 			}
 		}
 	}
@@ -364,7 +360,7 @@ public class RequestHandler {
 	@FtpRequestAnnotation(name = "SIZE", connected = true)
 	private void requestGetFileSize(final String file) {
 		final File f = new File(file);
-		this.ftpClient.writeMessage("226 " + f.length());
+		ftpClient.writeMessage("226 " + f.length());
 	}
 
 	/**
@@ -375,17 +371,16 @@ public class RequestHandler {
 	 */
 	@FtpRequestAnnotation(name = "RETR", connected = true)
 	private void requestDownloadFile(final String file) {
-		if (this.ftpClient.getTransfertServer() == null) {
-			this.ftpClient.writeMessage("443 No data connection");
+		if (ftpClient.getTransfertServer() == null) {
+			ftpClient.writeMessage("443 No data connection");
 		} else {
-			this.ftpClient.writeMessage("150 Accepted data connection");
+			ftpClient.writeMessage("150 Accepted data connection");
 			try {
 				try {
 					final byte[] encoded = Files.readAllBytes(Paths
-							.get(this.ftpClient.getCurrentDir() + "/" + file));
-					this.ftpClient.getTransfertServer().writeContent(encoded);
-					this.ftpClient
-							.writeMessage("226 File successfully transferred");
+							.get(ftpClient.getCurrentDir() + "/" + file));
+					ftpClient.getTransfertServer().writeContent(encoded);
+					ftpClient.writeMessage("226 File successfully transferred");
 				} catch (final IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -394,7 +389,7 @@ public class RequestHandler {
 			} catch (final RequestHandlerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				this.ftpClient.getTransfertServer().close();
+				ftpClient.getTransfertServer().close();
 			}
 		}
 	}
@@ -412,10 +407,9 @@ public class RequestHandler {
 			Date lastModificationDate = new Date(Files.getLastModifiedTime(
 					Paths.get(ftpClient.getCurrentDir() + "/" + file))
 					.toMillis());
-			this.ftpClient.writeMessage("226 "
-					+ sdf.format(lastModificationDate));
+			ftpClient.writeMessage("226 " + sdf.format(lastModificationDate));
 		} catch (IOException e) {
-			this.ftpClient
+			ftpClient
 					.writeMessage("451 Unable to access to last modification date.");
 		}
 

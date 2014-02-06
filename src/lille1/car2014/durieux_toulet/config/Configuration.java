@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**
  * The Configuration class is a utility class used to load ini file
@@ -17,15 +20,13 @@ import java.util.logging.Logger;
 public class Configuration {
 
 	private final Properties configurationProperties;
-	private final File f;
 
 	public Configuration(final String fileName) {
-		this.configurationProperties = new Properties();
-		this.f = new File(fileName);
-		if (!this.f.exists()) {
+		configurationProperties = new Properties();
+		File f = new File(fileName);
+		if (!f.exists()) {
 			try {
-				this.configurationProperties.store(
-						new FileOutputStream(this.f), null);
+				configurationProperties.store(new FileOutputStream(f), null);
 			} catch (final IOException ex) {
 				Logger.getLogger(Configuration.class.getName()).log(
 						Level.SEVERE, null, ex);
@@ -33,26 +34,33 @@ public class Configuration {
 		} else {
 			try {
 				// load a properties file
-				this.configurationProperties.load(new FileInputStream(this.f));
+				configurationProperties.load(new FileInputStream(f));
 			} catch (final IOException ex) {
-				ex.printStackTrace();
+				LoggerUtilities.error(ex);
 			}
 		}
 	}
 
-	public String getProperty(final String key) {
-		return this.configurationProperties.getProperty(key);
-	}
-
-	public void setProperty(final String key, final String value) {
-		this.configurationProperties.setProperty(key, value);
+	public Configuration(InputStream openStream) {
+		configurationProperties = new Properties();
 		try {
-			this.configurationProperties.store(new FileOutputStream(this.f),
-					null);
-		} catch (final IOException ex) {
-			Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE,
-					null, ex);
+			configurationProperties.load(openStream);
+		} catch (IOException e) {
+			LoggerUtilities.error(e);
 		}
 	}
+
+	public String getProperty(final String key) {
+		return configurationProperties.getProperty(key);
+	}
+
+	/*
+	 * public void setProperty(final String key, final String value) {
+	 * configurationProperties.setProperty(key, value); try {
+	 * configurationProperties.store(new FileOutputStream(f), null); } catch
+	 * (final IOException ex) {
+	 * Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE, null,
+	 * ex); } }
+	 */
 
 }
