@@ -223,7 +223,7 @@ public class FTPClientImpl implements FTPClient, Runnable {
 			this.transfertServer = transfertHandler;
 
 			// Return server port
-			return transfertHandler.getPublicPort();
+			return port;
 		} catch (UnknownHostException e) {
 			throw new SocketException("The current client is not found", e);
 		} catch (IOException e) {

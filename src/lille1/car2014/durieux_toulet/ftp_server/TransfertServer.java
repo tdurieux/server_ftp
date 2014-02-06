@@ -22,13 +22,15 @@ public class TransfertServer {
 
 	/**
 	 * Constructor
-	 * @throws IOException 
-	 * @throws UnknownHostException 
+	 * 
+	 * @throws IOException
+	 * @throws UnknownHostException
 	 * 
 	 * @throws SocketException
 	 *             If unable to create the transfert server socket
 	 */
-	public TransfertServer(String address, int port) throws UnknownHostException, IOException {
+	public TransfertServer(String address, int port)
+			throws UnknownHostException, IOException {
 		final Socket tranfsertSocket = new Socket(address, port);
 		// Create transfert client
 		TransfertServer.this.transfertClient = new TransfertClient(
@@ -162,8 +164,9 @@ public class TransfertServer {
 	 */
 	public void close() {
 		try {
-			// Close socket
-			transfertServerSocket.close();
+			if (transfertServerSocket != null)
+				// Close socket
+				transfertServerSocket.close();
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

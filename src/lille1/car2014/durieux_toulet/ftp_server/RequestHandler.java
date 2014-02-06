@@ -407,8 +407,8 @@ public class RequestHandler {
 		} else {
 			try {
 				final File folder = new File((path.length() > 0
-						&& path.charAt(0) == '/' ? ftpClient.getCurrentDir()
-						+ "/" : "")
+						&& path.charAt(0) == '/' ? ftpClient
+						.getCurrentDir() + "/" : "")
 						+ path);
 				if (!folder.exists() || !folder.isDirectory()) {
 					ftpClient.writeMessage("504 Only accept folder");
@@ -444,7 +444,8 @@ public class RequestHandler {
 	private void requestGetFileSize(final String... dirs) {
 		String path = arrayToPath(dirs);
 		final File f = new File(
-				(path.length() > 0 && path.charAt(0) == '/' ? ftpClient
+				(path.length() > 0
+						&& path.charAt(0) == '/' ? ftpClient
 						.getCurrentDir() + "/" : "")
 						+ path);
 		ftpClient.writeMessage("226 " + f.length());
@@ -465,10 +466,12 @@ public class RequestHandler {
 			ftpClient.writeMessage("150 Accepted data connection");
 			try {
 				try {
-					final byte[] encoded = Files.readAllBytes(Paths.get((path
-							.length() < 0 && path.charAt(0) == '/' ? ftpClient
+					String filePath = (path.length() > 0
+							&& path.charAt(0) == '/' ? ftpClient
 							.getCurrentDir() + "/" : "")
-							+ path));
+							+ path;
+					final byte[] encoded = Files.readAllBytes(Paths
+							.get(filePath));
 					ftpClient.getTransfertServer().writeContent(encoded);
 					ftpClient.writeMessage("226 File successfully transferred");
 				} catch (final IOException e) {
@@ -500,8 +503,8 @@ public class RequestHandler {
 				byte[] content = ftpClient.getTransfertServer().readContent();
 
 				FileOutputStream out = new FileOutputStream((path.length() > 0
-						&& path.charAt(0) == '/' ? ftpClient.getCurrentDir()
-						+ "/" : "")
+						&& path.charAt(0) == '/' ? ftpClient
+						.getCurrentDir() + "/" : "")
 						+ path);
 
 				out.write(content);
