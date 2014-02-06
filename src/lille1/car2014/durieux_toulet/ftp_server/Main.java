@@ -10,10 +10,14 @@ public class Main {
 		final Configuration config = new Configuration(Configuration.class
 				.getResource("ftp_config.ini").getPath());
 
+		String port = config
+				.getProperty("defaultPort");
 		// Get server port
-		final int defaultPort = Integer.parseInt(config
-				.getProperty("defaultPort"));
+		int defaultPort = 2121;		
 
+		if(port!=null) 
+			defaultPort = Integer.parseInt(port);
+		
 		// Create and start the ftp server
 		final FTPServer server = new FTPServer(defaultPort);
 

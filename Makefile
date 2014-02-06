@@ -9,7 +9,7 @@
 # Config
 SRC_PATH    = src
 CLASS_PATH  = class
-JAVAC       = javac
+JAVAC       = /usr/lib/jvm/j2sdk1.7-oracle/bin/javac
 JARC        = jar
 JAVAC_OPT   = -sourcepath $(SRC_PATH)
 JAVAC_OPT  += -classpath $(CLASS_PATH)
