@@ -1,6 +1,7 @@
 package lille1.car2014.durieux_toulet.ftp_server;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -369,8 +370,7 @@ public class RequestHandler {
 							+ " matches total");
 				}
 			} catch (final RequestHandlerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					LoggerUtilities.error(e);
 				ftpClient.getTransfertServer().close();
 			}
 		}
@@ -409,13 +409,39 @@ public class RequestHandler {
 					ftpClient.getTransfertServer().writeContent(encoded);
 					ftpClient.writeMessage("226 File successfully transferred");
 				} catch (final IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					LoggerUtilities.error(e);
+					ftpClient.getTransfertServer().close();
 				}
 
 			} catch (final RequestHandlerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LoggerUtilities.error(e);
+				ftpClient.getTransfertServer().close();
+			}
+		}
+	}
+
+	/**
+	 * Send the content of a file to the server
+	 * 
+	 * @param file The name of file to store
+	 */
+	@FtpRequestAnnotation(name = "STOR", connected = true)
+	private void requestUploadFile(final String file) {
+		if (ftpClient.getTransfertServer() == null) {
+			ftpClient.writeMessage("443 No data connection");
+		} else {
+			ftpClient.writeMessage("150 Accepted data connection");
+			try {
+				byte [] content = ftpClient.getTransfertServer().readContent();
+
+				FileOutputStream out = new FileOutputStream(ftpClient.getCurrentDir() + "/" + file);
+
+				out.write(content);
+				out.close();
+
+				ftpClient.writeMessage("226 File successfully transferred");
+			} catch (final IOException e) {
+				LoggerUtilities.error(e);
 				ftpClient.getTransfertServer().close();
 			}
 		}
