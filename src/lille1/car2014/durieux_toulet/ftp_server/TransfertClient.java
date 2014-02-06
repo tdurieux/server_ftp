@@ -64,7 +64,7 @@ public class TransfertClient {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 			// Read data
-			byte[] buffer = new byte[65536];
+			byte[] buffer = new byte[1];
 			int l;
 			while ((l = bi.read(buffer)) > 0) {
 				output.write(buffer);
