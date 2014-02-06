@@ -58,7 +58,7 @@ public class TransfertClient {
 	 * @return Bytes of message read
 	 */
 	public byte[] readMessage() {
-		final ArrayList<Integer> bytes = new ArrayList<>();
+		final ArrayList<Integer> bytes = new ArrayList<Integer>();
 
 		try {
 			final BufferedInputStream bi = new BufferedInputStream(
