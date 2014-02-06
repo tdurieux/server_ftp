@@ -14,6 +14,7 @@ import java.util.Map;
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.exception.FTPClientException;
+import lille1.car2014.durieux_toulet.exception.UserDatabaseException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**

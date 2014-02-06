@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
+import lille1.car2014.durieux_toulet.exception.FTPClientException;
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
@@ -165,15 +166,23 @@ public class RequestHandler {
 	 * 
 	 * @param password
 	 *            the password of the user
+	 * @throws RequestHandlerException
 	 */
 	@FtpRequestAnnotation(name = "PASS", connected = false)
-	private void requestConnect(final String password) {
-		// connect the user
-		if (ftpClient.connect(password)) {
-			ftpClient.writeMessage("230 Connected");
-		} else {
+	private void requestConnect(final String password)
+			throws RequestHandlerException {
+		try {
+			// connect the user
+			if (ftpClient.connect(password)) {
+				ftpClient.writeMessage("230 Connected");
+			} else {
+				ftpClient.writeMessage("430 Invalid username/password");
+			}
+		} catch (FTPClientException e) {
+			LoggerUtilities.error("Unable to log the user", e);
 			ftpClient.writeMessage("430 Invalid username/password");
 		}
+
 	}
 
 	/**
