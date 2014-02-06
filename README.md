@@ -1,8 +1,12 @@
-server_ftp
-==========
+# FTP Server
 
-# CHANGELOG
+## Authors
+Durieux Thomas
+Toulet Cyrille
 
-240130 - 10:01 : Creation of project
+## Start server
+
+/usr/lib/jvm/j2sdk1.7-oracle/bin/java -jar ftp_server.jar
+
 
 

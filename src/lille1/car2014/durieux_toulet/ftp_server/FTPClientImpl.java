@@ -161,7 +161,7 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	 */
 	public boolean connect(final String password) {
 		// If correct password
-		if (password.compareTo("pass") == 0) {
+		if (UserDatabase.getInstance ().signin (this.username, password)) {
 			// Connect user
 			this.isConnected = true;
 			return true;
