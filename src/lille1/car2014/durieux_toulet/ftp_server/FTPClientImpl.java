@@ -13,6 +13,7 @@ import java.util.Map;
 
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
+import lille1.car2014.durieux_toulet.exception.FTPClientException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**
@@ -157,19 +158,25 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	 * Try to connect user
 	 *
 	 * @param password User password
+	 * @throws FTPClientException when unable to load user database
 	 * @return true if is valid user, false else
 	 */
-	public boolean connect(final String password) {
-		// If correct password
-		if (UserDatabase.getInstance ().signin (this.username, password)) {
-			// Connect user
-			this.isConnected = true;
-			return true;
-		} else {
-			// Sorry, bye !
-			this.username = null;
-			this.isConnected = false;
-			return false;
+	public boolean connect(final String password) throws FTPClientException {
+		try {
+			// If correct password
+			if (UserDatabase.getInstance ().signin (this.username, password)) {
+				// Connect user
+				this.isConnected = true;
+				return true;
+			} else {
+				// Sorry, bye !
+				this.username = null;
+				this.isConnected = false;
+				return false;
+			}
+		}
+		catch (UserDatabaseException e) {
+			throw new FTPClientException ("Unable to load user database", e);
 		}
 	}
 
