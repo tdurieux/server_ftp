@@ -12,5 +12,7 @@ public @interface FtpRequestAnnotation {
 	String name();
 
 	boolean connected() default true;
+	
+	boolean annonymous() default false;
 
 }

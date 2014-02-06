@@ -2,8 +2,10 @@ package lille1.car2014.durieux_toulet.ftp_server;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
@@ -15,8 +17,23 @@ import lille1.car2014.durieux_toulet.exception.SocketException;
  * @author Toulet Cyrille
  */
 public class TransfertServer {
-	private final ServerSocket transfertServerSocket;
+	private ServerSocket transfertServerSocket;
 	private TransfertClient transfertClient;
+
+	/**
+	 * Constructor
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 * 
+	 * @throws SocketException
+	 *             If unable to create the transfert server socket
+	 */
+	public TransfertServer(String address, int port) throws UnknownHostException, IOException {
+		final Socket tranfsertSocket = new Socket(address, port);
+		// Create transfert client
+		TransfertServer.this.transfertClient = new TransfertClient(
+				tranfsertSocket);
+	}
 
 	/**
 	 * Constructor

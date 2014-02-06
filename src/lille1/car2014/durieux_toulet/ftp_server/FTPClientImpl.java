@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +34,7 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	private String username;
 	private String currentDir;
 	private final Map<String, String> options = new HashMap<String, String>();
+	public String fileToRename;
 
 	/**
 	 * Constructor
@@ -192,6 +194,8 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Create transfert server
+	 * @param port 
+	 * @param address 
 	 *
 	 * @throws SocketException when unable to create connection
 	 * @return Transfert server port
@@ -203,6 +207,28 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 		// Return server port
 		return transfertHandler.getPublicPort();
+	}
+	
+	/**
+	 * Create transfert server
+	 *
+	 * @throws SocketException when unable to create connection
+	 * @return Transfert server port
+	 */
+	public int createNewTransfert(String address,int port) throws SocketException {
+		// Create transfert server
+		TransfertServer transfertHandler;
+		try {
+			transfertHandler = new TransfertServer(address,port);
+			this.transfertServer = transfertHandler;
+
+			// Return server port
+			return transfertHandler.getPublicPort();
+		} catch (UnknownHostException e) {
+			throw new SocketException("The current client is not found", e);
+		} catch (IOException e) {
+			throw new SocketException("Unable to create data connection", e);
+		}
 	}
 
 	/**

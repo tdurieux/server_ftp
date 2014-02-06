@@ -65,21 +65,28 @@ public class RequestHandler {
 				}
 				// Check the signature of the methods
 				final Class<?>[] types = method.getParameterTypes();
-				if (types.length != parameters.length - 1) {
+				if (types.length >= parameters.length) {
 					continue;
 				}
-
-				// parameters of the function
 				final Object[] args = new Object[types.length];
 				for (int j = 0; j < types.length; j++) {
 					final String type = types[j].getName();
 					if (type.compareTo(parameters[j + 1].getClass().getName()) == 0) {
 						args[j] = parameters[j + 1];
+					} else if (type.compareTo("[Ljava.lang.String;") == 0) {
+						String[] stringArgs = new String[parameters.length - j
+								- 1];
+						for (int k = j + 1, l = 0; k < parameters.length; k++, l++) {
+							stringArgs[l] = parameters[k];
+						}
+						args[j] = stringArgs;
+						break;
 					} else {
 						throw new RequestHandlerException(
 								"Arguement not valid " + parameters[j + 1]);
 					}
 				}
+
 				// if the user must be connected before doing an command
 				if (annotation.connected() && !ftpClient.isConnected()) {
 					ftpClient.writeMessage("530 Not logged in.");
@@ -195,7 +202,12 @@ public class RequestHandler {
 	@FtpRequestAnnotation(name = "USER", connected = false)
 	private void requestUser(final String username) {
 		ftpClient.setUsername(username);
-		ftpClient.writeMessage("331 User accepted");
+		if (username.compareTo("anonymous") == 0) {
+			ftpClient.writeMessage("230 Anonyme");
+		} else {
+			ftpClient.writeMessage("331 User accepted");
+		}
+
 	}
 
 	/**
@@ -209,7 +221,7 @@ public class RequestHandler {
 	/**
 	 * Request the os type
 	 */
-	@FtpRequestAnnotation(name = "SYST", connected = true)
+	@FtpRequestAnnotation(name = "SYST", connected = true, annonymous = true)
 	private void requestSYST() {
 		// final String OS = System.getProperty("os.name").toLowerCase();
 		// this.ftpClient.writeMessage("215 " + OS);
@@ -224,7 +236,7 @@ public class RequestHandler {
 	 * @param value
 	 *            the value of the option
 	 */
-	@FtpRequestAnnotation(name = "OPTS", connected = true)
+	@FtpRequestAnnotation(name = "OPTS", connected = true, annonymous = true)
 	private void requestOptions(final String key, final String value) {
 		ftpClient.getOptions().put(key, value);
 		ftpClient.writeMessage("200 Accept option");
@@ -233,9 +245,18 @@ public class RequestHandler {
 	/**
 	 * Get the current directory
 	 */
-	@FtpRequestAnnotation(name = "PWD", connected = true)
+	@FtpRequestAnnotation(name = "PWD", connected = true, annonymous = true)
 	private void requestCurrentDirectory() {
 		ftpClient.writeMessage("257 " + '"' + ftpClient.getCurrentDir() + '"');
+	}
+
+	private String arrayToPath(String[] dirs) {
+		String path = "";
+		for (int i = 0; i < dirs.length; i++) {
+			String dir = dirs[i];
+			path += dir + (i != dirs.length - 1 ? " " : "");
+		}
+		return path;
 	}
 
 	/**
@@ -244,19 +265,25 @@ public class RequestHandler {
 	 * @param dir
 	 *            the new current direcotry
 	 */
-	@FtpRequestAnnotation(name = "CWD", connected = true)
-	private void requestSetCurrentDirecory(String dir) {
-		File f = new File(dir);
+	@FtpRequestAnnotation(name = "CWD", connected = true, annonymous = true)
+	private void requestSetCurrentDirecory(String... dirs) {
+		String path = arrayToPath(dirs);
+		File f = new File(path);
 		if (!f.exists() || !f.isDirectory()) {
-			f = new File(ftpClient.getCurrentDir() + "/" + dir);
+			f = new File(ftpClient.getCurrentDir() + "/" + path);
 			if (!f.exists() || !f.isDirectory()) {
 				ftpClient
 						.writeMessage("550 Can't change directory to test: No such file or directory");
+			} else {
+				ftpClient.setCurrentDir(f.getAbsolutePath());
+				ftpClient.writeMessage("250 OK. Current directory is "
+						+ f.getAbsolutePath());
 			}
+		} else {
+			ftpClient.setCurrentDir(f.getAbsolutePath());
+			ftpClient.writeMessage("250 OK. Current directory is "
+					+ f.getAbsolutePath());
 		}
-		ftpClient.setCurrentDir(f.getAbsolutePath());
-		ftpClient.writeMessage("250 OK. Current directory is "
-				+ f.getAbsolutePath());
 	}
 
 	/**
@@ -265,7 +292,7 @@ public class RequestHandler {
 	 * @param dir
 	 *            the new current direcotry
 	 */
-	@FtpRequestAnnotation(name = "CDUP", connected = true)
+	@FtpRequestAnnotation(name = "CDUP", connected = true, annonymous = true)
 	private void requestUpCurrentDirecory() {
 		File f = new File(ftpClient.getCurrentDir() + "/..");
 		if (!f.exists() || !f.isDirectory()) {
@@ -278,9 +305,28 @@ public class RequestHandler {
 	}
 
 	/**
+	 * Send the port of the data connection (active mode)
+	 */
+	@FtpRequestAnnotation(name = "PORT", connected = true, annonymous = true)
+	private void requestPort(String addressStirng) {
+		try {
+			String[] addressArray = addressStirng.split(",");
+			String address = addressArray[0] + "." + addressArray[1] + "."
+					+ addressArray[2] + "." + addressArray[3];
+			final int port = Integer.parseInt(addressArray[4]) * 256
+					+ Integer.parseInt(addressArray[5]);
+			ftpClient.createNewTransfert(address, port);
+			ftpClient.writeMessage("227 Entering Active Mode");
+		} catch (final SocketException e) {
+			LoggerUtilities.error(e);
+			ftpClient.writeMessage("425 Can't open data connection.");
+		}
+	}
+
+	/**
 	 * Send the port of the data connection (passive mode)
 	 */
-	@FtpRequestAnnotation(name = "PASV", connected = true)
+	@FtpRequestAnnotation(name = "PASV", connected = true, annonymous = true)
 	private void requestPassiveMode() {
 		try {
 			final int port = ftpClient.createNewTransfert();
@@ -297,7 +343,7 @@ public class RequestHandler {
 	/**
 	 * Get the port of the data connection (extended passive mode)
 	 */
-	@FtpRequestAnnotation(name = "EPSV", connected = true)
+	@FtpRequestAnnotation(name = "EPSV", connected = true, annonymous = true)
 	private void requestExtendedPassiveMode() {
 		try {
 			final int port = ftpClient.createNewTransfert();
@@ -315,18 +361,25 @@ public class RequestHandler {
 	 * @param dir
 	 *            the directory to list
 	 */
-	@FtpRequestAnnotation(name = "List", connected = true)
-	private void requestListFiles(String dir) {
-		if (dir.compareTo("-a") == 0) {
-			dir = "";
+	@FtpRequestAnnotation(name = "List", connected = true, annonymous = true)
+	private void requestListFiles(String... dirs) {
+		String path = arrayToPath(dirs);
+		if (path.compareTo("-a") == 0) {
+			path = "";
 		}
 		if (ftpClient.getTransfertServer() == null) {
 			ftpClient.writeMessage("443 No data connection");
 		} else {
 			ftpClient.writeMessage("150 Accepted data connection");
 			try {
-				ftpClient.getTransfertServer().writeContent(
-						this.createList(ftpClient.getCurrentDir() + "/" + dir));
+				if (path.length() > 0 && path.charAt(0) == '/') {
+					ftpClient.getTransfertServer().writeContent(
+							this.createList(path));
+				} else {
+					ftpClient.getTransfertServer().writeContent(
+							this.createList(ftpClient.getCurrentDir() + "/"
+									+ path));
+				}
 				ftpClient.writeMessage("226");
 			} catch (final RequestHandlerException e) {
 				LoggerUtilities.error(e);
@@ -338,7 +391,7 @@ public class RequestHandler {
 	/**
 	 * List all file of the current directory
 	 */
-	@FtpRequestAnnotation(name = "List", connected = true)
+	@FtpRequestAnnotation(name = "List", connected = true, annonymous = true)
 	private void requestListFiles() {
 		this.requestListFiles("");
 	}
@@ -346,14 +399,17 @@ public class RequestHandler {
 	/**
 	 * List all file name of the directory dir
 	 */
-	@FtpRequestAnnotation(name = "NLST", connected = true)
-	private void requestListFileName(final String dir) {
+	@FtpRequestAnnotation(name = "NLST", connected = true, annonymous = true)
+	private void requestListFileName(final String... dirs) {
+		String path = arrayToPath(dirs);
 		if (ftpClient.getTransfertServer() == null) {
 			ftpClient.writeMessage("443 No data connection");
 		} else {
 			try {
-				final File folder = new File(ftpClient.getCurrentDir() + "/"
-						+ dir);
+				final File folder = new File((path.length() > 0
+						&& path.charAt(0) == '/' ? ftpClient.getCurrentDir()
+						+ "/" : "")
+						+ path);
 				if (!folder.exists() || !folder.isDirectory()) {
 					ftpClient.writeMessage("504 Only accept folder");
 				} else {
@@ -370,7 +426,7 @@ public class RequestHandler {
 							+ " matches total");
 				}
 			} catch (final RequestHandlerException e) {
-					LoggerUtilities.error(e);
+				LoggerUtilities.error(e);
 				ftpClient.getTransfertServer().close();
 			}
 		}
@@ -379,14 +435,18 @@ public class RequestHandler {
 	/**
 	 * List all file name of the current directory
 	 */
-	@FtpRequestAnnotation(name = "NLST", connected = true)
+	@FtpRequestAnnotation(name = "NLST", connected = true, annonymous = true)
 	private void requestListFileName() {
 		this.requestListFileName("");
 	}
 
-	@FtpRequestAnnotation(name = "SIZE", connected = true)
-	private void requestGetFileSize(final String file) {
-		final File f = new File(file);
+	@FtpRequestAnnotation(name = "SIZE", connected = true, annonymous = true)
+	private void requestGetFileSize(final String... dirs) {
+		String path = arrayToPath(dirs);
+		final File f = new File(
+				(path.length() > 0 && path.charAt(0) == '/' ? ftpClient
+						.getCurrentDir() + "/" : "")
+						+ path);
 		ftpClient.writeMessage("226 " + f.length());
 	}
 
@@ -396,16 +456,19 @@ public class RequestHandler {
 	 * @param file
 	 *            the file to send
 	 */
-	@FtpRequestAnnotation(name = "RETR", connected = true)
-	private void requestDownloadFile(final String file) {
+	@FtpRequestAnnotation(name = "RETR", connected = true, annonymous = true)
+	private void requestDownloadFile(final String... dirs) {
+		String path = arrayToPath(dirs);
 		if (ftpClient.getTransfertServer() == null) {
 			ftpClient.writeMessage("443 No data connection");
 		} else {
 			ftpClient.writeMessage("150 Accepted data connection");
 			try {
 				try {
-					final byte[] encoded = Files.readAllBytes(Paths
-							.get(ftpClient.getCurrentDir() + "/" + file));
+					final byte[] encoded = Files.readAllBytes(Paths.get((path
+							.length() < 0 && path.charAt(0) == '/' ? ftpClient
+							.getCurrentDir() + "/" : "")
+							+ path));
 					ftpClient.getTransfertServer().writeContent(encoded);
 					ftpClient.writeMessage("226 File successfully transferred");
 				} catch (final IOException e) {
@@ -423,18 +486,23 @@ public class RequestHandler {
 	/**
 	 * Send the content of a file to the server
 	 * 
-	 * @param file The name of file to store
+	 * @param file
+	 *            The name of file to store
 	 */
-	@FtpRequestAnnotation(name = "STOR", connected = true)
-	private void requestUploadFile(final String file) {
+	@FtpRequestAnnotation(name = "STOR", connected = true, annonymous = false)
+	private void requestUploadFile(final String[] dirs) {
+		String path = arrayToPath(dirs);
 		if (ftpClient.getTransfertServer() == null) {
 			ftpClient.writeMessage("443 No data connection");
 		} else {
 			ftpClient.writeMessage("150 Accepted data connection");
 			try {
-				byte [] content = ftpClient.getTransfertServer().readContent();
+				byte[] content = ftpClient.getTransfertServer().readContent();
 
-				FileOutputStream out = new FileOutputStream(ftpClient.getCurrentDir() + "/" + file);
+				FileOutputStream out = new FileOutputStream((path.length() > 0
+						&& path.charAt(0) == '/' ? ftpClient.getCurrentDir()
+						+ "/" : "")
+						+ path);
 
 				out.write(content);
 				out.close();
@@ -452,20 +520,131 @@ public class RequestHandler {
 	 * 
 	 * @param file
 	 */
-	@FtpRequestAnnotation(name = "MDTM", connected = true)
-	private void requestGetLastModificationDate(final String file) {
+	@FtpRequestAnnotation(name = "MDTM", connected = true, annonymous = true)
+	private void requestGetLastModificationDate(final String... dirs) {
+		String path = arrayToPath(dirs);
 		try {
 			final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm",
 					Locale.ENGLISH);
-			Date lastModificationDate = new Date(Files.getLastModifiedTime(
-					Paths.get(ftpClient.getCurrentDir() + "/" + file))
-					.toMillis());
+			Date lastModificationDate = new Date(Files
+					.getLastModifiedTime(
+							Paths.get((path.length() > 0
+									&& path.charAt(0) == '/' ? ftpClient
+									.getCurrentDir() + "/" : "")
+									+ path)).toMillis());
 			ftpClient.writeMessage("226 " + sdf.format(lastModificationDate));
 		} catch (IOException e) {
 			ftpClient
 					.writeMessage("451 Unable to access to last modification date.");
 		}
 
+	}
+
+	/**
+	 * Create a folder
+	 * 
+	 * @param folderName
+	 */
+	@FtpRequestAnnotation(name = "MKD", connected = true, annonymous = false)
+	private void requestCreateFolder(final String... dirs) {
+		String path = arrayToPath(dirs);
+		String folderPath = "";
+		if (path.length() > 0 && path.charAt(0) == '/') {
+			folderPath = path;
+		} else {
+			folderPath = ftpClient.getCurrentDir() + "/" + path;
+		}
+		boolean success = (new File(folderPath)).mkdirs();
+		if (success) {
+			ftpClient.writeMessage("226 Folder created: " + path);
+		} else {
+			ftpClient.writeMessage("451 Folder not created: " + path);
+		}
+	}
+
+	/**
+	 * Remove a folder
+	 * 
+	 * @param folderName
+	 */
+	@FtpRequestAnnotation(name = "RMD", connected = true, annonymous = false)
+	private void requestRemoveFolder(final String... dirs) {
+		String path = arrayToPath(dirs);
+		String folderPath = "";
+		if (path.length() > 0 && path.charAt(0) == '/') {
+			folderPath = path;
+		} else {
+			folderPath = ftpClient.getCurrentDir() + "/" + path;
+		}
+		boolean success = (new File(folderPath)).delete();
+		if (success) {
+			ftpClient.writeMessage("226 Folder removed: " + path);
+		} else {
+			ftpClient.writeMessage("451 Folder not removed: " + path);
+		}
+	}
+
+	/**
+	 * Remove a file
+	 * 
+	 * @param folderName
+	 */
+	@FtpRequestAnnotation(name = "DELE", connected = true, annonymous = false)
+	private void requestRemoveFile(final String... dirs) {
+		String path = arrayToPath(dirs);
+		String folderPath = "";
+		if (path.length() > 0 && path.charAt(0) == '/') {
+			folderPath = path;
+		} else {
+			folderPath = ftpClient.getCurrentDir() + "/" + path;
+		}
+		boolean success = (new File(folderPath)).delete();
+		if (success) {
+			ftpClient.writeMessage("226 File removed: " + path);
+		} else {
+			ftpClient.writeMessage("451 File not removed: " + path);
+		}
+	}
+
+	/**
+	 * Rename a folder
+	 * 
+	 * @param folderName
+	 */
+	@FtpRequestAnnotation(name = "RNFR", connected = true, annonymous = false)
+	private void requestFileToRename(final String... dirs) {
+		String path = arrayToPath(dirs);
+		String folderPath = "";
+		if (path.length() > 0 && path.charAt(0) == '/') {
+			folderPath = path;
+		} else {
+			folderPath = ftpClient.getCurrentDir() + "/" + path;
+		}
+		ftpClient.fileToRename = folderPath;
+		ftpClient.writeMessage("350 File to rename: " + path);
+	}
+
+	/**
+	 * Rename a folder
+	 * 
+	 * @param folderName
+	 */
+	@FtpRequestAnnotation(name = "RNTO", connected = true)
+	private void requestRename(final String... dirs) {
+		String path = arrayToPath(dirs);
+		String folderPath = "";
+		if (path.length() > 0 && path.charAt(0) == '/') {
+			folderPath = path;
+		} else {
+			folderPath = ftpClient.getCurrentDir() + "/" + path;
+		}
+		boolean success = (new File(ftpClient.fileToRename))
+				.renameTo((new File(folderPath)));
+		if (success) {
+			ftpClient.writeMessage("250 Folder renamed: " + path);
+		} else {
+			ftpClient.writeMessage("451 Folder not renamed: " + path);
+		}
 	}
 
 	/**
