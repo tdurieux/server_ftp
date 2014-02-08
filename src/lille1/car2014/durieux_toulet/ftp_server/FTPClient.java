@@ -1,5 +1,8 @@
 package lille1.car2014.durieux_toulet.ftp_server;
 
+import java.util.Map;
+
+import lille1.car2014.durieux_toulet.exception.FTPClientException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 
 /**
@@ -11,11 +14,13 @@ import lille1.car2014.durieux_toulet.exception.SocketException;
 public interface FTPClient {
 	/**
 	 * Write message
-	 *
-	 * @param message Message to write
-	 * @throws SocketException When unable to create socket
+	 * 
+	 * @param message
+	 *            Message to write
+	 * @throws SocketException
+	 *             When unable to create socket
 	 */
-	void writeMessage(String message) throws SocketException;
+	void writeMessage(String message);
 
 	/**
 	 * Read message
@@ -26,4 +31,28 @@ public interface FTPClient {
 	 * Close connection with server
 	 */
 	void close();
+
+	void setUsername(String username);
+
+	boolean connect(String password) throws FTPClientException;
+
+	boolean isConnected();
+
+	void setTypeCharactor(String type);
+
+	Map<String, String> getOptions();
+
+	String getCurrentDir();
+
+	void setCurrentDir(String currentDir);
+
+	int createNewTransfert(String ip, int port) throws SocketException;
+
+	int createNewTransfert() throws SocketException;
+
+	TransfertServer getTransfertServer();
+
+	void setFileToRename(String path);
+
+	String getFileToRename();
 }

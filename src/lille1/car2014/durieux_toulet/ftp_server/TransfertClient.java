@@ -3,9 +3,11 @@ package lille1.car2014.durieux_toulet.ftp_server;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**
@@ -32,8 +34,9 @@ public class TransfertClient {
 	 * Write message
 	 * 
 	 * @param byte Bytes of message to write
+	 * @throws SocketException 
 	 */
-	public void writeMessage(final byte[] bytes) {
+	public void writeMessage(final byte[] bytes) throws SocketException {
 		try {
 			final BufferedOutputStream bo = new BufferedOutputStream(
 					tranfsertSocket.getOutputStream());
@@ -47,8 +50,27 @@ public class TransfertClient {
 			// Close the connection
 			this.close();
 		} catch (final IOException e) {
-			// Log errors
-			LoggerUtilities.error(e);
+			throw new SocketException("Unable to send data to client", e);
+		}
+	}
+
+	public void writeMessage(FileInputStream stream) throws SocketException {
+		try {
+			final BufferedOutputStream bo = new BufferedOutputStream(
+					tranfsertSocket.getOutputStream());
+
+			byte[] buffer = new byte[16];
+			int l;
+			while ((l = stream.read(buffer)) > 0) {
+				bo.write(buffer);
+			}
+			// Flush data
+			bo.flush();
+
+			// Close the connection
+			this.close();
+		} catch (final IOException e) {
+			throw new SocketException("Unable to send data to client", e);
 		}
 	}
 
@@ -92,5 +114,4 @@ public class TransfertClient {
 			LoggerUtilities.error(e);
 		}
 	}
-
 }

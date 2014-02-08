@@ -1,5 +1,6 @@
 package lille1.car2014.durieux_toulet.ftp_server;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -92,9 +93,10 @@ public class TransfertServer {
 	 * @param content
 	 *            Content to write
 	 * @throws RequestHandlerException
+	 * @throws SocketException
 	 */
 	public void writeContent(final String content)
-			throws RequestHandlerException {
+			throws RequestHandlerException, SocketException {
 		// Start server if it's stopped
 		if (transfertClient == null) {
 			this.startServer();
@@ -117,9 +119,10 @@ public class TransfertServer {
 	 * @param content
 	 *            Content to write
 	 * @throws RequestHandlerException
+	 * @throws SocketException
 	 */
 	public void writeContent(final byte[] content)
-			throws RequestHandlerException {
+			throws RequestHandlerException, SocketException {
 		// Start server if it's stopped
 		if (transfertClient == null) {
 			this.startServer();
@@ -140,7 +143,7 @@ public class TransfertServer {
 			this.startServer();
 		}
 
-		// Return content read
+		// Return content write
 		return new String(TransfertServer.this.transfertClient.readMessage());
 	}
 
@@ -171,5 +174,15 @@ public class TransfertServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void writeContent(FileInputStream stream) throws SocketException {
+		// Start server if it's stopped
+		if (transfertClient == null) {
+			this.startServer();
+		}
+
+		// Return content write
+		TransfertServer.this.transfertClient.writeMessage(stream);
 	}
 }

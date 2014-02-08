@@ -26,7 +26,7 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  */
 public class FTPClientImpl implements FTPClient, Runnable {
 	private final Socket clientSocket;
-	private RequestHandler requestHandler;
+	private FTPRequestHandler requestHandler;
 	private BufferedReader in;
 	private TransfertServer transfertServer;
 	private boolean isConnected = false;
@@ -38,8 +38,9 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Constructor
-	 *
-	 * @param clientSocket The FTP client socket
+	 * 
+	 * @param clientSocket
+	 *            The FTP client socket
 	 */
 	public FTPClientImpl(final Socket clientSocket) {
 		// Copy client socket
@@ -74,7 +75,7 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Parse client message and call the function associate to command
-	 *
+	 * 
 	 * @see lille1.car2014.durieux_toulet.ftp_server.FTPClient
 	 * @Override
 	 */
@@ -110,7 +111,7 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Tell if client is connected
-	 *
+	 * 
 	 * @return true if a client is connected, false else
 	 */
 	public boolean isConnected() {
@@ -140,8 +141,9 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Set type charactor
-	 *
-	 * @param typeCharactor Type char
+	 * 
+	 * @param typeCharactor
+	 *            Type char
 	 */
 	public void setTypeCharactor(final String typeCharactor) {
 		this.typeCharactor = typeCharactor;
@@ -150,8 +152,9 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Set uname
-	 *
-	 * @param username User name
+	 * 
+	 * @param username
+	 *            User name
 	 */
 	public void setUsername(final String username) {
 		this.username = username;
@@ -159,15 +162,17 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Try to connect user
-	 *
-	 * @param password User password
-	 * @throws FTPClientException when unable to load user database
+	 * 
+	 * @param password
+	 *            User password
+	 * @throws FTPClientException
+	 *             when unable to load user database
 	 * @return true if is valid user, false else
 	 */
 	public boolean connect(final String password) throws FTPClientException {
 		try {
 			// If correct password
-			if (UserDatabase.getInstance ().signin (this.username, password)) {
+			if (UserDatabase.getInstance().signin(this.username, password)) {
 				// Connect user
 				this.isConnected = true;
 				return true;
@@ -177,15 +182,14 @@ public class FTPClientImpl implements FTPClient, Runnable {
 				this.isConnected = false;
 				return false;
 			}
-		}
-		catch (UserDatabaseException e) {
-			throw new FTPClientException ("Unable to load user database", e);
+		} catch (UserDatabaseException e) {
+			throw new FTPClientException("Unable to load user database", e);
 		}
 	}
 
 	/**
 	 * Get options
-	 *
+	 * 
 	 * @return Options map
 	 */
 	public Map<String, String> getOptions() {
@@ -194,10 +198,12 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Create transfert server
-	 * @param port 
-	 * @param address 
-	 *
-	 * @throws SocketException when unable to create connection
+	 * 
+	 * @param port
+	 * @param address
+	 * 
+	 * @throws SocketException
+	 *             when unable to create connection
 	 * @return Transfert server port
 	 */
 	public int createNewTransfert() throws SocketException {
@@ -208,18 +214,20 @@ public class FTPClientImpl implements FTPClient, Runnable {
 		// Return server port
 		return transfertHandler.getPublicPort();
 	}
-	
+
 	/**
 	 * Create transfert server
-	 *
-	 * @throws SocketException when unable to create connection
+	 * 
+	 * @throws SocketException
+	 *             when unable to create connection
 	 * @return Transfert server port
 	 */
-	public int createNewTransfert(String address,int port) throws SocketException {
+	public int createNewTransfert(String address, int port)
+			throws SocketException {
 		// Create transfert server
 		TransfertServer transfertHandler;
 		try {
-			transfertHandler = new TransfertServer(address,port);
+			transfertHandler = new TransfertServer(address, port);
 			this.transfertServer = transfertHandler;
 
 			// Return server port
@@ -233,7 +241,7 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Get transfert server
-	 *
+	 * 
 	 * @return Transfert server
 	 */
 	public TransfertServer getTransfertServer() {
@@ -242,7 +250,7 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Get current dirrectory
-	 *
+	 * 
 	 * @return Current dirrectory
 	 */
 	public String getCurrentDir() {
@@ -251,8 +259,9 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Set current dirrectory
-	 *
-	 * @param currentDir Current dirrectory
+	 * 
+	 * @param currentDir
+	 *            Current dirrectory
 	 */
 	public void setCurrentDir(final String currentDir) {
 		this.currentDir = currentDir;
@@ -260,26 +269,37 @@ public class FTPClientImpl implements FTPClient, Runnable {
 
 	/**
 	 * Run client
-	 *
+	 * 
 	 * @Override
 	 */
 	public void run() {
 		// Log client creation
-		LoggerUtilities.log("New client "+clientSocket.getRemoteSocketAddress());
+		LoggerUtilities.log("New client "
+				+ clientSocket.getRemoteSocketAddress());
 
 		// Create request handler
-		this.requestHandler = new RequestHandler(this);
+		this.requestHandler = new FTPRequestHandlerImpl(this);
 
 		// Create relative path
 		final Path currentRelativePath = Paths.get("/");
 
 		// Set current dirrectory
-		this.setCurrentDir (currentRelativePath.toAbsolutePath().toString());
+		this.setCurrentDir(currentRelativePath.toAbsolutePath().toString());
 
 		// Write welcome message
 		this.writeMessage("200");
 
 		// Wait requests
 		this.readMessage();
+	}
+
+	@Override
+	public void setFileToRename(String path) {
+		this.fileToRename = path;
+	}
+
+	@Override
+	public String getFileToRename() {
+		return fileToRename;
 	}
 }
