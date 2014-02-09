@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FtpRequestAnnotation {
+public @interface FTPRequestAnnotation {
 	/**
 	 * The FTP command name
 	 * @return the command name

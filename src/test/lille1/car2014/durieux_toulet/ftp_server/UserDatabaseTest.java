@@ -1,7 +1,7 @@
 package test.lille1.car2014.durieux_toulet.ftp_server;
 
 import static org.junit.Assert.*;
-import lille1.car2014.durieux_toulet.ftp_server.UserDatabase;
+import lille1.car2014.durieux_toulet.common.UserDatabase;
 
 import org.junit.Test;
 

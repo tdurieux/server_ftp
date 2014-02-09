@@ -72,60 +72,61 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		final Method[] allMethods = this.getClass().getDeclaredMethods();
 		for (int i = 0; i < allMethods.length; i++) {
 			final Method method = allMethods[i];
-			final FtpRequestAnnotation annotation = method
-					.getAnnotation(FtpRequestAnnotation.class);
+			final FTPRequestAnnotation annotation = method
+					.getAnnotation(FTPRequestAnnotation.class);
 			// verify that the annotation have on annotation
-			if (annotation != null) {
-				if (annotation.name().toLowerCase()
-						.compareTo(command.toLowerCase()) != 0) {
-					continue;
-				}
-				// Check the signature of the methods
-				final Class<?>[] types = method.getParameterTypes();
-				if (types.length > args.length) {
-					continue;
-				}
-				final Object[] objectArray = new Object[types.length];
-				for (int j = 0; j < types.length; j++) {
-					final String type = types[j].getName();
-					if (type.compareTo(args[j].getClass().getName()) == 0) {
-						objectArray[j] = args[j];
-					} else if (type.compareTo("[Ljava.lang.String;") == 0) {
-						String[] stringArgs = new String[args.length - j];
-						for (int k = j, l = 0; k < args.length; k++, l++) {
-							stringArgs[l] = args[k];
-						}
-						objectArray[j] = stringArgs;
-						break;
-					} else {
-						throw new RequestHandlerException(
-								"Arguement not valid " + args[j]);
+			if (annotation == null) {
+				continue;
+			}
+			if (annotation.name().toLowerCase()
+					.compareTo(command.toLowerCase()) != 0) {
+				continue;
+			}
+			// Check the signature of the methods
+			final Class<?>[] types = method.getParameterTypes();
+			if (types.length > args.length) {
+				continue;
+			}
+			final Object[] objectArray = new Object[types.length];
+			for (int j = 0; j < types.length; j++) {
+				final String type = types[j].getName();
+				if (type.compareTo(args[j].getClass().getName()) == 0) {
+					objectArray[j] = args[j];
+				} else if (type.compareTo("[Ljava.lang.String;") == 0) {
+					String[] stringArgs = new String[args.length - j];
+					for (int k = j, l = 0; k < args.length; k++, l++) {
+						stringArgs[l] = args[k];
 					}
+					objectArray[j] = stringArgs;
+					break;
+				} else {
+					throw new RequestHandlerException("Arguement not valid "
+							+ args[j]);
 				}
+			}
 
-				// if the user must be connected before doing an command
-				if ((annotation.connected() && !ftpClient.isConnected())) {
-					if (!FTPConfiguration.INSTANCE
-							.getBooleanProperty("allowAnonymous")
-							|| !annotation.anonymous()
-							|| !ftpClient.getUsername().equals("anonymous")) {
-						clientSocket.writeMessage("530 Not logged in.");
-						return;
-					}
-				}
-				// invoke the methos
-				try {
-					method.invoke(this, objectArray);
+			// if the user must be connected before doing an command
+			if ((annotation.connected() && !ftpClient.isConnected())) {
+				if (!FTPConfiguration.INSTANCE
+						.getBooleanProperty("allowAnonymous")
+						|| !annotation.anonymous()
+						|| !ftpClient.getUsername().equals("anonymous")) {
+					clientSocket.writeMessage("530 Not logged in.");
 					return;
-				} catch (final IllegalAccessException e) {
-					throw new RequestHandlerException("Command not found "
-							+ command, e);
-				} catch (final IllegalArgumentException e) {
-					throw new RequestHandlerException("Arguement not valid ", e);
-				} catch (final InvocationTargetException e) {
-					throw new RequestHandlerException("Error execution "
-							+ command + " error: " + e.getMessage(), e);
 				}
+			}
+			// invoke the methos
+			try {
+				method.invoke(this, objectArray);
+				return;
+			} catch (final IllegalAccessException e) {
+				throw new RequestHandlerException("Command not found "
+						+ command, e);
+			} catch (final IllegalArgumentException e) {
+				throw new RequestHandlerException("Arguement not valid ", e);
+			} catch (final InvocationTargetException e) {
+				throw new RequestHandlerException("Error execution " + command
+						+ " error: " + e.getMessage(), e);
 			}
 		}
 		throw new RequestHandlerException("Command not found " + command);
@@ -156,7 +157,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		return true;
 	}
 
-	@FtpRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
 	private void requestType(final String typeCharacter,
 			final String secondTypeCharacter) {
 		if (!this.setPrimaryTypeCaracter(typeCharacter)) {
@@ -187,7 +188,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * 
 	 * @param typeCharacter
 	 */
-	@FtpRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
 	private void requestType(final String typeCharacter) {
 		if (this.setPrimaryTypeCaracter(typeCharacter))
 			clientSocket.writeMessage("200 Type accepted");
@@ -202,7 +203,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 *            the password of the user
 	 * @throws RequestHandlerException
 	 */
-	@FtpRequestAnnotation(name = "PASS", connected = false)
+	@FTPRequestAnnotation(name = "PASS", connected = false)
 	private void requestConnect(final String password)
 			throws RequestHandlerException {
 		// connect the user
@@ -219,7 +220,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * @param username
 	 *            the username of the client
 	 */
-	@FtpRequestAnnotation(name = "USER", connected = false)
+	@FTPRequestAnnotation(name = "USER", connected = false)
 	private void requestUser(final String username) {
 		ftpClient.setUsername(username);
 		if (FTPConfiguration.INSTANCE.getBooleanProperty("allowAnonymous")
@@ -234,7 +235,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	/**
 	 * Close the connection
 	 */
-	@FtpRequestAnnotation(name = "QUIT", connected = false)
+	@FTPRequestAnnotation(name = "QUIT", connected = false)
 	private void closeConnection() {
 		try {
 			clientSocket.close();
@@ -249,7 +250,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	/**
 	 * Request the os type
 	 */
-	@FtpRequestAnnotation(name = "SYST", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "SYST", connected = true, anonymous = true)
 	private void requestSYST() {
 		// final String OS = System.getProperty("os.name").toLowerCase();
 		// this.ftpClient.writeMessage("215 " + OS);
@@ -264,7 +265,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * @param value
 	 *            the value of the option
 	 */
-	@FtpRequestAnnotation(name = "OPTS", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "OPTS", connected = true, anonymous = true)
 	private void requestOptions(final String key, final String value) {
 		ftpClient.getOptions().put(key, value);
 		clientSocket.writeMessage("200 Accept option");
@@ -273,7 +274,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	/**
 	 * Get the current directory
 	 */
-	@FtpRequestAnnotation(name = "PWD", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "PWD", connected = true, anonymous = true)
 	private void requestCurrentDirectory() {
 		clientSocket.writeMessage("257 " + '"' + ftpClient.getCurrentDir()
 				+ '"');
@@ -297,7 +298,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * @param dir
 	 *            the new current direcotry
 	 */
-	@FtpRequestAnnotation(name = "CWD", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "CWD", connected = true, anonymous = true)
 	private void requestSetCurrentDirecory(String... dirs) {
 		String path = arrayToPath(dirs);
 		File f = new File(path);
@@ -317,7 +318,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * @param dir
 	 *            the new current direcotry
 	 */
-	@FtpRequestAnnotation(name = "CDUP", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "CDUP", connected = true, anonymous = true)
 	private void requestUpCurrentDirecory() {
 		File f = new File(ftpClient.getCurrentDir() + "/..");
 		if (!f.exists() || !f.isDirectory()) {
@@ -332,7 +333,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	/**
 	 * Send the port of the data connection (active mode)
 	 */
-	@FtpRequestAnnotation(name = "PORT", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "PORT", connected = true, anonymous = true)
 	private void requestPort(String addressStirng) {
 		try {
 			String[] addressArray = addressStirng.split(",");
@@ -355,7 +356,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	/**
 	 * Send the port of the data connection (passive mode)
 	 */
-	@FtpRequestAnnotation(name = "PASV", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "PASV", connected = true, anonymous = true)
 	private void requestPassiveMode() {
 		try {
 			final int port = ftpClient.createNewTransfert();
@@ -372,15 +373,20 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	/**
 	 * Send the port of the data connection (passive mode)
 	 */
-	@FtpRequestAnnotation(name = "ABOR", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "ABOR", connected = true, anonymous = true)
 	private void requestABOR() {
-		ftpClient.getTransfertServer().close();
+		try {
+			ftpClient.getTransfertServer().close();
+			clientSocket.writeMessage("226 ABORTED.");
+		} catch (SocketException e) {
+			clientSocket.writeMessage("451 Cannot ABOR.");
+		}
 	}
 
 	/**
 	 * Get the port of the data connection (extended passive mode)
 	 */
-	@FtpRequestAnnotation(name = "EPSV", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "EPSV", connected = true, anonymous = true)
 	private void requestExtendedPassiveMode() {
 		try {
 			final int port = ftpClient.createNewTransfert();
@@ -398,7 +404,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * @param dir
 	 *            the directory to list
 	 */
-	@FtpRequestAnnotation(name = "List", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "List", connected = true, anonymous = true)
 	private void requestListFiles(String... dirs) {
 		String path = arrayToPath(dirs);
 		if (path.compareTo("-a") == 0) {
@@ -414,12 +420,16 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				clientSocket.writeMessage("226 List transefered");
 			} catch (final RequestHandlerException e) {
 				LoggerUtilities.error(e);
-				ftpClient.getTransfertServer().close();
 				clientSocket.writeMessage("426 Unable to send file list");
 			} catch (SocketException e) {
 				LoggerUtilities.error(e);
-				ftpClient.getTransfertServer().close();
 				clientSocket.writeMessage("426 Unable to send file list");
+			}
+			try {
+				ftpClient.getTransfertServer().close();
+			} catch (SocketException e1) {
+				LoggerUtilities.error(e1);
+				clientSocket.writeMessage("451 Unable to close the transfert Server");
 			}
 		}
 	}
@@ -427,7 +437,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	/**
 	 * List all file of the current directory
 	 */
-	@FtpRequestAnnotation(name = "List", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "List", connected = true, anonymous = true)
 	private void requestListFiles() {
 		this.requestListFiles("");
 	}
@@ -435,7 +445,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	/**
 	 * List all file name of the directory dir
 	 */
-	@FtpRequestAnnotation(name = "NLST", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "NLST", connected = true, anonymous = true)
 	private void requestListFileName(final String... dirs) {
 		String path = arrayToPath(dirs);
 		if (ftpClient.getTransfertServer() == null) {
@@ -460,12 +470,16 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				}
 			} catch (final RequestHandlerException e) {
 				LoggerUtilities.error(e);
-				ftpClient.getTransfertServer().close();
 				clientSocket.writeMessage("426 Unable to send file list");
 			} catch (SocketException e) {
 				LoggerUtilities.error(e);
-				ftpClient.getTransfertServer().close();
 				clientSocket.writeMessage("426 Unable to send file list");
+			}
+			try {
+				ftpClient.getTransfertServer().close();
+			} catch (SocketException e1) {
+				LoggerUtilities.error(e1);
+				clientSocket.writeMessage("451 Unable to close the transfert Server");
 			}
 		}
 	}
@@ -473,12 +487,12 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	/**
 	 * List all file name of the current directory
 	 */
-	@FtpRequestAnnotation(name = "NLST", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "NLST", connected = true, anonymous = true)
 	private void requestListFileName() {
 		this.requestListFileName("");
 	}
 
-	@FtpRequestAnnotation(name = "SIZE", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "SIZE", connected = true, anonymous = true)
 	private void requestGetFileSize(final String... dirs) {
 		String path = arrayToPath(dirs);
 		final File f = new File(path);
@@ -491,7 +505,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * @param file
 	 *            the file to send
 	 */
-	@FtpRequestAnnotation(name = "RETR", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "RETR", connected = true, anonymous = true)
 	private void requestDownloadFile(final String... dirs) {
 		String path = arrayToPath(dirs);
 		if (ftpClient.getTransfertServer() == null) {
@@ -504,12 +518,16 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				clientSocket.writeMessage("226 File successfully transferred");
 			} catch (final IOException e) {
 				LoggerUtilities.error(e);
-				ftpClient.getTransfertServer().close();
 				clientSocket.writeMessage("426 Unable to send file");
 			} catch (SocketException e) {
 				LoggerUtilities.error(e);
-				ftpClient.getTransfertServer().close();
 				clientSocket.writeMessage("426 Unable to send file");
+			}
+			try {
+				ftpClient.getTransfertServer().close();
+			} catch (SocketException e1) {
+				LoggerUtilities.error(e1);
+				clientSocket.writeMessage("451 Unable to close the transfert Server");
 			}
 
 		}
@@ -521,7 +539,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * @param file
 	 *            The name of file to store
 	 */
-	@FtpRequestAnnotation(name = "STOR", connected = true, anonymous = false)
+	@FTPRequestAnnotation(name = "STOR", connected = true, anonymous = false)
 	private void requestUploadFile(final String[] dirs) {
 		String path = arrayToPath(dirs);
 		if (ftpClient.getTransfertServer() == null) {
@@ -539,7 +557,14 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				clientSocket.writeMessage("226 File successfully transferred");
 			} catch (final IOException e) {
 				LoggerUtilities.error(e);
+			} catch (SocketException e) {
+				clientSocket.writeMessage("426 Unable to transfer file");
+			}
+			try {
 				ftpClient.getTransfertServer().close();
+			} catch (SocketException e1) {
+				LoggerUtilities.error(e1);
+				clientSocket.writeMessage("451 Unable to close the transfert Server");
 			}
 		}
 	}
@@ -549,7 +574,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * 
 	 * @param file
 	 */
-	@FtpRequestAnnotation(name = "MDTM", connected = true, anonymous = true)
+	@FTPRequestAnnotation(name = "MDTM", connected = true, anonymous = true)
 	private void requestGetLastModificationDate(final String... dirs) {
 		String path = arrayToPath(dirs);
 		try {
@@ -571,7 +596,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * 
 	 * @param folderName
 	 */
-	@FtpRequestAnnotation(name = "MKD", connected = true, anonymous = false)
+	@FTPRequestAnnotation(name = "MKD", connected = true, anonymous = false)
 	private void requestCreateFolder(final String... dirs) {
 		String path = arrayToPath(dirs);
 		boolean success = (new File(path)).mkdirs();
@@ -587,7 +612,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * 
 	 * @param folderName
 	 */
-	@FtpRequestAnnotation(name = "RMD", connected = true, anonymous = false)
+	@FTPRequestAnnotation(name = "RMD", connected = true, anonymous = false)
 	private void requestRemoveFolder(final String... dirs) {
 		String path = arrayToPath(dirs);
 		boolean success = (new File(path)).delete();
@@ -603,7 +628,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * 
 	 * @param folderName
 	 */
-	@FtpRequestAnnotation(name = "DELE", connected = true, anonymous = false)
+	@FTPRequestAnnotation(name = "DELE", connected = true, anonymous = false)
 	private void requestRemoveFile(final String... dirs) {
 		String path = arrayToPath(dirs);
 		boolean success = (new File(path)).delete();
@@ -620,7 +645,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * @param folderName
 	 *            the old file name
 	 */
-	@FtpRequestAnnotation(name = "RNFR", connected = true, anonymous = false)
+	@FTPRequestAnnotation(name = "RNFR", connected = true, anonymous = false)
 	private void requestFileToRename(final String... dirs) {
 		String path = arrayToPath(dirs);
 		ftpClient.setFileToRename(path);
@@ -633,7 +658,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * @param folderName
 	 *            the new folder name
 	 */
-	@FtpRequestAnnotation(name = "RNTO", connected = true)
+	@FTPRequestAnnotation(name = "RNTO", connected = true)
 	private void requestRename(final String... dirs) {
 		String path = arrayToPath(dirs);
 		boolean success = (new File(ftpClient.getFileToRename()))

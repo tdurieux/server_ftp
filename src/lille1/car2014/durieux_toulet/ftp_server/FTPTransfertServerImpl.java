@@ -15,9 +15,9 @@ import lille1.car2014.durieux_toulet.exception.SocketException;
  * @author Durieux Thomas
  * @author Toulet Cyrille
  */
-public class TransfertServerImpl implements TransfertServer {
+public class FTPTransfertServerImpl implements FTPTransfertServer {
 	private ServerSocket transfertServerSocket;
-	private TransfertClient transfertClient;
+	private FTPTransfertClient transfertClient;
 
 	/**
 	 * Constructor
@@ -25,13 +25,13 @@ public class TransfertServerImpl implements TransfertServer {
 	 * @throws ServerSocketException
 	 *             If unable to create the transfert server socket
 	 */
-	public TransfertServerImpl(String address, int port)
+	public FTPTransfertServerImpl(String address, int port)
 			throws ServerSocketException {
 		Socket tranfsertSocket;
 		try {
 			tranfsertSocket = new Socket(address, port);
 			// Create transfert client
-			TransfertServerImpl.this.transfertClient = new TransfertClient(
+			FTPTransfertServerImpl.this.transfertClient = new FTPTransfertClient(
 					tranfsertSocket);
 		} catch (IOException e) {
 			throw new ServerSocketException(
@@ -46,7 +46,7 @@ public class TransfertServerImpl implements TransfertServer {
 	 * @throws SocketException
 	 *             If unable to create the transfert server socket
 	 */
-	public TransfertServerImpl() throws SocketException {
+	public FTPTransfertServerImpl() throws SocketException {
 		try {
 			// Create socket
 			transfertServerSocket = new ServerSocket(0);
@@ -57,17 +57,17 @@ public class TransfertServerImpl implements TransfertServer {
 
 	/**
 	 * Start the transfert server
+	 * @throws SocketException 
 	 */
-	private void startServer() {
+	private void startServer() throws SocketException {
 		try {
 			final Socket tranfsertSocket = transfertServerSocket.accept();
 
 			// Create transfert client
-			TransfertServerImpl.this.transfertClient = new TransfertClient(
+			FTPTransfertServerImpl.this.transfertClient = new FTPTransfertClient(
 					tranfsertSocket);
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SocketException("Unable to create FTPTansfertServer",e);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class TransfertServerImpl implements TransfertServer {
 	 * @return The transfer client
 	 */
 	@Override
-	public TransfertClient getTransfertClient() {
+	public FTPTransfertClient getTransfertClient() {
 		return transfertClient;
 	}
 
@@ -109,11 +109,11 @@ public class TransfertServerImpl implements TransfertServer {
 
 		try {
 			// Write message with ASCII encodding
-			TransfertServerImpl.this.transfertClient.writeMessage(content
+			FTPTransfertServerImpl.this.transfertClient.writeMessage(content
 					.getBytes("US-ASCII"));
 		} catch (final UnsupportedEncodingException e) {
 			// Write message without encodding
-			TransfertServerImpl.this.transfertClient.writeMessage(content
+			FTPTransfertServerImpl.this.transfertClient.writeMessage(content
 					.getBytes());
 		}
 	}
@@ -135,16 +135,17 @@ public class TransfertServerImpl implements TransfertServer {
 		}
 
 		// Write bytes
-		TransfertServerImpl.this.transfertClient.writeMessage(content);
+		FTPTransfertServerImpl.this.transfertClient.writeMessage(content);
 	}
 
 	/**
 	 * Read content
 	 * 
 	 * @return Content
+	 * @throws SocketException 
 	 */
 	@Override
-	public String readStringContent() {
+	public String readStringContent() throws SocketException {
 		// Start server if it's stopped
 		if (transfertClient == null) {
 			this.startServer();
@@ -152,37 +153,38 @@ public class TransfertServerImpl implements TransfertServer {
 
 		// Return content write
 		return new String(
-				TransfertServerImpl.this.transfertClient.readMessage());
+				FTPTransfertServerImpl.this.transfertClient.readMessage());
 	}
 
 	/**
 	 * Read content
 	 * 
 	 * @return Content
+	 * @throws SocketException 
 	 */
 	@Override
-	public byte[] readContent() {
+	public byte[] readContent() throws SocketException {
 		// Start server if it's stopped
 		if (transfertClient == null) {
 			this.startServer();
 		}
 
 		// Return content read
-		return TransfertServerImpl.this.transfertClient.readMessage();
+		return FTPTransfertServerImpl.this.transfertClient.readMessage();
 	}
 
 	/**
 	 * Close transfert server
+	 * @throws SocketException 
 	 */
 	@Override
-	public void close() {
+	public void close() throws SocketException {
 		try {
 			if (transfertServerSocket != null)
 				// Close socket
 				transfertServerSocket.close();
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SocketException("Unable to close TransfertServer", e);
 		}
 	}
 
@@ -194,6 +196,6 @@ public class TransfertServerImpl implements TransfertServer {
 		}
 
 		// Return content write
-		TransfertServerImpl.this.transfertClient.writeMessage(stream);
+		FTPTransfertServerImpl.this.transfertClient.writeMessage(stream);
 	}
 }

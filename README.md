@@ -52,8 +52,8 @@ RNTO        | path        | Le nouveau nom du fichier à renomer
 ### Utilisation des annotations pour relier les commandes FTP aux méthodes de la classe FTPRequestHandler
 
 ## Start server
-
+```
 /usr/lib/jvm/j2sdk1.7-oracle/bin/java -jar ftp_server.jar
-
+```
 
 

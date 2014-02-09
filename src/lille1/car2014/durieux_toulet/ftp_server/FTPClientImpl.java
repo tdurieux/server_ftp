@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import lille1.car2014.durieux_toulet.common.UserDatabase;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.exception.FTPClientException;
@@ -16,7 +17,7 @@ import lille1.car2014.durieux_toulet.exception.FTPClientException;
  * @author Toulet Cyrille
  */
 public class FTPClientImpl implements FTPClient {
-	private TransfertServerImpl transfertServer;
+	private FTPTransfertServerImpl transfertServer;
 	private boolean isConnected = false;
 	private String typeCharactor;
 	private String username;
@@ -118,7 +119,7 @@ public class FTPClientImpl implements FTPClient {
 	@Override
 	public int createNewTransfert() throws SocketException {
 		// Create transfert server
-		final TransfertServerImpl transfertHandler = new TransfertServerImpl();
+		final FTPTransfertServerImpl transfertHandler = new FTPTransfertServerImpl();
 		this.transfertServer = transfertHandler;
 
 		// Return server port
@@ -136,9 +137,9 @@ public class FTPClientImpl implements FTPClient {
 	public int createNewTransfert(String address, int port)
 			throws SocketException {
 		// Create transfert server
-		TransfertServerImpl transfertHandler;
+		FTPTransfertServerImpl transfertHandler;
 		try {
-			transfertHandler = new TransfertServerImpl(address, port);
+			transfertHandler = new FTPTransfertServerImpl(address, port);
 			this.transfertServer = transfertHandler;
 
 			// Return server port
@@ -154,7 +155,7 @@ public class FTPClientImpl implements FTPClient {
 	 * @return Transfert server
 	 */
 	@Override
-	public TransfertServerImpl getTransfertServer() {
+	public FTPTransfertServerImpl getTransfertServer() {
 		return this.transfertServer;
 	}
 
@@ -188,6 +189,7 @@ public class FTPClientImpl implements FTPClient {
 	public String getFileToRename() {
 		return fileToRename;
 	}
+	@Override
 	public String getUsername() {
 		return username;
 	}

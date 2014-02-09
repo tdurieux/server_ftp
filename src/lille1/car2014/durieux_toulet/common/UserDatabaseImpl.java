@@ -1,4 +1,4 @@
-package lille1.car2014.durieux_toulet.ftp_server;
+package lille1.car2014.durieux_toulet.common;
 
 import lille1.car2014.durieux_toulet.config.FTPUserDatabase;
 import lille1.car2014.durieux_toulet.exception.UserDatabaseException;

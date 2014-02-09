@@ -52,11 +52,9 @@ public class LoggerUtilities {
 			fhDebug.setFormatter(new SimpleFormatter());
 
 		} catch (final SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -68,8 +66,7 @@ public class LoggerUtilities {
 	}
 
 	public static void log(final String message) {
-		StackTraceElement[] stackTrace = Thread.currentThread()
-				.getStackTrace();
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		getInstance().logLogger.logp(Level.INFO, Thread.currentThread()
 				.getStackTrace()[2].getClassName(), Thread.currentThread()
 				.getStackTrace()[2].getMethodName(), message);

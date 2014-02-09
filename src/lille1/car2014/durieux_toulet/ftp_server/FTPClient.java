@@ -30,7 +30,7 @@ public interface FTPClient {
 
 	int createNewTransfert() throws SocketException;
 
-	TransfertServerImpl getTransfertServer();
+	FTPTransfertServerImpl getTransfertServer();
 
 	void setFileToRename(String path);
 

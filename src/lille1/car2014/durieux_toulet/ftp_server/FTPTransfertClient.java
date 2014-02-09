@@ -16,7 +16,7 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  * @author Durieux Thomas
  * @author Toulet Cyrille
  */
-public class TransfertClient {
+public class FTPTransfertClient {
 	private final Socket tranfsertSocket;
 
 	/**
@@ -25,7 +25,7 @@ public class TransfertClient {
 	 * @param transfertSocket
 	 *            Socket to use for connection
 	 */
-	public TransfertClient(final Socket tranfsertSocket) {
+	public FTPTransfertClient(final Socket tranfsertSocket) {
 		// Copy socket to use
 		this.tranfsertSocket = tranfsertSocket;
 	}

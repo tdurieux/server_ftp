@@ -5,10 +5,10 @@ import java.io.FileInputStream;
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 
-public interface TransfertServer {
+public interface FTPTransfertServer {
 	int getPublicPort();
 	
-	TransfertClient getTransfertClient();
+	FTPTransfertClient getTransfertClient();
 	
 	void writeContent(final String content)
 			throws RequestHandlerException, SocketException;
@@ -16,11 +16,11 @@ public interface TransfertServer {
 	void writeContent(final byte[] content)
 			throws RequestHandlerException, SocketException;
 	
-	String readStringContent();
+	String readStringContent() throws SocketException;
 	
-	byte[] readContent();
+	byte[] readContent() throws SocketException;
 	
-	void close();
+	void close() throws SocketException;
 	
 	void writeContent(FileInputStream stream) throws SocketException;
 	

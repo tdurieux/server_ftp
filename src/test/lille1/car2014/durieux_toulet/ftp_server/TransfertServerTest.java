@@ -2,10 +2,14 @@ package test.lille1.car2014.durieux_toulet.ftp_server;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
+import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
-import lille1.car2014.durieux_toulet.ftp_server.TransfertServer;
-import lille1.car2014.durieux_toulet.ftp_server.TransfertServerImpl;
+import lille1.car2014.durieux_toulet.ftp_server.FTPTransfertServer;
+import lille1.car2014.durieux_toulet.ftp_server.FTPTransfertServerImpl;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,16 +17,9 @@ import org.junit.Test;
 
 public class TransfertServerTest {
 
-	private TransfertServer transfertServer;
-
 	@Before
 	public void setUp() {
-		try {
-			transfertServer = new TransfertServerImpl();
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 
 	@After
@@ -30,43 +27,72 @@ public class TransfertServerTest {
 	}
 
 	@Test
-	public void testTransfertServerActiveMode() {
+	public void testTransfertServerActiveModeNotValid() {
 		try {
-			TransfertServer transfertServer = new TransfertServerImpl("127.0.0.1", 8743);
+			FTPTransfertServer transfertServer = new FTPTransfertServerImpl(
+					"127.0.0.1", 8743);
+			fail("Server does not exist");
 		} catch (ServerSocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		}
 	}
 
 	@Test
-	public void testTransfertServerPassiveMode() {
+	public void testTransfertServerActiveMode() throws IOException,
+			SocketException {
 		try {
-			TransfertServer transfertServer = new TransfertServerImpl();
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ServerSocket server = new ServerSocket(0);
+
+			FTPTransfertServer transfertServer = new FTPTransfertServerImpl(
+					"127.0.0.1", server.getLocalPort());
+			transfertServer.close();
+			server.close();
+		} catch (ServerSocketException e) {
+			fail("Server does not exist");
 		}
 	}
 
 	@Test
-	public void testGetPublicPort() {
+	public void testTransfertServerPassiveMode() throws SocketException {
+		FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
+		transfertServer.close();
+	}
+
+	@Test
+	public void testGetPublicPort() throws SocketException {
+		FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
 		transfertServer.getPublicPort();
 	}
 
 	@Test
-	public void testGetTransfertClient() {
-		fail("Not yet implemented");
+	public void testGetTransfertClient() throws SocketException {
+		FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
+		transfertServer.getTransfertClient();
+		transfertServer.close();
 	}
 
 	@Test
-	public void testWriteContentString() {
-		fail("Not yet implemented");
+	public void testWriteContentString() throws IOException, SocketException,
+			RequestHandlerException {
+		ServerSocket server = new ServerSocket(0);
+
+		FTPTransfertServer transfertServer = new FTPTransfertServerImpl(
+				"127.0.0.1", server.getLocalPort());
+		transfertServer.writeContent("Test");
+		transfertServer.close();
+		server.close();
 	}
 
 	@Test
-	public void testWriteContentByteArray() {
-		fail("Not yet implemented");
+	public void testWriteContentByteArray() throws IOException,
+			SocketException, RequestHandlerException {
+		ServerSocket server = new ServerSocket(0);
+
+		FTPTransfertServer transfertServer = new FTPTransfertServerImpl(
+				"127.0.0.1", server.getLocalPort());
+		transfertServer.writeContent("Test".getBytes());
+		transfertServer.close();
+		server.close();
 	}
 
 	@Test
@@ -80,8 +106,9 @@ public class TransfertServerTest {
 	}
 
 	@Test
-	public void testClose() {
-		fail("Not yet implemented");
+	public void testClose() throws SocketException {
+		FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
+		transfertServer.close();
 	}
 
 	@Test
