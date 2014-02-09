@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
+import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.exception.FTPClientException;
 import lille1.car2014.durieux_toulet.exception.UserDatabaseException;
@@ -28,7 +29,7 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	private final Socket clientSocket;
 	private FTPRequestHandler requestHandler;
 	private BufferedReader in;
-	private TransfertServer transfertServer;
+	private TransfertServerImpl transfertServer;
 	private boolean isConnected = false;
 	private String typeCharactor;
 	private String username;
@@ -169,21 +170,17 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	 *             when unable to load user database
 	 * @return true if is valid user, false else
 	 */
-	public boolean connect(final String password) throws FTPClientException {
-		try {
-			// If correct password
-			if (UserDatabase.getInstance().signin(this.username, password)) {
-				// Connect user
-				this.isConnected = true;
-				return true;
-			} else {
-				// Sorry, bye !
-				this.username = null;
-				this.isConnected = false;
-				return false;
-			}
-		} catch (UserDatabaseException e) {
-			throw new FTPClientException("Unable to load user database", e);
+	public boolean connect(final String password) {
+		// If correct password
+		if (UserDatabase.INSTANCE.loginUser(this.username, password)) {
+			// Connect user
+			this.isConnected = true;
+			return true;
+		} else {
+			// Sorry, bye !
+			this.username = null;
+			this.isConnected = false;
+			return false;
 		}
 	}
 
@@ -208,7 +205,7 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	 */
 	public int createNewTransfert() throws SocketException {
 		// Create transfert server
-		final TransfertServer transfertHandler = new TransfertServer();
+		final TransfertServerImpl transfertHandler = new TransfertServerImpl();
 		this.transfertServer = transfertHandler;
 
 		// Return server port
@@ -225,17 +222,15 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	public int createNewTransfert(String address, int port)
 			throws SocketException {
 		// Create transfert server
-		TransfertServer transfertHandler;
+		TransfertServerImpl transfertHandler;
 		try {
-			transfertHandler = new TransfertServer(address, port);
+			transfertHandler = new TransfertServerImpl(address, port);
 			this.transfertServer = transfertHandler;
 
 			// Return server port
 			return port;
-		} catch (UnknownHostException e) {
+		} catch (ServerSocketException e) {
 			throw new SocketException("The current client is not found", e);
-		} catch (IOException e) {
-			throw new SocketException("Unable to create data connection", e);
 		}
 	}
 
@@ -244,7 +239,7 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	 * 
 	 * @return Transfert server
 	 */
-	public TransfertServer getTransfertServer() {
+	public TransfertServerImpl getTransfertServer() {
 		return this.transfertServer;
 	}
 

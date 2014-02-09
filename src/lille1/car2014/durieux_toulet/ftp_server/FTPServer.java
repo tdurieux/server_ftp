@@ -13,4 +13,10 @@ public interface FTPServer {
 	 *             connection is interrupted
 	 */
 	void startServer() throws ServerSocketException;
+
+	void closeServer() throws ServerSocketException;
+	
+	int getPort();
+	
+	boolean isStarted();
 }

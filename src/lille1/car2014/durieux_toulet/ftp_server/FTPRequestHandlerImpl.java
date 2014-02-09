@@ -31,7 +31,7 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	private final FTPClient ftpClient;
 
-	public FTPRequestHandlerImpl(final FTPClientImpl ftpClient) {
+	public FTPRequestHandlerImpl(final FTPClient ftpClient) {
 		this.ftpClient = ftpClient;
 	}
 
@@ -184,18 +184,12 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	@FtpRequestAnnotation(name = "PASS", connected = false)
 	private void requestConnect(final String password)
 			throws RequestHandlerException {
-		try {
-			// connect the user
-			if (ftpClient.connect(password)) {
-				ftpClient.writeMessage("230 Connected");
-			} else {
-				ftpClient.writeMessage("430 Invalid username/password");
-			}
-		} catch (FTPClientException e) {
-			LoggerUtilities.error("Unable to log the user", e);
+		// connect the user
+		if (ftpClient.connect(password)) {
+			ftpClient.writeMessage("230 Connected");
+		} else {
 			ftpClient.writeMessage("430 Invalid username/password");
 		}
-
 	}
 
 	/**

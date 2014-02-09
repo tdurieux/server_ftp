@@ -34,7 +34,7 @@ public interface FTPClient {
 
 	void setUsername(String username);
 
-	boolean connect(String password) throws FTPClientException;
+	boolean connect(String password);
 
 	boolean isConnected();
 
@@ -50,7 +50,7 @@ public interface FTPClient {
 
 	int createNewTransfert() throws SocketException;
 
-	TransfertServer getTransfertServer();
+	TransfertServerImpl getTransfertServer();
 
 	void setFileToRename(String path);
 
