@@ -25,10 +25,7 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  * @author Durieux Thomas
  * @author Toulet Cyrille
  */
-public class FTPClientImpl implements FTPClient, Runnable {
-	private final Socket clientSocket;
-	private FTPRequestHandler requestHandler;
-	private BufferedReader in;
+public class FTPClientImpl implements FTPClient {
 	private TransfertServerImpl transfertServer;
 	private boolean isConnected = false;
 	private String typeCharactor;
@@ -43,71 +40,12 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	 * @param clientSocket
 	 *            The FTP client socket
 	 */
-	public FTPClientImpl(final Socket clientSocket) {
-		// Copy client socket
-		this.clientSocket = clientSocket;
-	}
+	public FTPClientImpl() {
+		// Create relative path
+		final Path currentRelativePath = Paths.get("/");
 
-	/**
-	 * @see lille1.car2014.durieux_toulet.ftp_server.FTPClient
-	 * @Override
-	 */
-	public void writeMessage(final String message) {
-		OutputStreamWriter writer;
-
-		try {
-			// Create writer with UTF-8 encoding
-			writer = new OutputStreamWriter(
-					this.clientSocket.getOutputStream(),
-					Charset.forName("UTF-8"));
-
-			// Write data
-			writer.write(message + " \n");
-
-			// Send data
-			writer.flush();
-		} catch (final IOException e) {
-			// Log errors
-			LoggerUtilities.error(e);
-
-			// throw new SocketException("Unable to write message", e);
-		}
-	}
-
-	/**
-	 * Parse client message and call the function associate to command
-	 * 
-	 * @see lille1.car2014.durieux_toulet.ftp_server.FTPClient
-	 * @Override
-	 */
-	public void readMessage() {
-		try {
-			// Create read buffer
-			this.in = new BufferedReader(new InputStreamReader(
-					this.clientSocket.getInputStream()));
-
-			String userInput;
-
-			// Read user input
-			while ((userInput = this.in.readLine()) != null) {
-				try {
-					// Print it
-					System.out.println(userInput);
-
-					// Try to parse request
-					this.requestHandler.parseStringRequest(userInput);
-				} catch (final RequestHandlerException e) {
-					// Log errors
-					LoggerUtilities.error(e);
-
-					// Print errors
-					this.writeMessage("202 " + e.getMessage());
-				}
-			}
-		} catch (final IOException e) {
-			// Log errors
-			LoggerUtilities.error(e);
-		}
+		// Set current dirrectory
+		this.setCurrentDir(currentRelativePath.toAbsolutePath().toString());
 	}
 
 	/**
@@ -117,27 +55,6 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	 */
 	public boolean isConnected() {
 		return this.isConnected;
-	}
-
-	/**
-	 * @see lille1.car2014.durieux_toulet.ftp_server.FTPClient
-	 * @Override
-	 */
-	public void close() {
-		// Print close message
-		System.out.println("quit quit");
-		this.writeMessage("426 Close connection");
-
-		try {
-			// Close buffer reader
-			this.in.close();
-
-			// Close socket
-			this.clientSocket.close();
-		} catch (final IOException e) {
-			// Log errors
-			LoggerUtilities.error(e);
-		}
 	}
 
 	/**
@@ -260,32 +177,6 @@ public class FTPClientImpl implements FTPClient, Runnable {
 	 */
 	public void setCurrentDir(final String currentDir) {
 		this.currentDir = currentDir;
-	}
-
-	/**
-	 * Run client
-	 * 
-	 * @Override
-	 */
-	public void run() {
-		// Log client creation
-		LoggerUtilities.log("New client "
-				+ clientSocket.getRemoteSocketAddress());
-
-		// Create request handler
-		this.requestHandler = new FTPRequestHandlerImpl(this);
-
-		// Create relative path
-		final Path currentRelativePath = Paths.get("/");
-
-		// Set current dirrectory
-		this.setCurrentDir(currentRelativePath.toAbsolutePath().toString());
-
-		// Write welcome message
-		this.writeMessage("200");
-
-		// Wait requests
-		this.readMessage();
 	}
 
 	@Override

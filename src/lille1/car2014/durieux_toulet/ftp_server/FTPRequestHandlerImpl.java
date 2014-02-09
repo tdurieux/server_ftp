@@ -29,21 +29,32 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  * 
  */
 public class FTPRequestHandlerImpl implements FTPRequestHandler {
-	private final FTPClient ftpClient;
 
-	public FTPRequestHandlerImpl(final FTPClient ftpClient) {
+	private String command;
+	private String[] args;
+	private FTPClient ftpClient;
+	private FTPClientSocket clientSocket;
+
+	public FTPRequestHandlerImpl(String command, String[] args,
+			FTPClient ftpClient, FTPClientSocket clientSocket) {
+		this.command = command;
+		this.args = args;
 		this.ftpClient = ftpClient;
+		this.clientSocket = clientSocket;
 	}
 
-	public void parseStringRequest(final String request)
+	public static FTPRequestHandler parseStringRequest(final String request,
+			final FTPClient ftpClient, FTPClientSocket clientSocket)
 			throws RequestHandlerException {
 		final String[] requestSplitted = request.split(" ");
 		final String command = requestSplitted[0];
 		if (requestSplitted.length > 1)
-			this.executeRquest(command, Arrays.copyOfRange(requestSplitted, 1,
-					requestSplitted.length));
-		else
-			this.executeRquest(command, new String[0]);
+			return new FTPRequestHandlerImpl(command, Arrays.copyOfRange(
+					requestSplitted, 1, requestSplitted.length), ftpClient,
+					clientSocket);
+
+		return new FTPRequestHandlerImpl(command, new String[0], ftpClient,
+				clientSocket);
 	}
 
 	/**
@@ -55,8 +66,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 *            parameters of the command
 	 * @throws RequestHandlerException
 	 */
-	private void executeRquest(final String command, final String[] parameters)
-			throws RequestHandlerException {
+	public void execute() throws RequestHandlerException {
 		// list all methods of this class
 		final Method[] allMethods = this.getClass().getDeclaredMethods();
 		for (int i = 0; i < allMethods.length; i++) {
@@ -71,35 +81,35 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				}
 				// Check the signature of the methods
 				final Class<?>[] types = method.getParameterTypes();
-				if (types.length > parameters.length) {
+				if (types.length > args.length) {
 					continue;
 				}
-				final Object[] args = new Object[types.length];
+				final Object[] objectArray = new Object[types.length];
 				for (int j = 0; j < types.length; j++) {
 					final String type = types[j].getName();
-					if (type.compareTo(parameters[j].getClass().getName()) == 0) {
-						args[j] = parameters[j];
+					if (type.compareTo(args[j].getClass().getName()) == 0) {
+						objectArray[j] = args[j];
 					} else if (type.compareTo("[Ljava.lang.String;") == 0) {
-						String[] stringArgs = new String[parameters.length - j];
-						for (int k = j, l = 0; k < parameters.length; k++, l++) {
-							stringArgs[l] = parameters[k];
+						String[] stringArgs = new String[args.length - j];
+						for (int k = j, l = 0; k < args.length; k++, l++) {
+							stringArgs[l] = args[k];
 						}
-						args[j] = stringArgs;
+						objectArray[j] = stringArgs;
 						break;
 					} else {
 						throw new RequestHandlerException(
-								"Arguement not valid " + parameters[j]);
+								"Arguement not valid " + args[j]);
 					}
 				}
 
 				// if the user must be connected before doing an command
 				if (annotation.connected() && !ftpClient.isConnected()) {
-					ftpClient.writeMessage("530 Not logged in.");
+					clientSocket.writeMessage("530 Not logged in.");
 					return;
 				}
 				// invoke the methos
 				try {
-					method.invoke(this, args);
+					method.invoke(this, objectArray);
 					return;
 				} catch (final IllegalAccessException e) {
 					throw new RequestHandlerException("Command not found "
@@ -120,7 +130,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * 
 	 * @param typeCharacter
 	 */
-	private void setPrimaryTypeCaracter(final String typeCharacter) {
+	private boolean setPrimaryTypeCaracter(final String typeCharacter) {
 		switch (typeCharacter) {
 		case "A":
 			ftpClient.setTypeCharactor("ASCII");
@@ -135,27 +145,18 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			ftpClient.setTypeCharactor("local");
 			break;
 		default:
-
-			break;
+			return false;
 		}
-	}
-
-	/**
-	 * Define the primary encoding of the communication and send response to the
-	 * client
-	 * 
-	 * @param typeCharacter
-	 */
-	@FtpRequestAnnotation(name = "TYPE", connected = true)
-	private void requestType(final String typeCharacter) {
-		this.setPrimaryTypeCaracter(typeCharacter);
-		ftpClient.writeMessage("200 Type accepted");
+		return true;
 	}
 
 	@FtpRequestAnnotation(name = "TYPE", connected = true)
 	private void requestType(final String typeCharacter,
 			final String secondTypeCharacter) {
-		this.setPrimaryTypeCaracter(typeCharacter);
+		if (!this.setPrimaryTypeCaracter(typeCharacter)) {
+			clientSocket.writeMessage("400 Type not accepted");
+			return;
+		}
 
 		switch (secondTypeCharacter) {
 		case "N":
@@ -168,10 +169,24 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			ftpClient.setTypeCharactor("ASA");
 			break;
 		default:
-
-			break;
+			clientSocket.writeMessage("400 Type not accepted");
+			return;
 		}
-		ftpClient.writeMessage("200 Type accepted");
+		clientSocket.writeMessage("200 Type accepted");
+	}
+
+	/**
+	 * Define the primary encoding of the communication and send response to the
+	 * client
+	 * 
+	 * @param typeCharacter
+	 */
+	@FtpRequestAnnotation(name = "TYPE", connected = true)
+	private void requestType(final String typeCharacter) {
+		if (this.setPrimaryTypeCaracter(typeCharacter))
+			clientSocket.writeMessage("200 Type accepted");
+		else
+			clientSocket.writeMessage("400 Type not accepted");
 	}
 
 	/**
@@ -186,9 +201,9 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			throws RequestHandlerException {
 		// connect the user
 		if (ftpClient.connect(password)) {
-			ftpClient.writeMessage("230 Connected");
+			clientSocket.writeMessage("230 Connected");
 		} else {
-			ftpClient.writeMessage("430 Invalid username/password");
+			clientSocket.writeMessage("430 Invalid username/password");
 		}
 	}
 
@@ -202,9 +217,9 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	private void requestUser(final String username) {
 		ftpClient.setUsername(username);
 		if (username.compareTo("anonymous") == 0) {
-			ftpClient.writeMessage("230 Anonyme");
+			clientSocket.writeMessage("230 anonymous");
 		} else {
-			ftpClient.writeMessage("331 User accepted");
+			clientSocket.writeMessage("331 User accepted");
 		}
 
 	}
@@ -214,7 +229,14 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 */
 	@FtpRequestAnnotation(name = "QUIT", connected = false)
 	private void closeConnection() {
-		ftpClient.close();
+		try {
+			clientSocket.close();
+			// Print close message
+			clientSocket.writeMessage("426 Close connection");
+		} catch (SocketException e) {
+			// unable to client client connection
+		}
+
 	}
 
 	/**
@@ -224,7 +246,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	private void requestSYST() {
 		// final String OS = System.getProperty("os.name").toLowerCase();
 		// this.ftpClient.writeMessage("215 " + OS);
-		ftpClient.writeMessage("215 UNIX Type: L8");
+		clientSocket.writeMessage("215 UNIX Type: L8");
 	}
 
 	/**
@@ -238,7 +260,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	@FtpRequestAnnotation(name = "OPTS", connected = true, anonymous = true)
 	private void requestOptions(final String key, final String value) {
 		ftpClient.getOptions().put(key, value);
-		ftpClient.writeMessage("200 Accept option");
+		clientSocket.writeMessage("200 Accept option");
 	}
 
 	/**
@@ -246,7 +268,8 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 */
 	@FtpRequestAnnotation(name = "PWD", connected = true, anonymous = true)
 	private void requestCurrentDirectory() {
-		ftpClient.writeMessage("257 " + '"' + ftpClient.getCurrentDir() + '"');
+		clientSocket.writeMessage("257 " + '"' + ftpClient.getCurrentDir()
+				+ '"');
 	}
 
 	private String arrayToPath(String[] dirs) {
@@ -255,7 +278,10 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			String dir = dirs[i];
 			path += dir + (i != dirs.length - 1 ? " " : "");
 		}
-		return path;
+		if (path.length() > 0 && path.charAt(0) == '/') {
+			return path;
+		}
+		return ftpClient.getCurrentDir() + "/" + path;
 	}
 
 	/**
@@ -269,18 +295,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		String path = arrayToPath(dirs);
 		File f = new File(path);
 		if (!f.exists() || !f.isDirectory()) {
-			f = new File(ftpClient.getCurrentDir() + "/" + path);
-			if (!f.exists() || !f.isDirectory()) {
-				ftpClient
-						.writeMessage("550 Can't change directory to test: No such file or directory");
-			} else {
-				ftpClient.setCurrentDir(f.getAbsolutePath());
-				ftpClient.writeMessage("250 OK. Current directory is "
-						+ f.getAbsolutePath());
-			}
+			clientSocket
+					.writeMessage("550 Can't change directory: No such file or directory");
 		} else {
 			ftpClient.setCurrentDir(f.getAbsolutePath());
-			ftpClient.writeMessage("250 OK. Current directory is "
+			clientSocket.writeMessage("250 OK. Current directory is "
 					+ f.getAbsolutePath());
 		}
 	}
@@ -295,11 +314,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	private void requestUpCurrentDirecory() {
 		File f = new File(ftpClient.getCurrentDir() + "/..");
 		if (!f.exists() || !f.isDirectory()) {
-			ftpClient
+			clientSocket
 					.writeMessage("550 Can't change directory to test: No such file or directory");
 		}
 		ftpClient.setCurrentDir(f.getAbsolutePath());
-		ftpClient.writeMessage("250 OK. Current directory is "
+		clientSocket.writeMessage("250 OK. Current directory is "
 				+ f.getAbsolutePath());
 	}
 
@@ -310,15 +329,19 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	private void requestPort(String addressStirng) {
 		try {
 			String[] addressArray = addressStirng.split(",");
+			if (addressArray.length != 6) {
+				clientSocket.writeMessage("425 Can't open data connection.");
+				return;
+			}
 			String address = addressArray[0] + "." + addressArray[1] + "."
 					+ addressArray[2] + "." + addressArray[3];
 			final int port = Integer.parseInt(addressArray[4]) * 256
 					+ Integer.parseInt(addressArray[5]);
 			ftpClient.createNewTransfert(address, port);
-			ftpClient.writeMessage("227 Entering Active Mode");
+			clientSocket.writeMessage("227 Entering Active Mode");
 		} catch (final SocketException e) {
 			LoggerUtilities.error(e);
-			ftpClient.writeMessage("425 Can't open data connection.");
+			clientSocket.writeMessage("425 Can't open data connection.");
 		}
 	}
 
@@ -331,12 +354,20 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			final int port = ftpClient.createNewTransfert();
 			final int p1 = (port / 256);
 			final int p2 = port - p1 * 256;
-			ftpClient.writeMessage("227 Entering Passive Mode (127,0,0,1," + p1
-					+ "," + p2 + ")");
+			clientSocket.writeMessage("227 Entering Passive Mode (127,0,0,1,"
+					+ p1 + "," + p2 + ")");
 		} catch (final SocketException e) {
 			LoggerUtilities.error(e);
-			ftpClient.writeMessage("425 Can't open data connection.");
+			clientSocket.writeMessage("425 Can't open data connection.");
 		}
+	}
+
+	/**
+	 * Send the port of the data connection (passive mode)
+	 */
+	@FtpRequestAnnotation(name = "ABOR", connected = true, anonymous = true)
+	private void requestABOR() {
+		ftpClient.getTransfertServer().close();
 	}
 
 	/**
@@ -346,11 +377,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	private void requestExtendedPassiveMode() {
 		try {
 			final int port = ftpClient.createNewTransfert();
-			ftpClient.writeMessage("229 Entering Extended Passive Mode (|||"
+			clientSocket.writeMessage("229 Entering Extended Passive Mode (|||"
 					+ port + "|)");
 		} catch (final SocketException e) {
 			LoggerUtilities.error(e);
-			ftpClient.writeMessage("425 Can't open data connection.");
+			clientSocket.writeMessage("425 Can't open data connection.");
 		}
 	}
 
@@ -367,27 +398,21 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			path = "";
 		}
 		if (ftpClient.getTransfertServer() == null) {
-			ftpClient.writeMessage("443 No data connection");
+			clientSocket.writeMessage("443 No data connection");
 		} else {
-			ftpClient.writeMessage("150 Accepted data connection");
+			clientSocket.writeMessage("150 Accepted data connection");
 			try {
-				if (path.length() > 0 && path.charAt(0) == '/') {
-					ftpClient.getTransfertServer().writeContent(
-							this.createList(path));
-				} else {
-					ftpClient.getTransfertServer().writeContent(
-							this.createList(ftpClient.getCurrentDir() + "/"
-									+ path));
-				}
-				ftpClient.writeMessage("226 List transefered");
+				ftpClient.getTransfertServer().writeContent(
+						this.createList(path));
+				clientSocket.writeMessage("226 List transefered");
 			} catch (final RequestHandlerException e) {
 				LoggerUtilities.error(e);
 				ftpClient.getTransfertServer().close();
-				ftpClient.writeMessage("426 Unable to send file list");
+				clientSocket.writeMessage("426 Unable to send file list");
 			} catch (SocketException e) {
 				LoggerUtilities.error(e);
 				ftpClient.getTransfertServer().close();
-				ftpClient.writeMessage("426 Unable to send file list");
+				clientSocket.writeMessage("426 Unable to send file list");
 			}
 		}
 	}
@@ -407,17 +432,14 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	private void requestListFileName(final String... dirs) {
 		String path = arrayToPath(dirs);
 		if (ftpClient.getTransfertServer() == null) {
-			ftpClient.writeMessage("443 No data connection");
+			clientSocket.writeMessage("443 No data connection");
 		} else {
 			try {
-				final File folder = new File((path.length() > 0
-						&& path.charAt(0) == '/' ? ftpClient.getCurrentDir()
-						+ "/" : "")
-						+ path);
+				final File folder = new File(path);
 				if (!folder.exists() || !folder.isDirectory()) {
-					ftpClient.writeMessage("504 Only accept folder");
+					clientSocket.writeMessage("504 Only accept folder");
 				} else {
-					ftpClient.writeMessage("150 Accepted data connection");
+					clientSocket.writeMessage("150 Accepted data connection");
 					final String[] files = folder.list();
 					String listFilename = "";
 					for (int i = 0; i < files.length; i++) {
@@ -426,17 +448,17 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 
 					}
 					ftpClient.getTransfertServer().writeContent(listFilename);
-					ftpClient.writeMessage("226 " + files.length
+					clientSocket.writeMessage("226 " + files.length
 							+ " matches total");
 				}
 			} catch (final RequestHandlerException e) {
 				LoggerUtilities.error(e);
 				ftpClient.getTransfertServer().close();
-				ftpClient.writeMessage("426 Unable to send file list");
+				clientSocket.writeMessage("426 Unable to send file list");
 			} catch (SocketException e) {
 				LoggerUtilities.error(e);
 				ftpClient.getTransfertServer().close();
-				ftpClient.writeMessage("426 Unable to send file list");
+				clientSocket.writeMessage("426 Unable to send file list");
 			}
 		}
 	}
@@ -452,11 +474,8 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	@FtpRequestAnnotation(name = "SIZE", connected = true, anonymous = true)
 	private void requestGetFileSize(final String... dirs) {
 		String path = arrayToPath(dirs);
-		final File f = new File(
-				(path.length() > 0 && path.charAt(0) == '/' ? ftpClient
-						.getCurrentDir() + "/" : "")
-						+ path);
-		ftpClient.writeMessage("226 " + f.length());
+		final File f = new File(path);
+		clientSocket.writeMessage("226 " + f.length());
 	}
 
 	/**
@@ -469,24 +488,21 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	private void requestDownloadFile(final String... dirs) {
 		String path = arrayToPath(dirs);
 		if (ftpClient.getTransfertServer() == null) {
-			ftpClient.writeMessage("443 No data connection");
+			clientSocket.writeMessage("443 No data connection");
 		} else {
-			ftpClient.writeMessage("150 Accepted data connection");
+			clientSocket.writeMessage("150 Accepted data connection");
 			try {
-				String filePath = (path.length() > 0 && path.charAt(0) == '/' ? ""
-						: ftpClient.getCurrentDir() + "/")
-						+ path;
-				FileInputStream fis = new FileInputStream(filePath);
+				FileInputStream fis = new FileInputStream(path);
 				ftpClient.getTransfertServer().writeContent(fis);
-				ftpClient.writeMessage("226 File successfully transferred");
+				clientSocket.writeMessage("226 File successfully transferred");
 			} catch (final IOException e) {
 				LoggerUtilities.error(e);
 				ftpClient.getTransfertServer().close();
-				ftpClient.writeMessage("426 Unable to send file");
+				clientSocket.writeMessage("426 Unable to send file");
 			} catch (SocketException e) {
 				LoggerUtilities.error(e);
 				ftpClient.getTransfertServer().close();
-				ftpClient.writeMessage("426 Unable to send file");
+				clientSocket.writeMessage("426 Unable to send file");
 			}
 
 		}
@@ -502,21 +518,18 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	private void requestUploadFile(final String[] dirs) {
 		String path = arrayToPath(dirs);
 		if (ftpClient.getTransfertServer() == null) {
-			ftpClient.writeMessage("443 No data connection");
+			clientSocket.writeMessage("443 No data connection");
 		} else {
-			ftpClient.writeMessage("150 Accepted data connection");
+			clientSocket.writeMessage("150 Accepted data connection");
 			try {
 				byte[] content = ftpClient.getTransfertServer().readContent();
 
-				FileOutputStream out = new FileOutputStream((path.length() > 0
-						&& path.charAt(0) == '/' ? ftpClient.getCurrentDir()
-						+ "/" : "")
-						+ path);
+				FileOutputStream out = new FileOutputStream(path);
 
 				out.write(content);
 				out.close();
 
-				ftpClient.writeMessage("226 File successfully transferred");
+				clientSocket.writeMessage("226 File successfully transferred");
 			} catch (final IOException e) {
 				LoggerUtilities.error(e);
 				ftpClient.getTransfertServer().close();
@@ -535,15 +548,12 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		try {
 			final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm",
 					Locale.ENGLISH);
-			Date lastModificationDate = new Date(Files
-					.getLastModifiedTime(
-							Paths.get((path.length() > 0
-									&& path.charAt(0) == '/' ? ftpClient
-									.getCurrentDir() + "/" : "")
-									+ path)).toMillis());
-			ftpClient.writeMessage("226 " + sdf.format(lastModificationDate));
+			Date lastModificationDate = new Date(Files.getLastModifiedTime(
+					Paths.get(path)).toMillis());
+			clientSocket
+					.writeMessage("226 " + sdf.format(lastModificationDate));
 		} catch (IOException e) {
-			ftpClient
+			clientSocket
 					.writeMessage("451 Unable to access to last modification date.");
 		}
 
@@ -557,17 +567,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	@FtpRequestAnnotation(name = "MKD", connected = true, anonymous = false)
 	private void requestCreateFolder(final String... dirs) {
 		String path = arrayToPath(dirs);
-		String folderPath = "";
-		if (path.length() > 0 && path.charAt(0) == '/') {
-			folderPath = path;
-		} else {
-			folderPath = ftpClient.getCurrentDir() + "/" + path;
-		}
-		boolean success = (new File(folderPath)).mkdirs();
+		boolean success = (new File(path)).mkdirs();
 		if (success) {
-			ftpClient.writeMessage("226 Folder created: " + path);
+			clientSocket.writeMessage("226 Folder created: " + path);
 		} else {
-			ftpClient.writeMessage("451 Folder not created: " + path);
+			clientSocket.writeMessage("451 Folder not created: " + path);
 		}
 	}
 
@@ -579,17 +583,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	@FtpRequestAnnotation(name = "RMD", connected = true, anonymous = false)
 	private void requestRemoveFolder(final String... dirs) {
 		String path = arrayToPath(dirs);
-		String folderPath = "";
-		if (path.length() > 0 && path.charAt(0) == '/') {
-			folderPath = path;
-		} else {
-			folderPath = ftpClient.getCurrentDir() + "/" + path;
-		}
-		boolean success = (new File(folderPath)).delete();
+		boolean success = (new File(path)).delete();
 		if (success) {
-			ftpClient.writeMessage("226 Folder removed: " + path);
+			clientSocket.writeMessage("226 Folder removed: " + path);
 		} else {
-			ftpClient.writeMessage("451 Folder not removed: " + path);
+			clientSocket.writeMessage("451 Folder not removed: " + path);
 		}
 	}
 
@@ -601,58 +599,42 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	@FtpRequestAnnotation(name = "DELE", connected = true, anonymous = false)
 	private void requestRemoveFile(final String... dirs) {
 		String path = arrayToPath(dirs);
-		String folderPath = "";
-		if (path.length() > 0 && path.charAt(0) == '/') {
-			folderPath = path;
-		} else {
-			folderPath = ftpClient.getCurrentDir() + "/" + path;
-		}
-		boolean success = (new File(folderPath)).delete();
+		boolean success = (new File(path)).delete();
 		if (success) {
-			ftpClient.writeMessage("226 File removed: " + path);
+			clientSocket.writeMessage("226 File removed: " + path);
 		} else {
-			ftpClient.writeMessage("451 File not removed: " + path);
+			clientSocket.writeMessage("451 File not removed: " + path);
 		}
 	}
 
 	/**
-	 * Rename a folder
+	 * Rename a file
 	 * 
 	 * @param folderName
+	 *            the old file name
 	 */
 	@FtpRequestAnnotation(name = "RNFR", connected = true, anonymous = false)
 	private void requestFileToRename(final String... dirs) {
 		String path = arrayToPath(dirs);
-		String folderPath = "";
-		if (path.length() > 0 && path.charAt(0) == '/') {
-			folderPath = path;
-		} else {
-			folderPath = ftpClient.getCurrentDir() + "/" + path;
-		}
-		ftpClient.setFileToRename(folderPath);
-		ftpClient.writeMessage("350 File to rename: " + path);
+		ftpClient.setFileToRename(path);
+		clientSocket.writeMessage("350 File to rename: " + path);
 	}
 
 	/**
-	 * Rename a folder
+	 * Rename a file
 	 * 
 	 * @param folderName
+	 *            the new folder name
 	 */
 	@FtpRequestAnnotation(name = "RNTO", connected = true)
 	private void requestRename(final String... dirs) {
 		String path = arrayToPath(dirs);
-		String folderPath = "";
-		if (path.length() > 0 && path.charAt(0) == '/') {
-			folderPath = path;
-		} else {
-			folderPath = ftpClient.getCurrentDir() + "/" + path;
-		}
 		boolean success = (new File(ftpClient.getFileToRename()))
-				.renameTo((new File(folderPath)));
+				.renameTo((new File(path)));
 		if (success) {
-			ftpClient.writeMessage("250 Folder renamed: " + path);
+			clientSocket.writeMessage("250 Folder renamed: " + path);
 		} else {
-			ftpClient.writeMessage("451 Folder not renamed: " + path);
+			clientSocket.writeMessage("451 Folder not renamed: " + path);
 		}
 	}
 

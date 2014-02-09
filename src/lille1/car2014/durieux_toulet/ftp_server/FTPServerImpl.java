@@ -72,7 +72,7 @@ public class FTPServerImpl implements FTPServer {
 				final Socket clientSocket = this.serverSocket.accept();
 
 				// Create client thread
-				executor.execute(new FTPClientImpl(clientSocket));
+				executor.execute(new FTPClientSocketImpl(clientSocket));
 			} catch (final IOException e) {
 				// The connection with the client is already closed, nothing to
 				// do. The ftp client must stay alive and wait new client
@@ -84,7 +84,9 @@ public class FTPServerImpl implements FTPServer {
 
 	/**
 	 * Stop the FTP server
-	 * @throws ServerSocketException if the server is not started
+	 * 
+	 * @throws ServerSocketException
+	 *             if the server is not started
 	 */
 	public void closeServer() throws ServerSocketException {
 		if (!isStarted) {
@@ -102,7 +104,7 @@ public class FTPServerImpl implements FTPServer {
 	public int getPort() {
 		return port;
 	}
-	
+
 	public boolean isStarted() {
 		return isStarted;
 	}

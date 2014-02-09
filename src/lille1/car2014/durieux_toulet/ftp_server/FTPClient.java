@@ -12,25 +12,6 @@ import lille1.car2014.durieux_toulet.exception.SocketException;
  * @author Toulet Cyrille
  */
 public interface FTPClient {
-	/**
-	 * Write message
-	 * 
-	 * @param message
-	 *            Message to write
-	 * @throws SocketException
-	 *             When unable to create socket
-	 */
-	void writeMessage(String message);
-
-	/**
-	 * Read message
-	 */
-	void readMessage();
-
-	/**
-	 * Close connection with server
-	 */
-	void close();
 
 	void setUsername(String username);
 

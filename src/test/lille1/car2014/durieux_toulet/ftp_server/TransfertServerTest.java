@@ -57,7 +57,7 @@ public class TransfertServerTest {
 
 	@Test
 	public void testGetPublicPort() {
-		fail("Not yet implemented");
+		transfertServer.getPublicPort();
 	}
 
 	@Test
