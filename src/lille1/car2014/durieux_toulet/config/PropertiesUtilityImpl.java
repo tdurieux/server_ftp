@@ -50,13 +50,16 @@ public class PropertiesUtilityImpl implements PropertiesUtility{
 		}
 	}
 
+	@Override
 	public String getProperty(final String key) {
 		return properties.getProperty(key);
 	}
 
+	@Override
 	public boolean getBooleanProperty(final String key) {
 		return Boolean.parseBoolean(properties.getProperty(key));
 	}
+	@Override
 	public int getIntProperty(final String key) {
 		return Integer.parseInt(properties.getProperty(key));
 	}

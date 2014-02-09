@@ -1,7 +1,6 @@
 package lille1.car2014.durieux_toulet.logs;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;

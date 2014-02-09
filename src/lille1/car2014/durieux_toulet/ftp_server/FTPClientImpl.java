@@ -1,23 +1,13 @@
 package lille1.car2014.durieux_toulet.ftp_server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.exception.FTPClientException;
-import lille1.car2014.durieux_toulet.exception.UserDatabaseException;
-import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**
  * All commands of the client is interpreted by the class
@@ -53,6 +43,7 @@ public class FTPClientImpl implements FTPClient {
 	 * 
 	 * @return true if a client is connected, false else
 	 */
+	@Override
 	public boolean isConnected() {
 		return this.isConnected;
 	}
@@ -63,6 +54,7 @@ public class FTPClientImpl implements FTPClient {
 	 * @param typeCharactor
 	 *            Type char
 	 */
+	@Override
 	public void setTypeCharactor(final String typeCharactor) {
 		this.typeCharactor = typeCharactor;
 
@@ -74,6 +66,7 @@ public class FTPClientImpl implements FTPClient {
 	 * @param username
 	 *            User name
 	 */
+	@Override
 	public void setUsername(final String username) {
 		this.username = username;
 	}
@@ -87,6 +80,7 @@ public class FTPClientImpl implements FTPClient {
 	 *             when unable to load user database
 	 * @return true if is valid user, false else
 	 */
+	@Override
 	public boolean connect(final String password) {
 		// If correct password
 		if (UserDatabase.INSTANCE.loginUser(this.username, password)) {
@@ -106,6 +100,7 @@ public class FTPClientImpl implements FTPClient {
 	 * 
 	 * @return Options map
 	 */
+	@Override
 	public Map<String, String> getOptions() {
 		return this.options;
 	}
@@ -120,6 +115,7 @@ public class FTPClientImpl implements FTPClient {
 	 *             when unable to create connection
 	 * @return Transfert server port
 	 */
+	@Override
 	public int createNewTransfert() throws SocketException {
 		// Create transfert server
 		final TransfertServerImpl transfertHandler = new TransfertServerImpl();
@@ -136,6 +132,7 @@ public class FTPClientImpl implements FTPClient {
 	 *             when unable to create connection
 	 * @return Transfert server port
 	 */
+	@Override
 	public int createNewTransfert(String address, int port)
 			throws SocketException {
 		// Create transfert server
@@ -156,6 +153,7 @@ public class FTPClientImpl implements FTPClient {
 	 * 
 	 * @return Transfert server
 	 */
+	@Override
 	public TransfertServerImpl getTransfertServer() {
 		return this.transfertServer;
 	}
@@ -165,6 +163,7 @@ public class FTPClientImpl implements FTPClient {
 	 * 
 	 * @return Current dirrectory
 	 */
+	@Override
 	public String getCurrentDir() {
 		return this.currentDir;
 	}
@@ -175,6 +174,7 @@ public class FTPClientImpl implements FTPClient {
 	 * @param currentDir
 	 *            Current dirrectory
 	 */
+	@Override
 	public void setCurrentDir(final String currentDir) {
 		this.currentDir = currentDir;
 	}
@@ -187,5 +187,8 @@ public class FTPClientImpl implements FTPClient {
 	@Override
 	public String getFileToRename() {
 		return fileToRename;
+	}
+	public String getUsername() {
+		return username;
 	}
 }

@@ -39,7 +39,8 @@ public class FTPServerTest {
 			}
 		}).start();
 		try {
-			Thread.currentThread().sleep(500);
+			Thread.currentThread();
+			Thread.sleep(500);
 			assertEquals(ftpServer.isStarted(), true);
 			ftpServer.closeServer();
 		} catch (ServerSocketException e) {
@@ -66,7 +67,8 @@ public class FTPServerTest {
 			}
 		}).start();
 		try {
-			Thread.currentThread().sleep(500);
+			Thread.currentThread();
+			Thread.sleep(500);
 			try {
 				ftpServer.startServer();
 				fail("Server already started");

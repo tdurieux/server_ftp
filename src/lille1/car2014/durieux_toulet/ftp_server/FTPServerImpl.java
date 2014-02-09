@@ -48,6 +48,7 @@ public class FTPServerImpl implements FTPServer {
 	 *             Exception launched if server cannot start or if a client
 	 *             connection is interrupted
 	 */
+	@Override
 	public void startServer() throws ServerSocketException {
 		if (isStarted) {
 			throw new ServerSocketException("The FTP server is already started");
@@ -88,6 +89,7 @@ public class FTPServerImpl implements FTPServer {
 	 * @throws ServerSocketException
 	 *             if the server is not started
 	 */
+	@Override
 	public void closeServer() throws ServerSocketException {
 		if (!isStarted) {
 			throw new ServerSocketException("The FTP server is not started");
@@ -101,10 +103,12 @@ public class FTPServerImpl implements FTPServer {
 		}
 	}
 
+	@Override
 	public int getPort() {
 		return port;
 	}
 
+	@Override
 	public boolean isStarted() {
 		return isStarted;
 	}

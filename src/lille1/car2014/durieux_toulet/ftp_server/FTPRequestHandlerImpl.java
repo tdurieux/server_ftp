@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
-import lille1.car2014.durieux_toulet.exception.FTPClientException;
+import lille1.car2014.durieux_toulet.config.FTPConfiguration;
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
@@ -66,6 +66,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 *            parameters of the command
 	 * @throws RequestHandlerException
 	 */
+	@Override
 	public void execute() throws RequestHandlerException {
 		// list all methods of this class
 		final Method[] allMethods = this.getClass().getDeclaredMethods();
@@ -103,9 +104,14 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				}
 
 				// if the user must be connected before doing an command
-				if (annotation.connected() && !ftpClient.isConnected()) {
-					clientSocket.writeMessage("530 Not logged in.");
-					return;
+				if ((annotation.connected() && !ftpClient.isConnected())) {
+					if (!FTPConfiguration.INSTANCE
+							.getBooleanProperty("allowAnonymous")
+							|| !annotation.anonymous()
+							|| !ftpClient.getUsername().equals("anonymous")) {
+						clientSocket.writeMessage("530 Not logged in.");
+						return;
+					}
 				}
 				// invoke the methos
 				try {
@@ -150,7 +156,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		return true;
 	}
 
-	@FtpRequestAnnotation(name = "TYPE", connected = true)
+	@FtpRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
 	private void requestType(final String typeCharacter,
 			final String secondTypeCharacter) {
 		if (!this.setPrimaryTypeCaracter(typeCharacter)) {
@@ -181,7 +187,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * 
 	 * @param typeCharacter
 	 */
-	@FtpRequestAnnotation(name = "TYPE", connected = true)
+	@FtpRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
 	private void requestType(final String typeCharacter) {
 		if (this.setPrimaryTypeCaracter(typeCharacter))
 			clientSocket.writeMessage("200 Type accepted");
@@ -216,7 +222,8 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	@FtpRequestAnnotation(name = "USER", connected = false)
 	private void requestUser(final String username) {
 		ftpClient.setUsername(username);
-		if (username.compareTo("anonymous") == 0) {
+		if (FTPConfiguration.INSTANCE.getBooleanProperty("allowAnonymous")
+				&& username.compareTo("anonymous") == 0) {
 			clientSocket.writeMessage("230 anonymous");
 		} else {
 			clientSocket.writeMessage("331 User accepted");

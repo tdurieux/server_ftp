@@ -3,11 +3,8 @@ package lille1.car2014.durieux_toulet.ftp_server;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
@@ -79,6 +76,7 @@ public class TransfertServerImpl implements TransfertServer {
 	 * 
 	 * @return The transfer server port
 	 */
+	@Override
 	public int getPublicPort() {
 		return transfertServerSocket.getLocalPort();
 	}
@@ -88,6 +86,7 @@ public class TransfertServerImpl implements TransfertServer {
 	 * 
 	 * @return The transfer client
 	 */
+	@Override
 	public TransfertClient getTransfertClient() {
 		return transfertClient;
 	}
@@ -100,6 +99,7 @@ public class TransfertServerImpl implements TransfertServer {
 	 * @throws RequestHandlerException
 	 * @throws SocketException
 	 */
+	@Override
 	public void writeContent(final String content)
 			throws RequestHandlerException, SocketException {
 		// Start server if it's stopped
@@ -126,6 +126,7 @@ public class TransfertServerImpl implements TransfertServer {
 	 * @throws RequestHandlerException
 	 * @throws SocketException
 	 */
+	@Override
 	public void writeContent(final byte[] content)
 			throws RequestHandlerException, SocketException {
 		// Start server if it's stopped
@@ -142,6 +143,7 @@ public class TransfertServerImpl implements TransfertServer {
 	 * 
 	 * @return Content
 	 */
+	@Override
 	public String readStringContent() {
 		// Start server if it's stopped
 		if (transfertClient == null) {
@@ -158,6 +160,7 @@ public class TransfertServerImpl implements TransfertServer {
 	 * 
 	 * @return Content
 	 */
+	@Override
 	public byte[] readContent() {
 		// Start server if it's stopped
 		if (transfertClient == null) {
@@ -171,6 +174,7 @@ public class TransfertServerImpl implements TransfertServer {
 	/**
 	 * Close transfert server
 	 */
+	@Override
 	public void close() {
 		try {
 			if (transfertServerSocket != null)
@@ -182,6 +186,7 @@ public class TransfertServerImpl implements TransfertServer {
 		}
 	}
 
+	@Override
 	public void writeContent(FileInputStream stream) throws SocketException {
 		// Start server if it's stopped
 		if (transfertClient == null) {

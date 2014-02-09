@@ -2,7 +2,6 @@ package lille1.car2014.durieux_toulet.ftp_server;
 
 import java.util.Map;
 
-import lille1.car2014.durieux_toulet.exception.FTPClientException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 
 /**
@@ -36,4 +35,6 @@ public interface FTPClient {
 	void setFileToRename(String path);
 
 	String getFileToRename();
+	
+	String getUsername();
 }

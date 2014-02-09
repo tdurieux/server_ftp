@@ -20,6 +20,7 @@ public class UserDatabaseImpl implements UserDatabase {
 	public UserDatabaseImpl() {
 	}
 
+	@Override
 	public boolean userExist(String username) {
 		return FTPUserDatabase.INSTANCE.getProperty(username) != null;
 	}
@@ -32,6 +33,7 @@ public class UserDatabaseImpl implements UserDatabase {
 	 * @param password
 	 *            Password
 	 */
+	@Override
 	public boolean loginUser(String username, String password) {
 		String passwd = FTPUserDatabase.INSTANCE.getProperty(username);
 

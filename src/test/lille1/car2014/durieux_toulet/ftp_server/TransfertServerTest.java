@@ -2,14 +2,8 @@ package test.lille1.car2014.durieux_toulet.ftp_server;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
-import lille1.car2014.durieux_toulet.ftp_server.FTPClientImpl;
-import lille1.car2014.durieux_toulet.ftp_server.FTPRequestHandlerImpl;
 import lille1.car2014.durieux_toulet.ftp_server.TransfertServer;
 import lille1.car2014.durieux_toulet.ftp_server.TransfertServerImpl;
 

@@ -2,15 +2,11 @@ package test.lille1.car2014.durieux_toulet.ftp_server;
 
 import static org.junit.Assert.*;
 
-import java.net.Socket;
-
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.ftp_server.FTPClient;
 import lille1.car2014.durieux_toulet.ftp_server.FTPClientImpl;
-import lille1.car2014.durieux_toulet.ftp_server.FTPClientSocketImpl;
-import lille1.car2014.durieux_toulet.ftp_server.FTPRequestHandler;
 import lille1.car2014.durieux_toulet.ftp_server.FTPRequestHandlerImpl;
 import lille1.car2014.durieux_toulet.ftp_server.TransfertServerImpl;
 
