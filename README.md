@@ -36,7 +36,7 @@ EPSV        |             | Demande au serveur de créer un socket de données (
 ABOR        |             | Interrompt le transfert de données
 LIST        | [path]      | List le contenu d'un répertoire (données envoyées sur le socket de données)
 NLST        | [path]      | List les nom de fichier et dossiers (données envoyées sur le socket de données)
-SIZE        | [pathFile]  | Retourne la taille du fichier
+SIZE        | path        | Retourne la taille du fichier
 RETR        | path        | Récupérer le contenu du fichier (données envoyées sur le socket de données)
 STOR        | path        | Sauvegarde les données envoyé sur le socket de données dans un fichier
 MDTM        | path        | Récupère la date de dernière modification
