@@ -237,10 +237,10 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 */
 	@FTPRequestAnnotation(name = "QUIT", connected = false)
 	private void closeConnection() {
+		// Print close message
+		clientSocket.writeMessage("426 Close connection");
 		try {
 			clientSocket.close();
-			// Print close message
-			clientSocket.writeMessage("426 Close connection");
 		} catch (SocketException e) {
 			// unable to client client connection
 		}
@@ -429,7 +429,8 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				ftpClient.getTransfertServer().close();
 			} catch (SocketException e1) {
 				LoggerUtilities.error(e1);
-				clientSocket.writeMessage("451 Unable to close the transfert Server");
+				clientSocket
+						.writeMessage("451 Unable to close the transfert Server");
 			}
 		}
 	}
@@ -479,7 +480,8 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				ftpClient.getTransfertServer().close();
 			} catch (SocketException e1) {
 				LoggerUtilities.error(e1);
-				clientSocket.writeMessage("451 Unable to close the transfert Server");
+				clientSocket
+						.writeMessage("451 Unable to close the transfert Server");
 			}
 		}
 	}
@@ -527,7 +529,8 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				ftpClient.getTransfertServer().close();
 			} catch (SocketException e1) {
 				LoggerUtilities.error(e1);
-				clientSocket.writeMessage("451 Unable to close the transfert Server");
+				clientSocket
+						.writeMessage("451 Unable to close the transfert Server");
 			}
 
 		}
@@ -564,7 +567,8 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				ftpClient.getTransfertServer().close();
 			} catch (SocketException e1) {
 				LoggerUtilities.error(e1);
-				clientSocket.writeMessage("451 Unable to close the transfert Server");
+				clientSocket
+						.writeMessage("451 Unable to close the transfert Server");
 			}
 		}
 	}
