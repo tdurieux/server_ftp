@@ -11,12 +11,14 @@ SRC_PATH    = src
 CLASS_PATH  = class
 #JAVAC       = /usr/lib/jvm/j2sdk1.7-oracle/bin/javac
 JAVAC       = javac
+#JAVA       = /usr/lib/jvm/j2sdk1.7-oracle/bin/java
 JAVA        = /usr/lib/jvm/java-1.7.0-openjdk-amd64/jre/bin/java
 JARC        = jar
 JAVAC_OPT   = -sourcepath $(SRC_PATH)
 JAVAC_OPT  += -classpath $(CLASS_PATH)
 JAVAC_OPT  += -d $(CLASS_PATH)
 JUNIT       = /usr/share/java/junit4.jar
+JAVADOC     = javadoc
 
 # Groups
 CLASS       = lille1/car2014/durieux_toulet/logs/*.class
@@ -29,6 +31,8 @@ CLASS      += test/lille1/car2014/durieux_toulet/ftp_server/*.class
 JAR         = ftp_server.jar
 
 FILES       = lille1/car2014/durieux_toulet/config/*.ini
+
+DOC         = doc
 
 MANIFEST    = MANIFEST.mf
 
@@ -49,14 +53,21 @@ ftp_server.jar: $(CLASS)
 	cd $(SRC_PATH) && $(JARC) uf ../$@ $(FILES)
 
 # Phony
-.PHONY: clean mrproper tests
+.PHONY: clean mrproper server tests doc
 
-tests: $(CLASS)
+server:
+	$(JAVA) -jar $(JAR)
+
+tests:
 	$(JAVA) -cp $(JUNIT):$(CLASS_PATH) test.lille1.car2014.durieux_toulet.ftp_server.JUnitRunner
+
+doc:
+	$(JAVADOC) -sourcepath $(SRC_PATH) -d $(DOC) -subpackages lille1
 
 clean:
 	cd $(CLASS_PATH) && rm -f $(CLASS)
 
 mrproper: clean
 	rm -f $(JAR)
+	cd $(DOC) && rm -f *
 
