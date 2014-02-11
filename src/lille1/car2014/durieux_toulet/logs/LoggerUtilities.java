@@ -30,31 +30,31 @@ public class LoggerUtilities {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		getInstance().logLogger.logp(Level.INFO, Thread.currentThread()
 				.getStackTrace()[2].getClassName(), Thread.currentThread()
-				.getStackTrace()[2].getMethodName(), message);
+				.getStackTrace()[2].getMethodName(), "[ LOG ] " + message);
 	}
 
 	public static void error(final String message) {
 		getInstance().errorLogger.logp(Level.SEVERE, Thread.currentThread()
 				.getStackTrace()[2].getClassName(), Thread.currentThread()
-				.getStackTrace()[2].getMethodName(), message);
+				.getStackTrace()[2].getMethodName(), "[ERROR] " + message);
 	}
 
 	public static void error(final String message, final Exception exception) {
 		getInstance().errorLogger.logp(Level.SEVERE, Thread.currentThread()
 				.getStackTrace()[2].getClassName(), Thread.currentThread()
-				.getStackTrace()[2].getMethodName(), message, exception);
+				.getStackTrace()[2].getMethodName(), "[ERROR] " + message, exception);
 
 	}
 
 	public static void error(final Exception exception) {
 		getInstance().errorLogger.logp(Level.SEVERE, Thread.currentThread()
 				.getStackTrace()[2].getClassName(), Thread.currentThread()
-				.getStackTrace()[2].getMethodName(), null, exception);
+				.getStackTrace()[2].getMethodName(), "[ERROR] N/A", exception);
 	}
 
 	public static void debug(final String message) {
 		getInstance().debugLogger.logp(Level.INFO, Thread.currentThread()
 				.getStackTrace()[2].getClassName(), Thread.currentThread()
-				.getStackTrace()[2].getMethodName(), message);
+				.getStackTrace()[2].getMethodName(), "[DEBUG] " + message);
 	}
 }
