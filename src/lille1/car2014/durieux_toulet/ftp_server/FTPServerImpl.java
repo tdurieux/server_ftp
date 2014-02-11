@@ -18,10 +18,12 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  * @author Toulet Cyrille
  */
 public class FTPServerImpl implements FTPServer {
+    /* Parameters */
 	private final int port;
 	private ServerSocket serverSocket;
 	private ExecutorService executor;
 	private boolean isStarted;
+
 
 	/**
 	 * Constructor with default port
@@ -30,24 +32,20 @@ public class FTPServerImpl implements FTPServer {
 		this.port = 21;
 	}
 
+
 	/**
 	 * Constructor with custom port
-	 * 
-	 * @param port
-	 *            Server port
+	 * @param port The server port
 	 */
 	public FTPServerImpl(final int port) {
 		this.port = port;
 		isStarted = false;
 	}
 
-	/**
-	 * Start to waiting new client connection
-	 * 
-	 * @throws SocketException
-	 *             Exception launched if server cannot start or if a client
-	 *             connection is interrupted
-	 */
+
+    /**
+     * @see FTPServer
+     */
 	@Override
 	public void startServer() throws ServerSocketException {
 		if (isStarted) {
@@ -83,12 +81,10 @@ public class FTPServerImpl implements FTPServer {
 		}
 	}
 
-	/**
-	 * Stop the FTP server
-	 * 
-	 * @throws ServerSocketException
-	 *             if the server is not started
-	 */
+
+    /**
+     * @see FTPServer
+     */
 	@Override
 	public void closeServer() throws ServerSocketException {
 		if (!isStarted) {
@@ -103,11 +99,19 @@ public class FTPServerImpl implements FTPServer {
 		}
 	}
 
+
+    /**
+     * @see FTPServer
+     */
 	@Override
 	public int getPort() {
 		return port;
 	}
 
+
+    /**
+     * @see FTPServer
+     */
 	@Override
 	public boolean isStarted() {
 		return isStarted;

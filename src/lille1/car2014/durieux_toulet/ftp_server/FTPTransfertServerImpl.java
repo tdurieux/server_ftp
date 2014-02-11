@@ -16,14 +16,14 @@ import lille1.car2014.durieux_toulet.exception.SocketException;
  * @author Toulet Cyrille
  */
 public class FTPTransfertServerImpl implements FTPTransfertServer {
+    /* Parameters */
 	private ServerSocket transfertServerSocket;
 	private FTPTransfertClient transfertClient;
 
+
 	/**
 	 * Constructor
-	 * 
-	 * @throws ServerSocketException
-	 *             If unable to create the transfert server socket
+	 * @throws ServerSocketException when unable to create the transfert server socket
 	 */
 	public FTPTransfertServerImpl(String address, int port)
 			throws ServerSocketException {
@@ -40,11 +40,10 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 
 	}
 
+
 	/**
 	 * Constructor
-	 * 
-	 * @throws SocketException
-	 *             If unable to create the transfert server socket
+	 * @throws SocketException when unable to create the transfert server socket
 	 */
 	public FTPTransfertServerImpl() throws SocketException {
 		try {
@@ -54,6 +53,7 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 			throw new SocketException("Unable to create transfert socket", e);
 		}
 	}
+
 
 	/**
 	 * Start the transfert server
@@ -71,34 +71,28 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 		}
 	}
 
-	/**
-	 * Get the public transfert server port
-	 * 
-	 * @return The transfer server port
-	 */
+
+    /**
+     * @see FTPTransfertServer
+     */
 	@Override
 	public int getPublicPort() {
 		return transfertServerSocket.getLocalPort();
 	}
 
-	/**
-	 * Get the transfert client
-	 * 
-	 * @return The transfer client
-	 */
+
+    /**
+     * @see FTPTransfertServer
+     */
 	@Override
 	public FTPTransfertClient getTransfertClient() {
 		return transfertClient;
 	}
 
-	/**
-	 * Write content
-	 * 
-	 * @param content
-	 *            Content to write
-	 * @throws RequestHandlerException
-	 * @throws SocketException
-	 */
+
+    /**
+     * @see FTPTransfertServer
+     */
 	@Override
 	public void writeContent(final String content)
 			throws RequestHandlerException, SocketException {
@@ -118,14 +112,10 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 		}
 	}
 
-	/**
-	 * Write content
-	 * 
-	 * @param content
-	 *            Content to write
-	 * @throws RequestHandlerException
-	 * @throws SocketException
-	 */
+
+    /**
+     * @see FTPTransfertServer
+     */
 	@Override
 	public void writeContent(final byte[] content)
 			throws RequestHandlerException, SocketException {
@@ -138,12 +128,10 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 		FTPTransfertServerImpl.this.transfertClient.writeMessage(content);
 	}
 
-	/**
-	 * Read content
-	 * 
-	 * @return Content
-	 * @throws SocketException 
-	 */
+
+    /**
+     * @see FTPTransfertServer
+     */
 	@Override
 	public String readStringContent() throws SocketException {
 		// Start server if it's stopped
@@ -156,12 +144,10 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 				FTPTransfertServerImpl.this.transfertClient.readMessage());
 	}
 
-	/**
-	 * Read content
-	 * 
-	 * @return Content
-	 * @throws SocketException 
-	 */
+
+    /**
+     * @see FTPTransfertServer
+     */
 	@Override
 	public byte[] readContent() throws SocketException {
 		// Start server if it's stopped
@@ -173,10 +159,10 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 		return FTPTransfertServerImpl.this.transfertClient.readMessage();
 	}
 
-	/**
-	 * Close transfert server
-	 * @throws SocketException 
-	 */
+
+    /**
+     * @see FTPTransfertServer
+     */
 	@Override
 	public void close() throws SocketException {
 		try {
@@ -188,6 +174,10 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 		}
 	}
 
+
+    /**
+     * @see FTPTransfertServer
+     */
 	@Override
 	public void writeContent(FileInputStream stream) throws SocketException {
 		// Start server if it's stopped

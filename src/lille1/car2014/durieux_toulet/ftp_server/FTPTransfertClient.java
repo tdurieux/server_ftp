@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
-
 import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
@@ -19,22 +18,21 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 public class FTPTransfertClient {
 	private final Socket tranfsertSocket;
 
+
 	/**
 	 * Constructor
-	 * 
-	 * @param transfertSocket
-	 *            Socket to use for connection
+	 * @param transfertSocket Socket to use for connection
 	 */
 	public FTPTransfertClient(final Socket tranfsertSocket) {
 		// Copy socket to use
 		this.tranfsertSocket = tranfsertSocket;
 	}
 
+
 	/**
 	 * Write message
-	 * 
 	 * @param byte Bytes of message to write
-	 * @throws SocketException 
+	 * @throws SocketException when unable to write message
 	 */
 	public void writeMessage(final byte[] bytes) throws SocketException {
 		try {
@@ -54,6 +52,12 @@ public class FTPTransfertClient {
 		}
 	}
 
+
+	/**
+	 * Write message
+	 * @param stream The input stream to write
+	 * @throws SocketException when unable to write message
+	 */
 	public void writeMessage(FileInputStream stream) throws SocketException {
 		try {
 			final BufferedOutputStream bo = new BufferedOutputStream(
@@ -74,9 +78,9 @@ public class FTPTransfertClient {
 		}
 	}
 
+
 	/**
 	 * Read message
-	 * 
 	 * @return Bytes of message read
 	 */
 	public byte[] readMessage() {
@@ -101,6 +105,7 @@ public class FTPTransfertClient {
 
 		return null;
 	}
+
 
 	/**
 	 * Close connection with the transfert server
