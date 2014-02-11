@@ -1,7 +1,6 @@
 package lille1.car2014.durieux_toulet.common;
 
 import lille1.car2014.durieux_toulet.config.FTPUserDatabase;
-import lille1.car2014.durieux_toulet.exception.UserDatabaseException;
 
 /**
  * User database
@@ -17,8 +16,7 @@ public class UserDatabaseImpl implements UserDatabase {
 	 * @throws UserDatabaseException
 	 *             when unable to load user DB
 	 */
-	public UserDatabaseImpl() {
-	}
+	public UserDatabaseImpl() {}
 
 	@Override
 	public boolean userExist(String username) {
