@@ -12,20 +12,44 @@ import org.junit.runner.notification.Failure;
 public class JUnitRunner {
 
     /**
-     * Run JUnit tests
-     */
-    public static void run () {
-        Result result = JUnitCore.runClasses (FTPServer.class);
-
-        for (Failure failure : result.getFailures ())
-            System.out.println (failure.toString ());
-    }
-
-    /**
      * Main
      */
     public static void main (String [] args) {
-        JUnitRunner.run ();
+        /* Test FTPClientSocketListener */
+        Result result = JUnitCore.runClasses (FTPClientSocketListenerTest.class);
+
+        for (Failure failure : result.getFailures ())
+            System.out.println (failure.toString ());
+
+        /* Test FTPClientSocketMockup */
+        result = JUnitCore.runClasses (FTPClientSocketMockupTest.class);
+
+        for (Failure failure : result.getFailures ())
+            System.out.println (failure.toString ());
+
+        /* Test FTPRequestHandler */
+        result = JUnitCore.runClasses (FTPRequestHandlerTest.class);
+
+        for (Failure failure : result.getFailures ())
+            System.out.println (failure.toString ());
+
+        /* Test FTPServer */
+        result = JUnitCore.runClasses (FTPServerTest.class);
+
+        for (Failure failure : result.getFailures ())
+            System.out.println (failure.toString ());
+
+        /* Test TransfertServer */
+        result = JUnitCore.runClasses (TransfertServerTest.class);
+
+        for (Failure failure : result.getFailures ())
+            System.out.println (failure.toString ());
+
+        /* Test UserDatabase */
+        result = JUnitCore.runClasses (UserDatabaseTest.class);
+
+        for (Failure failure : result.getFailures ())
+            System.out.println (failure.toString ());
     }    
 
 }
