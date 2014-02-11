@@ -14,16 +14,27 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 /**
  * The Configuration class is a utility class used to load ini file
  * 
- * @author Thomas Durieux
- * 
+ * @author Durieux Thomas
+ * @author Toulet Cyrille
  */
 public class PropertiesUtilityImpl implements PropertiesUtility{
 
+    /* Instance */
 	private final Properties properties;
 
+
+    /**
+     * Constructor
+     * @param fileName The property file name
+     */
 	public PropertiesUtilityImpl(final String fileName) {
+        /* Set instance */
 		properties = new Properties();
-		File f = new File(fileName);
+
+        /*Set file */
+        File f = new File(fileName);
+
+        /* Check */
 		if (!f.exists()) {
 			try {
 				properties.store(new FileOutputStream(f), null);
@@ -33,7 +44,7 @@ public class PropertiesUtilityImpl implements PropertiesUtility{
 			}
 		} else {
 			try {
-				// load a properties file
+				// Load the properties file
 				properties.load(new FileInputStream(f));
 			} catch (final IOException ex) {
 				LoggerUtilities.error(ex);
@@ -41,8 +52,16 @@ public class PropertiesUtilityImpl implements PropertiesUtility{
 		}
 	}
 
+
+    /**
+     * Constructor
+     * @param openStream The property file stream
+     */
 	public PropertiesUtilityImpl(InputStream openStream) {
+        /* Set instance */
 		properties = new Properties();
+
+        /* Use open stream */
 		try {
 			properties.load(openStream);
 		} catch (IOException e) {
@@ -50,26 +69,31 @@ public class PropertiesUtilityImpl implements PropertiesUtility{
 		}
 	}
 
+
+    /**
+     * @see PropertiesUtility
+     */
 	@Override
 	public String getProperty(final String key) {
 		return properties.getProperty(key);
 	}
 
+
+    /**
+     * @see PropertiesUtility
+     */
 	@Override
 	public boolean getBooleanProperty(final String key) {
 		return Boolean.parseBoolean(properties.getProperty(key));
 	}
+
+
+    /**
+     * @see PropertiesUtility
+     */
 	@Override
 	public int getIntProperty(final String key) {
 		return Integer.parseInt(properties.getProperty(key));
 	}
-	/*
-	 * public void setProperty(final String key, final String value) {
-	 * configurationProperties.setProperty(key, value); try {
-	 * configurationProperties.store(new FileOutputStream(f), null); } catch
-	 * (final IOException ex) {
-	 * Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE, null,
-	 * ex); } }
-	 */
 
 }
