@@ -24,7 +24,7 @@ CLASS      += lille1/car2014/durieux_toulet/ftp_server/*.class
 CLASS      += lille1/car2014/durieux_toulet/exception/*.class
 CLASS      += lille1/car2014/durieux_toulet/config/*.class
 CLASS      += lille1/car2014/durieux_toulet/common/*.class
-CLASS      += test/lille1/car2014/durieux_toulet/ftp_server/JUnitRunner.class
+CLASS      += test/lille1/car2014/durieux_toulet/ftp_server/*.class
 
 JAR         = ftp_server.jar
 
@@ -51,8 +51,8 @@ ftp_server.jar: $(CLASS)
 # Phony
 .PHONY: clean mrproper tests
 
-tests: clean all
-	cd $(CLASS_PATH) && $(JAVA) -cp $(JUNIT) test.lille1.car2014.durieux_toulet.ftp_server.JUnitRunner
+tests: $(CLASS)
+	$(JAVA) -cp $(JUNIT):$(CLASS_PATH) test.lille1.car2014.durieux_toulet.ftp_server.JUnitRunner
 
 clean:
 	cd $(CLASS_PATH) && rm -f $(CLASS)

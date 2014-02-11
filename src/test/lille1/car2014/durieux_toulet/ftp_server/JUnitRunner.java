@@ -14,21 +14,9 @@ public class JUnitRunner {
     /**
      * Main
      */
-    public static void main (String [] args) {
-        /* Test FTPClientSocketListener */
-        Result result = JUnitCore.runClasses (FTPClientSocketListenerTest.class);
-
-        for (Failure failure : result.getFailures ())
-            System.out.println (failure.toString ());
-
-        /* Test FTPClientSocketMockup */
-        result = JUnitCore.runClasses (FTPClientSocketMockupTest.class);
-
-        for (Failure failure : result.getFailures ())
-            System.out.println (failure.toString ());
-
+	public static void main (final String[] args) {
         /* Test FTPRequestHandler */
-        result = JUnitCore.runClasses (FTPRequestHandlerTest.class);
+        Result result = JUnitCore.runClasses (FTPRequestHandlerTest.class);
 
         for (Failure failure : result.getFailures ())
             System.out.println (failure.toString ());
