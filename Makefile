@@ -29,7 +29,6 @@ CLASS      += test/lille1/car2014/durieux_toulet/ftp_server/JUnitRunner.class
 JAR         = ftp_server.jar
 
 FILES       = lille1/car2014/durieux_toulet/config/*.ini
-FILES      += lille1/car2014/durieux_toulet/logs/server_ftp.*
 
 MANIFEST    = MANIFEST.mf
 

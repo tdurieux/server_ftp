@@ -7,10 +7,6 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class LoggerUtilities {
-	private String errorFile;
-	private String logFile;
-	private String debugFile;
-
 	private final Logger errorLogger;
 	private final Logger logLogger;
 	private final Logger debugLogger;
@@ -18,44 +14,9 @@ public class LoggerUtilities {
 	private static LoggerUtilities INSTANCE;
 
 	private LoggerUtilities() {
-		try {
-			this.errorFile = LoggerUtilities.class
-					.getResource("server_ftp.err").getPath();
-			this.logFile = LoggerUtilities.class.getResource("server_ftp.log")
-					.getPath();
-			this.debugFile = LoggerUtilities.class.getResource(
-					"server_ftp.debug").getPath();
-		} catch (NullPointerException e) {
-			this.errorFile = LoggerUtilities.class.getResource("").getPath()
-					+ "/server_ftp.err";
-			this.logFile = LoggerUtilities.class.getResource("").getPath()
-					+ "/server_ftp.log";
-			this.debugFile = LoggerUtilities.class.getResource("").getPath()
-					+ "/server_ftp.debug";
-		}
 		this.errorLogger = Logger.getLogger("errorLogger");
 		this.logLogger = Logger.getLogger("logLogger");
 		this.debugLogger = Logger.getLogger("debugLogger");
-
-		try {
-			final FileHandler fhError = new FileHandler(this.errorFile);
-
-			final FileHandler fhLog = new FileHandler(this.logFile);
-			final FileHandler fhDebug = new FileHandler(this.debugFile);
-
-			this.errorLogger.addHandler(fhError);
-			this.logLogger.addHandler(fhLog);
-			this.debugLogger.addHandler(fhDebug);
-
-			fhError.setFormatter(new SimpleFormatter());
-			fhLog.setFormatter(new SimpleFormatter());
-			fhDebug.setFormatter(new SimpleFormatter());
-
-		} catch (final SecurityException e) {
-			throw new RuntimeException(e);
-		} catch (final IOException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	private static LoggerUtilities getInstance() {
