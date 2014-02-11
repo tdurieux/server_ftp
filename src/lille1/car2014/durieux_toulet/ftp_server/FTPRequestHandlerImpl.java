@@ -550,13 +550,9 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		} else {
 			clientSocket.writeMessage("150 Accepted data connection");
 			try {
-				byte[] content = ftpClient.getTransfertServer().readContent();
-
 				FileOutputStream out = new FileOutputStream(path);
-
-				out.write(content);
+				ftpClient.getTransfertServer().readContent(out);
 				out.close();
-
 				clientSocket.writeMessage("226 File successfully transferred");
 			} catch (final IOException e) {
 				LoggerUtilities.error(e);

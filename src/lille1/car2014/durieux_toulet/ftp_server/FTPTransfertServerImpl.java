@@ -1,10 +1,12 @@
 package lille1.car2014.durieux_toulet.ftp_server;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
@@ -31,8 +33,7 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 		try {
 			tranfsertSocket = new Socket(address, port);
 			// Create transfert client
-			FTPTransfertServerImpl.this.transfertClient = new FTPTransfertClient(
-					tranfsertSocket);
+			this.transfertClient = new FTPTransfertClient(tranfsertSocket);
 		} catch (IOException e) {
 			throw new ServerSocketException(
 					"Unable to create TransfertServer actif mode", e);
@@ -57,7 +58,8 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 
 	/**
 	 * Start the transfert server
-	 * @throws SocketException 
+	 * 
+	 * @throws SocketException
 	 */
 	private void startServer() throws SocketException {
 		try {
@@ -67,7 +69,7 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 			FTPTransfertServerImpl.this.transfertClient = new FTPTransfertClient(
 					tranfsertSocket);
 		} catch (final IOException e) {
-			throw new SocketException("Unable to create FTPTansfertServer",e);
+			throw new SocketException("Unable to create FTPTansfertServer", e);
 		}
 	}
 
@@ -142,7 +144,7 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 	 * Read content
 	 * 
 	 * @return Content
-	 * @throws SocketException 
+	 * @throws SocketException
 	 */
 	@Override
 	public String readStringContent() throws SocketException {
@@ -160,7 +162,7 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 	 * Read content
 	 * 
 	 * @return Content
-	 * @throws SocketException 
+	 * @throws SocketException
 	 */
 	@Override
 	public byte[] readContent() throws SocketException {
@@ -170,12 +172,29 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 		}
 
 		// Return content read
-		return FTPTransfertServerImpl.this.transfertClient.readMessage();
+		return transfertClient.readMessage();
+	}
+
+	/**
+	 * Read content
+	 * 
+	 * @return Content
+	 * @throws SocketException
+	 */
+	@Override
+	public void readContent(FileOutputStream fileOutputStream)
+			throws SocketException {
+		// Start server if it's stopped
+		if (transfertClient == null) {
+			this.startServer();
+		}
+		transfertClient.readMessage(fileOutputStream);
 	}
 
 	/**
 	 * Close transfert server
-	 * @throws SocketException 
+	 * 
+	 * @throws SocketException
 	 */
 	@Override
 	public void close() throws SocketException {
