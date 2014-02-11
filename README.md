@@ -2,12 +2,15 @@
 
 ## Authors
 Durieux Thomas
+
 Toulet Cyrille
+
 14/02/2014
 
 ## Introduction
 Ce serveur FTP a été réalisé dans le cadre du cours: "Construction d'Applications Réparties" de l'université Lille 1 à Lille (France).
-Ce serveur a été réalisé en Java. Ce serveur implémente les principales fonctionalités du protocole FTP.
+
+Il a été réalisé en Java et implémente les principales fonctionalités du protocole FTP.
 
 ## Architecture
 - FTPServer: Permet de lancer le serveur FTP
@@ -50,10 +53,25 @@ RNTO        | path        | Le nouveau nom du fichier à renomer
 ## Code Samples
 
 ### Utilisation des annotations pour relier les commandes FTP aux méthodes de la classe FTPRequestHandler
+## Avant tout
+```
+mkdir class
+mkdir doc
+```
 
 ## Start server
 ```
-/usr/lib/jvm/j2sdk1.7-oracle/bin/java -jar ftp_server.jar
+make server
+```
+
+## Tests unitaires
+```
+make tests
+```
+
+## Documentation
+```
+make doc
 ```
 
 

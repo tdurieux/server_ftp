@@ -17,19 +17,20 @@ import lille1.car2014.durieux_toulet.exception.FTPClientException;
  * @author Toulet Cyrille
  */
 public class FTPClientImpl implements FTPClient {
+    /* Transfert server */
 	private FTPTransfertServerImpl transfertServer;
+
+    /* Parameters */
 	private boolean isConnected = false;
 	private String typeCharactor;
 	private String username;
 	private String currentDir;
-	private final Map<String, String> options = new HashMap<String, String>();
 	public String fileToRename;
+	private final Map<String, String> options = new HashMap<String, String>();
 
 	/**
 	 * Constructor
-	 * 
-	 * @param clientSocket
-	 *            The FTP client socket
+	 * @param clientSocket The FTP client socket
 	 */
 	public FTPClientImpl() {
 		// Create relative path
@@ -39,48 +40,38 @@ public class FTPClientImpl implements FTPClient {
 		this.setCurrentDir(currentRelativePath.toAbsolutePath().toString());
 	}
 
-	/**
-	 * Tell if client is connected
-	 * 
-	 * @return true if a client is connected, false else
-	 */
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public boolean isConnected() {
 		return this.isConnected;
 	}
 
-	/**
-	 * Set type charactor
-	 * 
-	 * @param typeCharactor
-	 *            Type char
-	 */
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public void setTypeCharactor(final String typeCharactor) {
 		this.typeCharactor = typeCharactor;
 
 	}
 
-	/**
-	 * Set uname
-	 * 
-	 * @param username
-	 *            User name
-	 */
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public void setUsername(final String username) {
 		this.username = username;
 	}
 
-	/**
-	 * Try to connect user
-	 * 
-	 * @param password
-	 *            User password
-	 * @throws FTPClientException
-	 *             when unable to load user database
-	 * @return true if is valid user, false else
-	 */
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public boolean connect(final String password) {
 		// If correct password
@@ -96,26 +87,19 @@ public class FTPClientImpl implements FTPClient {
 		}
 	}
 
-	/**
-	 * Get options
-	 * 
-	 * @return Options map
-	 */
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public Map<String, String> getOptions() {
 		return this.options;
 	}
 
-	/**
-	 * Create transfert server
-	 * 
-	 * @param port
-	 * @param address
-	 * 
-	 * @throws SocketException
-	 *             when unable to create connection
-	 * @return Transfert server port
-	 */
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public int createNewTransfert() throws SocketException {
 		// Create transfert server
@@ -126,13 +110,10 @@ public class FTPClientImpl implements FTPClient {
 		return transfertHandler.getPublicPort();
 	}
 
-	/**
-	 * Create transfert server
-	 * 
-	 * @throws SocketException
-	 *             when unable to create connection
-	 * @return Transfert server port
-	 */
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public int createNewTransfert(String address, int port)
 			throws SocketException {
@@ -149,46 +130,55 @@ public class FTPClientImpl implements FTPClient {
 		}
 	}
 
-	/**
-	 * Get transfert server
-	 * 
-	 * @return Transfert server
-	 */
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public FTPTransfertServerImpl getTransfertServer() {
 		return this.transfertServer;
 	}
 
-	/**
-	 * Get current dirrectory
-	 * 
-	 * @return Current dirrectory
-	 */
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public String getCurrentDir() {
 		return this.currentDir;
 	}
 
-	/**
-	 * Set current dirrectory
-	 * 
-	 * @param currentDir
-	 *            Current dirrectory
-	 */
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public void setCurrentDir(final String currentDir) {
 		this.currentDir = currentDir;
 	}
 
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public void setFileToRename(String path) {
 		this.fileToRename = path;
 	}
 
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public String getFileToRename() {
 		return fileToRename;
 	}
+
+
+    /**
+     * @see FTPClient
+     */
 	@Override
 	public String getUsername() {
 		return username;

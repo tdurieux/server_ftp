@@ -8,25 +8,29 @@ import java.lang.annotation.Target;
 /**
  * This annotation is used to match FTP command to a method
  * @author Thomas Durieux
- *
+ * @author Toulet Cyrille
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FTPRequestAnnotation {
-	/**
+
+    /**
 	 * The FTP command name
 	 * @return the command name
 	 */
 	String name();
-	/**
-	 * If the used must be connected to execute this method
-	 * @return
+
+
+    /**
+	 * Tell if the used must be connected to execute this method
+	 * @return True if the user hate to be connected, false else
 	 */
 	boolean connected() default true;
-	
+
+
 	/**
-	 * If this method can be called by a anonymous
-	 * @return
+	 * Tell if this method can be called by a anonymous user
+	 * @return True if the user can be anonymous, false else
 	 */
 	boolean anonymous() default false;
 
