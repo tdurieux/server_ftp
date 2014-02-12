@@ -12,13 +12,13 @@ public class UserDatabaseTest {
 		boolean isConnected = UserDatabase.INSTANCE.loginUser("NoUser", "test");
 		assertEquals(isConnected, false);
 	}
-	
+
 	@Test
 	public void testLoginWithBadPassword() {
 		boolean isConnected = UserDatabase.INSTANCE.loginUser("user", "test");
 		assertEquals(isConnected, false);
 	}
-	
+
 	@Test
 	public void testLogin() {
 		boolean isConnected = UserDatabase.INSTANCE.loginUser("user", "pass");
@@ -30,7 +30,7 @@ public class UserDatabaseTest {
 		boolean exist = UserDatabase.INSTANCE.userExist("NoUser");
 		assertEquals(exist, false);
 	}
-	
+
 	@Test
 	public void testUserExist() {
 		boolean exist = UserDatabase.INSTANCE.userExist("user");

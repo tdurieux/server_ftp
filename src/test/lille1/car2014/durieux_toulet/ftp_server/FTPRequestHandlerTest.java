@@ -698,8 +698,6 @@ public class FTPRequestHandlerTest {
 											transfertServerImpl
 													.writeContent("Test");
 											transfertServerImpl.close();
-										} catch (RequestHandlerException e) {
-											throw new RuntimeException(e);
 										} catch (SocketException e) {
 											throw new RuntimeException(e);
 										}
@@ -923,8 +921,6 @@ public class FTPRequestHandlerTest {
 											transfertServerImpl
 													.writeContent("Test");
 											transfertServerImpl.close();
-										} catch (RequestHandlerException e) {
-											throw new RuntimeException(e);
 										} catch (SocketException e) {
 											throw new RuntimeException(e);
 										}

@@ -35,7 +35,7 @@ public class FTPClientSocketMockup implements FTPClientSocket {
 	}
 
 	protected void newWriteMessage(String message) {
-		if(ftpClientSocketListeners.size()>0) {
+		if (ftpClientSocketListeners.size() > 0) {
 			System.out.println(message);
 		}
 		for (FTPClientSocketListener listener : ftpClientSocketListeners) {

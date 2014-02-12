@@ -12,14 +12,14 @@ public class FTPServerTest {
 	@Test
 	public void testConstructorWithoutParameter() {
 		FTPServer ftpServer = new FTPServerImpl();
-		assertEquals(ftpServer.getPort(), 21);
+		assertEquals(21, ftpServer.getPort());
 	}
 
 	@Test
 	public void testConstructorWithParameter() {
 		int port = 2121;
 		FTPServer ftpServer = new FTPServerImpl(port);
-		assertEquals(ftpServer.getPort(), port);
+		assertEquals(port, ftpServer.getPort());
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class FTPServerTest {
 		try {
 			Thread.currentThread();
 			Thread.sleep(500);
-			assertEquals(ftpServer.isStarted(), true);
+			assertEquals(true, ftpServer.isStarted());
 			ftpServer.closeServer();
 		} catch (ServerSocketException e) {
 			fail("Unable to stop server: " + e.getMessage());
@@ -49,7 +49,7 @@ public class FTPServerTest {
 			fail("Unable to start server: " + e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void testStartFTPServerWithServerAlreadyStarted() {
 		int port = 2121;
@@ -73,9 +73,10 @@ public class FTPServerTest {
 				ftpServer.startServer();
 				fail("Server already started");
 			} catch (ServerSocketException e) {
-				assertEquals(e.getMessage(), "The FTP server is already started");
+				assertEquals(e.getMessage(),
+						"The FTP server is already started");
 			}
-			
+
 			ftpServer.closeServer();
 		} catch (ServerSocketException e) {
 			fail("Unable to stop server: " + e.getMessage());
@@ -83,7 +84,7 @@ public class FTPServerTest {
 			fail("Unable to start server: " + e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void testStopFTPServerServerNotStarted() {
 		int port = 2121;
@@ -93,6 +94,6 @@ public class FTPServerTest {
 			fail("Server is not stared");
 		} catch (ServerSocketException e) {
 			assertEquals(e.getMessage(), "The FTP server is not started");
-		} 
+		}
 	}
 }
