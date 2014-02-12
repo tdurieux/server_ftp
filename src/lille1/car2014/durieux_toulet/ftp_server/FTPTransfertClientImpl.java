@@ -3,9 +3,9 @@ package lille1.car2014.durieux_toulet.ftp_server;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 import lille1.car2014.durieux_toulet.exception.SocketException;
@@ -104,7 +104,7 @@ public class FTPTransfertClientImpl implements FTPTransfertClient {
 	 * @see lille1.car2014.durieux_toulet.ftp_server.FTPTransfertClient#readData(java.io.FileOutputStream)
 	 */
 	@Override
-	public void readData(FileOutputStream fileOutputStream)
+	public void readData(OutputStream outputStream)
 			throws SocketException {
 		try {
 			final BufferedInputStream bi = new BufferedInputStream(
@@ -114,7 +114,7 @@ public class FTPTransfertClientImpl implements FTPTransfertClient {
 			byte[] buffer = new byte[1];
 			int l;
 			while ((l = bi.read(buffer)) > 0) {
-				fileOutputStream.write(buffer, 0, l);
+				outputStream.write(buffer, 0, l);
 			}
 		} catch (final IOException e) {
 			throw new SocketException("Unable to read client data", e);

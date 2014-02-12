@@ -1,8 +1,8 @@
 package lille1.car2014.durieux_toulet.ftp_server;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -168,13 +168,12 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 	 * @see FTPTransfertServer
 	 */
 	@Override
-	public void readContent(FileOutputStream fileOutputStream)
-			throws SocketException {
+	public void readContent(OutputStream outputStream) throws SocketException {
 		// Start server if it's stopped
 		if (transfertClient == null) {
 			this.startServer();
 		}
-		transfertClient.readData(fileOutputStream);
+		transfertClient.readData(outputStream);
 	}
 
 	/**

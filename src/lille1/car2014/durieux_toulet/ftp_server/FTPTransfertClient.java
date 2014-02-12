@@ -1,7 +1,7 @@
 package lille1.car2014.durieux_toulet.ftp_server;
 
-import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import lille1.car2014.durieux_toulet.exception.SocketException;
 
@@ -44,7 +44,7 @@ public interface FTPTransfertClient {
 	 * @throws SocketException
 	 *             Unable to read client data
 	 */
-	void readData(FileOutputStream fileOutputStream) throws SocketException;
+	void readData(OutputStream fileOutputStream) throws SocketException;
 
 	/**
 	 * Close connection with the client
