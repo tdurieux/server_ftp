@@ -49,8 +49,6 @@ public interface FTPClient {
 	/**
 	 * Get type charactor
 	 * 
-	 * @param type
-	 *            Type char
 	 */
 	String getTypeCharactor();
 

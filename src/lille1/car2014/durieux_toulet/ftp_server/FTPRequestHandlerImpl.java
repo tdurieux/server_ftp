@@ -161,17 +161,20 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 * @return True if able to set the primary caracter, false else
 	 */
 	private boolean setPrimaryTypeCaracter(final String typeCharacter) {
-		switch (typeCharacter) {
-		case "A":
+		if(typeCharacter.length()!=1) {
+			return false;
+		}
+		switch (typeCharacter.charAt(0)) {
+		case 'A':
 			ftpClient.setTypeCharactor("ASCII");
 			break;
-		case "E":
+		case 'E':
 			ftpClient.setTypeCharactor("EBCDIC");
 			break;
-		case "I":
+		case 'I':
 			ftpClient.setTypeCharactor("image");
 			break;
-		case "L":
+		case 'L':
 			ftpClient.setTypeCharactor("local");
 			break;
 		default:
@@ -192,19 +195,23 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	@FTPRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
 	private void requestType(final String typeCharacter,
 			final String secondTypeCharacter) {
+		if(secondTypeCharacter.length()!=1) {
+			clientSocket.writeMessage("400 Type not accepted");
+			return;
+		}
 		if (!this.setPrimaryTypeCaracter(typeCharacter)) {
 			clientSocket.writeMessage("400 Type not accepted");
 			return;
 		}
 
-		switch (secondTypeCharacter) {
-		case "N":
+		switch (secondTypeCharacter.charAt(0)) {
+		case 'N':
 			ftpClient.setTypeCharactor("Non-print");
 			break;
-		case "T":
+		case 'T':
 			ftpClient.setTypeCharactor("Telnet");
 			break;
-		case "C":
+		case 'C':
 			ftpClient.setTypeCharactor("ASA");
 			break;
 		default:
