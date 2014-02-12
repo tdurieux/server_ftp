@@ -111,7 +111,7 @@ public class FTPTransfertClientImpl implements FTPTransfertClient {
 					transfertSocket.getInputStream());
 
 			// Read data
-			byte[] buffer = new byte[1];
+			byte[] buffer = new byte[512];
 			int l;
 			while ((l = bi.read(buffer)) > 0) {
 				outputStream.write(buffer, 0, l);

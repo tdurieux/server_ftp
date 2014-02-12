@@ -209,12 +209,12 @@ public class TransfertServerTest {
 					transfertServer.getPublicPort());
 			final FTPTransfertClient transfertClient = new FTPTransfertClientImpl(
 					socket);
+
 			new Thread("testWriteContentFileInputStream") {
 				@Override
 				public void run() {
 					try {
-						transfertServer.writeContent(FTPConfiguration.class
-								.getResource("db_user.ini").openStream());
+						transfertClient.readData();
 					} catch (Exception e) {
 						fail("Unable to write content");
 					}
@@ -222,8 +222,12 @@ public class TransfertServerTest {
 			}.start();
 
 			try {
-				transfertClient.readData();
+				transfertServer.writeContent(FTPConfiguration.class
+						.getResource("db_user.ini").openStream());
+
 			} catch (Exception e) {
+				transfertServer.close();
+				transfertClient.close();
 				fail("Unable to read content");
 			}
 

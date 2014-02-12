@@ -61,7 +61,7 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 	 * 
 	 * @throws SocketException
 	 */
-	private void startServer() throws SocketException {
+	public void startServer() throws ServerSocketException {
 		try {
 			final Socket tranfsertSocket = transfertServerSocket.accept();
 
@@ -69,7 +69,7 @@ public class FTPTransfertServerImpl implements FTPTransfertServer {
 			FTPTransfertServerImpl.this.transfertClient = new FTPTransfertClientImpl(
 					tranfsertSocket);
 		} catch (final IOException e) {
-			throw new SocketException("Unable to create FTPTansfertServer", e);
+			throw new ServerSocketException("Unable to create FTPTansfertServer", e);
 		}
 	}
 

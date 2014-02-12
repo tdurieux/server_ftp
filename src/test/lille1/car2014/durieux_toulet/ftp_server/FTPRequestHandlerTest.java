@@ -305,6 +305,7 @@ public class FTPRequestHandlerTest {
 			FTPRequestHandlerImpl.parseStringRequest("TYPE E asda", ftpClient,
 					ftpClientSocketMockup).execute();
 		} catch (RequestHandlerException e) {
+			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}

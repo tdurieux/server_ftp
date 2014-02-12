@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
+import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 
 /**
@@ -27,6 +28,11 @@ public interface FTPTransfertServer {
 	 * @return The transfer client
 	 */
 	FTPTransfertClient getTransfertClient();
+	
+	/**
+	 * Start the transfert server (passive mode)
+	 */
+	void startServer() throws ServerSocketException;
 
 	/**
 	 * Write content

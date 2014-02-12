@@ -450,10 +450,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	 */
 	@FTPRequestAnnotation(name = "List", connected = true, anonymous = true)
 	private void requestListFiles(String... dirs) {
-		String path = arrayToPath(dirs);
-		if (path.compareTo("-a") == 0) {
-			path = "";
+		if (dirs[0].compareTo("-a") == 0) {
+			dirs[0] = "";
 		}
+		String path = arrayToPath(dirs);
+		
 		if (ftpClient.getTransfertServer() == null) {
 			clientSocket.writeMessage("443 No data connection");
 		} else {
