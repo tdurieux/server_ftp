@@ -35,7 +35,7 @@ public class FTPClientImpl implements FTPClient {
 		final Path currentRelativePath = Paths.get("/");
 
 		// Set current dirrectory
-		this.setCurrentDir(currentRelativePath.toAbsolutePath().toString());
+		setCurrentDir(currentRelativePath.toAbsolutePath().toString());
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class FTPClientImpl implements FTPClient {
 	 */
 	@Override
 	public boolean isConnected() {
-		return this.isConnected;
+		return isConnected;
 	}
 
 	/**
@@ -77,14 +77,14 @@ public class FTPClientImpl implements FTPClient {
 	@Override
 	public boolean connect(final String password) {
 		// If correct password
-		if (UserDatabase.INSTANCE.loginUser(this.username, password)) {
+		if (UserDatabase.INSTANCE.loginUser(username, password)) {
 			// Connect user
-			this.isConnected = true;
+			isConnected = true;
 			return true;
 		} else {
 			// Sorry, bye !
-			this.username = null;
-			this.isConnected = false;
+			username = null;
+			isConnected = false;
 			return false;
 		}
 	}
@@ -94,7 +94,7 @@ public class FTPClientImpl implements FTPClient {
 	 */
 	@Override
 	public Map<String, String> getOptions() {
-		return this.options;
+		return options;
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class FTPClientImpl implements FTPClient {
 	@Override
 	public int createNewTransfer() throws SocketException {
 		// Create transfert server
-		this.transfertSocket = new FTPTransferSocketImpl();
+		transfertSocket = new FTPTransferSocketImpl();
 
 		// Return server port
 		return transfertSocket.getPublicPort();
@@ -113,16 +113,16 @@ public class FTPClientImpl implements FTPClient {
 	 * @see FTPClient
 	 */
 	@Override
-	public int createNewTransfer(String address, int port)
+	public int createNewTransfer(final String address, final int port)
 			throws SocketException {
 		// Create transfert server
 		try {
-			this.transfertSocket = new FTPTransferSocketImpl(address, port);
+			transfertSocket = new FTPTransferSocketImpl(address, port);
 			;
 
 			// Return server port
 			return port;
-		} catch (ServerSocketException e) {
+		} catch (final ServerSocketException e) {
 			throw new SocketException("The current client is not found", e);
 		}
 	}
@@ -132,7 +132,7 @@ public class FTPClientImpl implements FTPClient {
 	 */
 	@Override
 	public FTPTransferSocket getTransferServer() {
-		return this.transfertSocket;
+		return transfertSocket;
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class FTPClientImpl implements FTPClient {
 	 */
 	@Override
 	public String getCurrentDir() {
-		return this.currentDir;
+		return currentDir;
 	}
 
 	/**
@@ -155,8 +155,8 @@ public class FTPClientImpl implements FTPClient {
 	 * @see FTPClient
 	 */
 	@Override
-	public void setFileToRename(String path) {
-		this.fileToRename = path;
+	public void setFileToRename(final String path) {
+		fileToRename = path;
 	}
 
 	/**

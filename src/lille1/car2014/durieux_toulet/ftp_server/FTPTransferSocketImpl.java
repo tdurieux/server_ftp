@@ -31,11 +31,11 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 	 * @throws ServerSocketException
 	 *             when unable to create the transfert server socket
 	 */
-	public FTPTransferSocketImpl(String address, int port)
+	public FTPTransferSocketImpl(final String address, final int port)
 			throws ServerSocketException {
 		try {
 			transferSocket = new Socket(address, port);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new ServerSocketException(
 					"Unable to create TransfertServer actif mode", e);
 		}
@@ -61,9 +61,11 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 	/**
 	 * @see FTPTransferSocket
 	 */
+	@Override
 	public void startServer() throws ServerSocketException {
-		if (transfertServerSocket == null)
+		if (transfertServerSocket == null) {
 			return;
+		}
 		try {
 			transferSocket = transfertServerSocket.accept();
 		} catch (final IOException e) {
@@ -77,10 +79,11 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 	 */
 	@Override
 	public int getPublicPort() {
-		if (transfertServerSocket != null)
+		if (transfertServerSocket != null) {
 			return transfertServerSocket.getLocalPort();
-		else
+		} else {
 			return transferSocket.getLocalPort();
+		}
 	}
 
 	/**
@@ -102,7 +105,7 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 			bo.flush();
 
 			// Close the connection
-			this.close();
+			close();
 		} catch (final IOException e) {
 			throw new SocketException("Unable to send data to client", e);
 		}
@@ -112,7 +115,7 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 	 * @see FTPTransferSocket
 	 */
 	@Override
-	public void writeData(InputStream stream) throws SocketException {
+	public void writeData(final InputStream stream) throws SocketException {
 		if (transferSocket == null) {
 			startServer();
 		}
@@ -120,7 +123,7 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 			final BufferedOutputStream bo = new BufferedOutputStream(
 					transferSocket.getOutputStream());
 
-			byte[] buffer = new byte[512];
+			final byte[] buffer = new byte[512];
 			int l;
 			while ((l = stream.read(buffer)) > 0) {
 				bo.write(buffer, 0, l);
@@ -129,7 +132,7 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 			bo.flush();
 
 			// Close the connection
-			this.close();
+			close();
 		} catch (final IOException e) {
 			throw new SocketException("Unable to send data to client", e);
 		}
@@ -139,7 +142,7 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 	 * @see FTPTransferSocket
 	 */
 	@Override
-	public void writeData(String data) throws SocketException {
+	public void writeData(final String data) throws SocketException {
 		writeData(data.getBytes());
 	}
 
@@ -154,10 +157,10 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 		try {
 			final BufferedInputStream bi = new BufferedInputStream(
 					transferSocket.getInputStream());
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 			// Read data
-			byte[] buffer = new byte[512];
+			final byte[] buffer = new byte[512];
 			int l;
 			while ((l = bi.read(buffer)) > 0) {
 				output.write(buffer, 0, l);
@@ -182,7 +185,8 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 	 * @see FTPTransferSocket
 	 */
 	@Override
-	public void readData(OutputStream outputStream) throws SocketException {
+	public void readData(final OutputStream outputStream)
+			throws SocketException {
 		if (transferSocket == null) {
 			startServer();
 		}
@@ -191,7 +195,7 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 					transferSocket.getInputStream());
 
 			// Read data
-			byte[] buffer = new byte[512];
+			final byte[] buffer = new byte[512];
 			int l;
 			while ((l = bi.read(buffer)) > 0) {
 				outputStream.write(buffer, 0, l);
@@ -205,13 +209,16 @@ public class FTPTransferSocketImpl implements FTPTransferSocket {
 	/**
 	 * @see FTPTransferSocket
 	 */
+	@Override
 	public void close() throws SocketException {
 		try {
 			// Close socket
-			if (transferSocket != null)
+			if (transferSocket != null) {
 				transferSocket.close();
-			if (transfertServerSocket != null)
+			}
+			if (transfertServerSocket != null) {
 				transfertServerSocket.close();
+			}
 		} catch (final IOException e) {
 			throw new SocketException("Unable to close data connection", e);
 		}

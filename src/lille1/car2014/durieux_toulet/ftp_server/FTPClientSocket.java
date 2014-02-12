@@ -24,7 +24,7 @@ public interface FTPClientSocket {
 	void readMessage();
 
 	/**
-	 * Close the client socket 
+	 * Close the client socket
 	 * 
 	 * @throws SocketException
 	 *             when unable to close socket

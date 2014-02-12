@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.Charset;
+
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
@@ -17,8 +18,8 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  * @author Toulet Cyrille
  */
 public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
-	private Socket clientSocket;
-	private FTPClient ftpClient;
+	private final Socket clientSocket;
+	private final FTPClient ftpClient;
 
 	/**
 	 * Constructor
@@ -26,7 +27,7 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 	 * @param clientSocket
 	 *            The client socket
 	 */
-	public FTPClientSocketImpl(Socket clientSocket) {
+	public FTPClientSocketImpl(final Socket clientSocket) {
 		this.clientSocket = clientSocket;
 		ftpClient = new FTPClientImpl();
 	}
@@ -39,7 +40,7 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 	 *             when unable to get the stream
 	 */
 	private OutputStreamWriter getOutputStreamWriter() throws IOException {
-		return new OutputStreamWriter(this.clientSocket.getOutputStream(),
+		return new OutputStreamWriter(clientSocket.getOutputStream(),
 				Charset.forName("UTF-8"));
 	}
 
@@ -51,7 +52,7 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 	 *             when unable to get the stream
 	 */
 	private InputStreamReader getInputStreamReader() throws IOException {
-		return new InputStreamReader(this.clientSocket.getInputStream(),
+		return new InputStreamReader(clientSocket.getInputStream(),
 				Charset.forName("UTF-8"));
 	}
 
@@ -69,7 +70,7 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 			writer.write(message + " \n");
 			// Send data
 			writer.flush();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			// Log errors
 			LoggerUtilities.error(e);
 		}
@@ -82,7 +83,7 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 	public void readMessage() {
 		try {
 			// Create read buffer
-			BufferedReader in = new BufferedReader(getInputStreamReader());
+			final BufferedReader in = new BufferedReader(getInputStreamReader());
 
 			String userInput;
 
@@ -93,7 +94,7 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 					System.out.println(userInput);
 
 					// Try to parse request
-					FTPRequestHandler ftpRequestHandler = FTPRequestHandlerImpl
+					final FTPRequestHandler ftpRequestHandler = FTPRequestHandlerImpl
 							.parseStringRequest(userInput, ftpClient, this);
 					ftpRequestHandler.execute();
 				} catch (final RequestHandlerException e) {
@@ -101,7 +102,7 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 					LoggerUtilities.error(e);
 
 					// Print errors
-					this.writeMessage("202 " + e.getMessage());
+					writeMessage("202 " + e.getMessage());
 				}
 			}
 		} catch (final IOException e) {
@@ -116,8 +117,8 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 	@Override
 	public void close() throws SocketException {
 		try {
-			this.clientSocket.close();
-		} catch (IOException e) {
+			clientSocket.close();
+		} catch (final IOException e) {
 			throw new SocketException("Unlable to close client connection", e);
 		}
 	}
@@ -128,10 +129,10 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 	@Override
 	public void startListeningClient() {
 		// Write welcome message
-		this.writeMessage("200");
+		writeMessage("200");
 
 		// Wait requests
-		this.readMessage();
+		readMessage();
 	}
 
 	/**

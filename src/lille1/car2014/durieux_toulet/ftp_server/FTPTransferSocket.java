@@ -67,7 +67,7 @@ public interface FTPTransferSocket {
 	 *             Unable to read client data
 	 */
 	byte[] readData() throws SocketException;
-	
+
 	/**
 	 * Read data on socket
 	 * 

@@ -33,7 +33,7 @@ public class PropertiesUtilityImpl implements PropertiesUtility {
 		properties = new Properties();
 
 		/* Set file */
-		File f = new File(fileName);
+		final File f = new File(fileName);
 
 		/* Check */
 		if (!f.exists()) {
@@ -59,14 +59,14 @@ public class PropertiesUtilityImpl implements PropertiesUtility {
 	 * @param openStream
 	 *            The property file stream
 	 */
-	public PropertiesUtilityImpl(InputStream openStream) {
+	public PropertiesUtilityImpl(final InputStream openStream) {
 		/* Set instance */
 		properties = new Properties();
 
 		/* Use open stream */
 		try {
 			properties.load(openStream);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			LoggerUtilities.error(e);
 		}
 	}

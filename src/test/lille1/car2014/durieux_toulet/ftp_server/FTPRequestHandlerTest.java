@@ -1,6 +1,7 @@
 package test.lille1.car2014.durieux_toulet.ftp_server;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
@@ -26,8 +27,8 @@ public class FTPRequestHandlerTest {
 	public void tearDown() {
 	}
 
-	private int parseMessageCode(String message) {
-		String[] splittedMessage = message.split(" ");
+	private int parseMessageCode(final String message) {
+		final String[] splittedMessage = message.split(" ");
 		if (splittedMessage.length > 0) {
 			return Integer.parseInt(splittedMessage[0]);
 		}
@@ -37,7 +38,7 @@ public class FTPRequestHandlerTest {
 	@Test
 	public void testRequestUser() {
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -49,23 +50,23 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(331, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("USER user",
 					new FTPClientImpl(), ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestBadPassword() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -77,8 +78,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(430, code);
 						}
 					});
@@ -86,16 +87,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("PASS user", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestGoodPassword() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -107,8 +108,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(230, code);
 						}
 					});
@@ -116,16 +117,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("PASS pass", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestTypeNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -137,23 +138,23 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("TYPE ds", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestInvalidType() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -165,8 +166,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(400, code);
 						}
 					});
@@ -176,16 +177,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("TYPE ds", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestValidType() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -197,8 +198,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(200, code);
 						}
 					});
@@ -208,16 +209,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("TYPE A", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestValidSecondType() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -229,8 +230,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(200, code);
 						}
 					});
@@ -240,16 +241,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("TYPE L N", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestInvalidSecondType() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -261,8 +262,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(400, code);
 						}
 					});
@@ -272,16 +273,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("TYPE G N", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestInvalidSecondType2() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -293,8 +294,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(400, code);
 						}
 					});
@@ -304,7 +305,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("TYPE E asda", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -312,7 +313,7 @@ public class FTPRequestHandlerTest {
 	@Test
 	public void testRequestListWithUserNotConnected() {
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -324,23 +325,23 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("LIST -a",
 					new FTPClientImpl(), ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestListNotDataConnection() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -352,8 +353,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(443, code);
 						}
 					});
@@ -363,7 +364,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("LIST -a", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -384,8 +385,8 @@ public class FTPRequestHandlerTest {
 					}
 
 					@Override
-					public void newWriteMessage(String message) {
-						int code = parseMessageCode(message);
+					public void newWriteMessage(final String message) {
+						final int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
 								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
@@ -400,13 +401,13 @@ public class FTPRequestHandlerTest {
 											transfertServerImpl
 													.readStringData();
 											transfertServerImpl.close();
-										} catch (SocketException e) {
+										} catch (final SocketException e) {
 											throw new RuntimeException(e);
 										}
 
 									}
 								}).start();
-							} catch (ServerSocketException e) {
+							} catch (final ServerSocketException e) {
 								throw new RuntimeException(e);
 							}
 						} else {
@@ -423,7 +424,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("LIST", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 
@@ -432,7 +433,7 @@ public class FTPRequestHandlerTest {
 	@Test
 	public void testRequestNLSTWithUserNotConnected() {
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -444,23 +445,23 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("NLST",
 					new FTPClientImpl(), ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestNLSTNotDataConnection() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -472,8 +473,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(443, code);
 						}
 					});
@@ -483,7 +484,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("NLST", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -504,8 +505,8 @@ public class FTPRequestHandlerTest {
 					}
 
 					@Override
-					public void newWriteMessage(String message) {
-						int code = parseMessageCode(message);
+					public void newWriteMessage(final String message) {
+						final int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
 								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
@@ -520,13 +521,13 @@ public class FTPRequestHandlerTest {
 											transfertServerImpl
 													.readStringData();
 											transfertServerImpl.close();
-										} catch (SocketException e) {
+										} catch (final SocketException e) {
 											throw new RuntimeException(e);
 										}
 
 									}
 								}).start();
-							} catch (ServerSocketException e) {
+							} catch (final ServerSocketException e) {
 								throw new RuntimeException(e);
 							}
 						} else {
@@ -543,7 +544,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("NLST", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -564,8 +565,8 @@ public class FTPRequestHandlerTest {
 					}
 
 					@Override
-					public void newWriteMessage(String message) {
-						int code = parseMessageCode(message);
+					public void newWriteMessage(final String message) {
+						final int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
 								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
@@ -580,12 +581,12 @@ public class FTPRequestHandlerTest {
 											transfertServerImpl
 													.readStringData();
 											transfertServerImpl.close();
-										} catch (SocketException e) {
+										} catch (final SocketException e) {
 											throw new RuntimeException(e);
 										}
 									}
 								}).start();
-							} catch (ServerSocketException e) {
+							} catch (final ServerSocketException e) {
 								throw new RuntimeException(e);
 							}
 						} else {
@@ -603,7 +604,7 @@ public class FTPRequestHandlerTest {
 			FTPRequestHandlerImpl.parseStringRequest(
 					"NLST /tmp/fichierNonPresent", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -611,7 +612,7 @@ public class FTPRequestHandlerTest {
 	@Test
 	public void testRequestSTORWithUserNotConnected() {
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -623,23 +624,23 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("STOR /tmp/test.txt",
 					new FTPClientImpl(), ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestSTORNotDataConnection() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -651,8 +652,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(443, code);
 						}
 					});
@@ -662,7 +663,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("STOR /tmp/test.txt",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -683,8 +684,8 @@ public class FTPRequestHandlerTest {
 					}
 
 					@Override
-					public void newWriteMessage(String message) {
-						int code = parseMessageCode(message);
+					public void newWriteMessage(final String message) {
+						final int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
 								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
@@ -699,12 +700,12 @@ public class FTPRequestHandlerTest {
 											transfertServerImpl
 													.writeData("Test");
 											transfertServerImpl.close();
-										} catch (SocketException e) {
+										} catch (final SocketException e) {
 											throw new RuntimeException(e);
 										}
 									}
 								}).start();
-							} catch (ServerSocketException e) {
+							} catch (final ServerSocketException e) {
 								throw new RuntimeException(e);
 							}
 						} else {
@@ -724,7 +725,7 @@ public class FTPRequestHandlerTest {
 					ftpClient, ftpClientSocketMockup).execute();
 			FTPRequestHandlerImpl.parseStringRequest("DELE /tmp/text.txt",
 					ftpClient, new FTPClientSocketMockup()).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 
@@ -733,7 +734,7 @@ public class FTPRequestHandlerTest {
 	@Test
 	public void testRequestRETRWithUserNotConnected() {
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -745,23 +746,23 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("RETR /tmp/test.txt",
 					new FTPClientImpl(), ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail();
 		}
 	}
 
 	@Test
 	public void testRequestRETRNotDataConnection() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -773,8 +774,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(443, code);
 						}
 					});
@@ -784,7 +785,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("RETR /tmp/test.txt",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -805,8 +806,8 @@ public class FTPRequestHandlerTest {
 					}
 
 					@Override
-					public void newWriteMessage(String message) {
-						int code = parseMessageCode(message);
+					public void newWriteMessage(final String message) {
+						final int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
 								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
@@ -820,12 +821,12 @@ public class FTPRequestHandlerTest {
 										try {
 											transfertServerImpl.readData();
 											transfertServerImpl.close();
-										} catch (SocketException e) {
+										} catch (final SocketException e) {
 											throw new RuntimeException(e);
 										}
 									}
 								}).start();
-							} catch (ServerSocketException e) {
+							} catch (final ServerSocketException e) {
 								throw new RuntimeException(e);
 							}
 						} else {
@@ -843,7 +844,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("RETR /tmp/text.txt",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -864,8 +865,8 @@ public class FTPRequestHandlerTest {
 					}
 
 					@Override
-					public void newWriteMessage(String message) {
-						int code = parseMessageCode(message);
+					public void newWriteMessage(final String message) {
+						final int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
 								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
@@ -880,12 +881,12 @@ public class FTPRequestHandlerTest {
 											transfertServerImpl
 													.readStringData();
 											transfertServerImpl.close();
-										} catch (SocketException e) {
+										} catch (final SocketException e) {
 											throw new RuntimeException(e);
 										}
 									}
 								}).start();
-							} catch (ServerSocketException e) {
+							} catch (final ServerSocketException e) {
 								throw new RuntimeException(e);
 							}
 						} else {
@@ -906,8 +907,8 @@ public class FTPRequestHandlerTest {
 					}
 
 					@Override
-					public void newWriteMessage(String message) {
-						int code = parseMessageCode(message);
+					public void newWriteMessage(final String message) {
+						final int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
 								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
@@ -922,12 +923,12 @@ public class FTPRequestHandlerTest {
 											transfertServerImpl
 													.writeData("Test");
 											transfertServerImpl.close();
-										} catch (SocketException e) {
+										} catch (final SocketException e) {
 											throw new RuntimeException(e);
 										}
 									}
 								}).start();
-							} catch (ServerSocketException e) {
+							} catch (final ServerSocketException e) {
 								throw new RuntimeException(e);
 							}
 						} else if (code == 226) {
@@ -942,7 +943,7 @@ public class FTPRequestHandlerTest {
 								FTPRequestHandlerImpl.parseStringRequest(
 										"DELE /tmp/text.txt", ftpClient,
 										new FTPClientSocketMockup()).execute();
-							} catch (RequestHandlerException e) {
+							} catch (final RequestHandlerException e) {
 								fail(e.getMessage());
 							}
 						}
@@ -959,16 +960,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("STOR /tmp/text.txt",
 					ftpClient, ftpClientSocketMockupNewFile).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestSystem() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -980,8 +981,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(215, code);
 						}
 					});
@@ -991,16 +992,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("SYST", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestSystemNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1012,14 +1013,14 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("SYST", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1028,7 +1029,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestOptions() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1040,10 +1041,11 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
-							if (code != 200)
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
+							if (code != 200) {
 								fail("Options not accpeted");
+							}
 							assertEquals("test",
 									ftpClient.getOptions().get("test"));
 						}
@@ -1054,16 +1056,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("OPTS test test",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestOptionsNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1075,14 +1077,14 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("OPTS test test",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1091,7 +1093,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestPWD() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1103,8 +1105,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(257, code);
 						}
 					});
@@ -1114,16 +1116,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("PWD", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestPWDNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1135,14 +1137,14 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("PWD", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1151,7 +1153,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestCWD() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1163,8 +1165,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(250, code);
 						}
 					});
@@ -1174,7 +1176,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("CWD /", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1183,7 +1185,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestCWDFolderNotExist() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1195,8 +1197,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(550, code);
 						}
 					});
@@ -1206,16 +1208,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("CWD /blablabla",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestCWDNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1227,14 +1229,14 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("CWD /", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1243,7 +1245,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestCDUP() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1255,8 +1257,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(250, code);
 						}
 					});
@@ -1266,16 +1268,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("CDUP", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestCDUPNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1287,14 +1289,14 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("CDUP", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1303,7 +1305,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestMKD() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1315,8 +1317,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(226, code);
 						}
 					});
@@ -1330,7 +1332,7 @@ public class FTPRequestHandlerTest {
 			FTPRequestHandlerImpl.parseStringRequest(
 					"DELE /tmp/testCreationFolder", ftpClient,
 					new FTPClientSocketMockup()).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1339,7 +1341,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestMKDFolderNotCreated() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1351,8 +1353,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(451, code);
 						}
 					});
@@ -1362,16 +1364,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("MKD /testCreationFolder",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestMKDNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1383,14 +1385,14 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("MKD /testCreationFolder",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1399,7 +1401,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestRename() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1411,8 +1413,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(250, code);
 						}
 					});
@@ -1435,16 +1437,16 @@ public class FTPRequestHandlerTest {
 			FTPRequestHandlerImpl.parseStringRequest(
 					"RMD /tmp/testCreationFolderRN", ftpClient,
 					new FTPClientSocketMockup()).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestRenameNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1456,15 +1458,15 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest(
 					"RNFR /testCreationFolder", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1473,7 +1475,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestMDTM() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1485,8 +1487,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(226, code);
 						}
 					});
@@ -1496,7 +1498,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("MDTM /tmp", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1505,7 +1507,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestMDTMFileNotExist() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1517,8 +1519,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(451, code);
 						}
 					});
@@ -1528,16 +1530,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("MDTM /booom", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestMDTMNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1549,14 +1551,14 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("MDTM /tmp", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1565,7 +1567,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestSIZE() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1577,8 +1579,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(226, code);
 						}
 					});
@@ -1588,7 +1590,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("SIZE /tmp", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1597,7 +1599,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestSIZEFileNotExist() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1609,7 +1611,7 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
+						public void newWriteMessage(final String message) {
 							assertEquals("226 0", message);
 						}
 					});
@@ -1619,16 +1621,16 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("SIZE /booom", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestSIZENotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1640,23 +1642,23 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("SIZE /tmp", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestPORTNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1668,14 +1670,14 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("PORT 127,0,0,1,123,13",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1684,7 +1686,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestPORTNoServer() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1696,8 +1698,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(425, code);
 						}
 					});
@@ -1707,7 +1709,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("PORT 127,0,0,1,123,13",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1716,7 +1718,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestPORTNotValid() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1728,8 +1730,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(425, code);
 						}
 					});
@@ -1739,7 +1741,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("PORT 127,0,0,125,34",
 					ftpClient, ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1748,7 +1750,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestPASV() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1760,8 +1762,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(227, code);
 						}
 					});
@@ -1773,16 +1775,16 @@ public class FTPRequestHandlerTest {
 					ftpClientSocketMockup).execute();
 			FTPRequestHandlerImpl.parseStringRequest("ABOR", ftpClient,
 					new FTPClientSocketMockup()).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestPASVNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1794,14 +1796,14 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("PASV", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -1810,7 +1812,7 @@ public class FTPRequestHandlerTest {
 	public void testRequestEPSV() {
 		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1822,8 +1824,8 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(229, code);
 						}
 					});
@@ -1835,16 +1837,16 @@ public class FTPRequestHandlerTest {
 					ftpClientSocketMockup).execute();
 			FTPRequestHandlerImpl.parseStringRequest("ABOR", ftpClient,
 					new FTPClientSocketMockup()).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}
 
 	@Test
 	public void testRequestEPSVNotConnected() {
-		FTPClient ftpClient = new FTPClientImpl();
+		final FTPClient ftpClient = new FTPClientImpl();
 		try {
-			FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
+			final FTPClientSocketMockup ftpClientSocketMockup = new FTPClientSocketMockup();
 			ftpClientSocketMockup
 					.addFTPClientSocketListener(new FTPClientSocketListener() {
 						@Override
@@ -1856,14 +1858,14 @@ public class FTPRequestHandlerTest {
 						}
 
 						@Override
-						public void newWriteMessage(String message) {
-							int code = parseMessageCode(message);
+						public void newWriteMessage(final String message) {
+							final int code = parseMessageCode(message);
 							assertEquals(530, code);
 						}
 					});
 			FTPRequestHandlerImpl.parseStringRequest("EPSV", ftpClient,
 					ftpClientSocketMockup).execute();
-		} catch (RequestHandlerException e) {
+		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());
 		}
 	}

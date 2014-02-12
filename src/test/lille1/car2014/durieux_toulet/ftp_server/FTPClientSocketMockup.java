@@ -15,7 +15,7 @@ public class FTPClientSocketMockup implements FTPClientSocket {
 	}
 
 	@Override
-	public void writeMessage(String message) {
+	public void writeMessage(final String message) {
 		newWriteMessage(message);
 	}
 
@@ -34,32 +34,34 @@ public class FTPClientSocketMockup implements FTPClientSocket {
 		openSocket();
 	}
 
-	protected void newWriteMessage(String message) {
+	protected void newWriteMessage(final String message) {
 		if (ftpClientSocketListeners.size() > 0) {
 			System.out.println(message);
 		}
-		for (FTPClientSocketListener listener : ftpClientSocketListeners) {
+		for (final FTPClientSocketListener listener : ftpClientSocketListeners) {
 			listener.newWriteMessage(message);
 		}
 	}
 
 	protected void closeSocket() {
-		for (FTPClientSocketListener listener : ftpClientSocketListeners) {
+		for (final FTPClientSocketListener listener : ftpClientSocketListeners) {
 			listener.sokcetClosed();
 		}
 	}
 
 	protected void openSocket() {
-		for (FTPClientSocketListener listener : ftpClientSocketListeners) {
+		for (final FTPClientSocketListener listener : ftpClientSocketListeners) {
 			listener.socketOpened();
 		}
 	}
 
-	public void addFTPClientSocketListener(FTPClientSocketListener listener) {
+	public void addFTPClientSocketListener(
+			final FTPClientSocketListener listener) {
 		ftpClientSocketListeners.add(listener);
 	}
 
-	public void removeFTPClientSocketListener(FTPClientSocketListener listener) {
+	public void removeFTPClientSocketListener(
+			final FTPClientSocketListener listener) {
 		ftpClientSocketListeners.remove(listener);
 	}
 

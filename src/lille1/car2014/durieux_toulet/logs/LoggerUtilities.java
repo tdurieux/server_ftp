@@ -22,9 +22,9 @@ public class LoggerUtilities {
 	 * Constructor
 	 */
 	private LoggerUtilities() {
-		this.errorLogger = Logger.getLogger("errorLogger");
-		this.logLogger = Logger.getLogger("logLogger");
-		this.debugLogger = Logger.getLogger("debugLogger");
+		errorLogger = Logger.getLogger("errorLogger");
+		logLogger = Logger.getLogger("logLogger");
+		debugLogger = Logger.getLogger("debugLogger");
 	}
 
 	/**

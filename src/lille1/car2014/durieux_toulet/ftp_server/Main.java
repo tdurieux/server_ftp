@@ -20,7 +20,7 @@ public class Main {
 		try {
 			defaultPort = FTPConfiguration.INSTANCE
 					.getIntProperty("defaultPort");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			defaultPort = 2121;
 		}
 

@@ -16,26 +16,30 @@ public class JUnitRunner {
 		/* Test FTPRequestHandler */
 		Result result = JUnitCore.runClasses(FTPRequestHandlerTest.class);
 
-		for (Failure failure : result.getFailures())
+		for (final Failure failure : result.getFailures()) {
 			System.out.println(failure.toString());
+		}
 
 		/* Test FTPServer */
 		result = JUnitCore.runClasses(FTPServerTest.class);
 
-		for (Failure failure : result.getFailures())
+		for (final Failure failure : result.getFailures()) {
 			System.out.println(failure.toString());
+		}
 
 		/* Test TransfertServer */
 		result = JUnitCore.runClasses(FTPTransferSocketTest.class);
 
-		for (Failure failure : result.getFailures())
+		for (final Failure failure : result.getFailures()) {
 			System.out.println(failure.toString());
+		}
 
 		/* Test UserDatabase */
 		result = JUnitCore.runClasses(UserDatabaseTest.class);
 
-		for (Failure failure : result.getFailures())
+		for (final Failure failure : result.getFailures()) {
 			System.out.println(failure.toString());
+		}
 	}
 
 }

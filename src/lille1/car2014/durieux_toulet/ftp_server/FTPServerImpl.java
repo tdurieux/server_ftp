@@ -27,7 +27,7 @@ public class FTPServerImpl implements FTPServer {
 	 * Constructor with default port
 	 */
 	public FTPServerImpl() {
-		this.port = 21;
+		port = 21;
 	}
 
 	/**
@@ -51,22 +51,22 @@ public class FTPServerImpl implements FTPServer {
 		}
 		try {
 			// Create socket
-			this.serverSocket = new ServerSocket(this.port);
+			serverSocket = new ServerSocket(port);
 			isStarted = true;
 		} catch (final IOException e) {
-			throw new ServerSocketException("Port " + this.port
+			throw new ServerSocketException("Port " + port
 					+ " already used or reserved by the system.", e);
 		}
 
 		// Log server starting
-		LoggerUtilities.log("FTP server started on port: " + this.port);
+		LoggerUtilities.log("FTP server started on port: " + port);
 
 		executor = Executors.newFixedThreadPool(FTPConfiguration.INSTANCE
 				.getIntProperty("maxConcurrentUser"));
 		// Listen for client connections
 		while (true) {
 			try {
-				final Socket clientSocket = this.serverSocket.accept();
+				final Socket clientSocket = serverSocket.accept();
 
 				// Create client thread
 				executor.execute(new FTPClientSocketImpl(clientSocket));
@@ -89,9 +89,9 @@ public class FTPServerImpl implements FTPServer {
 		}
 		executor.shutdownNow();
 		try {
-			this.serverSocket.close();
+			serverSocket.close();
 			isStarted = false;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new ServerSocketException("Unable to close the FTP server", e);
 		}
 	}

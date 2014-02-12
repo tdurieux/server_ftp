@@ -25,8 +25,6 @@ public interface FTPClient {
 	 * 
 	 * @param password
 	 *            User password
-	 * @throws FTPClientException
-	 *             when unable to load user database
 	 * @return true if is valid user, false else
 	 */
 	boolean connect(String password);
