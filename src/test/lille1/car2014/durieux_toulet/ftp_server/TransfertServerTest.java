@@ -96,24 +96,51 @@ public class TransfertServerTest {
 	}
 
 	@Test
-	public void testReadStringContent() {
-		fail("Not yet implemented");
+	public void testReadStringContent() throws SocketException, IOException {
+        /* TODO */
+		ServerSocket server = new ServerSocket (0);
+
+		final FTPTransfertServer transfertServer = new FTPTransfertServerImpl (
+				"127.0.0.1", 
+                server.getLocalPort ()
+        );
+
+        new Thread ("TestReadStingContent") {
+            public void run () {
+                try {
+                    transfertServer.getTransfertClient ().readMessage ();
+                }
+                catch (Exception e) {
+		            fail ("Unable to read content");
+                }
+            }
+        }.start ();
+
+        try {
+            transfertServer.writeContent("Test".getBytes ());
+        }
+        catch (RequestHandlerException e3) {
+		    fail ("Request error");
+        }
+
+        transfertServer.close ();
+        server.close ();
 	}
 
 	@Test
-	public void testReadContent() {
+	public void testReadContent() throws SocketException, IOException {
 		fail("Not yet implemented");
-	}
+    }
 
-	@Test
-	public void testClose() throws SocketException {
-		FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
-		transfertServer.close();
-	}
+    @Test
+    public void testClose() throws SocketException {
+        FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
+        transfertServer.close();
+    }
 
-	@Test
-	public void testWriteContentFileInputStream() {
-		fail("Not yet implemented");
-	}
+    @Test
+    public void testWriteContentFileInputStream() {
+        fail("Not yet implemented");
+    }
 
 }
