@@ -3,7 +3,7 @@ package lille1.car2014.durieux_toulet.ftp_server;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 
 /**
- * FTP client socket interface
+ * FTP client socket used to read and write the client socket
  * 
  * @author Durieux Thomas
  * @author Toulet Cyrille
@@ -11,29 +11,29 @@ import lille1.car2014.durieux_toulet.exception.SocketException;
 public interface FTPClientSocket {
 
 	/**
-	 * Write message
+	 * Write message to the client
 	 * 
 	 * @param message
 	 *            Message to write
 	 */
-	public abstract void writeMessage(String message);
+	void writeMessage(String message);
 
 	/**
-	 * Read message
+	 * Read message from a client
 	 */
-	public abstract void readMessage();
+	void readMessage();
 
 	/**
-	 * Close socket
+	 * Close the client socket 
 	 * 
 	 * @throws SocketException
 	 *             when unable to close socket
 	 */
-	public abstract void close() throws SocketException;
+	void close() throws SocketException;
 
 	/**
-	 * Listen client
+	 * Listen client socket
 	 */
-	public abstract void startListeningClient();
+	void startListeningClient();
 
 }

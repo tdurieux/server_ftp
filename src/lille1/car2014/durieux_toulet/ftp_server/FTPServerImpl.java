@@ -17,7 +17,7 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  * @author Toulet Cyrille
  */
 public class FTPServerImpl implements FTPServer {
-	/* Parameters */
+	/* Attributes */
 	private final int port;
 	private ServerSocket serverSocket;
 	private ExecutorService executor;

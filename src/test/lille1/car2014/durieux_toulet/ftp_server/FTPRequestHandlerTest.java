@@ -1,14 +1,14 @@
 package test.lille1.car2014.durieux_toulet.ftp_server;
 
 import static org.junit.Assert.*;
-
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.ftp_server.FTPClient;
 import lille1.car2014.durieux_toulet.ftp_server.FTPClientImpl;
 import lille1.car2014.durieux_toulet.ftp_server.FTPRequestHandlerImpl;
-import lille1.car2014.durieux_toulet.ftp_server.FTPTransfertServerImpl;
+import lille1.car2014.durieux_toulet.ftp_server.FTPTransferSocket;
+import lille1.car2014.durieux_toulet.ftp_server.FTPTransferSocketImpl;
 
 import org.junit.After;
 import org.junit.Before;
@@ -305,7 +305,6 @@ public class FTPRequestHandlerTest {
 			FTPRequestHandlerImpl.parseStringRequest("TYPE E asda", ftpClient,
 					ftpClientSocketMockup).execute();
 		} catch (RequestHandlerException e) {
-			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
@@ -389,9 +388,9 @@ public class FTPRequestHandlerTest {
 						int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
-								final FTPTransfertServerImpl transfertServerImpl = new FTPTransfertServerImpl(
+								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
 										"127.0.0.1", ftpClient
-												.getTransfertServer()
+												.getTransferServer()
 												.getPublicPort());
 								new Thread(new Runnable() {
 
@@ -399,7 +398,7 @@ public class FTPRequestHandlerTest {
 									public void run() {
 										try {
 											transfertServerImpl
-													.readStringContent();
+													.readStringData();
 											transfertServerImpl.close();
 										} catch (SocketException e) {
 											throw new RuntimeException(e);
@@ -509,9 +508,9 @@ public class FTPRequestHandlerTest {
 						int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
-								final FTPTransfertServerImpl transfertServerImpl = new FTPTransfertServerImpl(
+								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
 										"127.0.0.1", ftpClient
-												.getTransfertServer()
+												.getTransferServer()
 												.getPublicPort());
 								new Thread(new Runnable() {
 
@@ -519,7 +518,7 @@ public class FTPRequestHandlerTest {
 									public void run() {
 										try {
 											transfertServerImpl
-													.readStringContent();
+													.readStringData();
 											transfertServerImpl.close();
 										} catch (SocketException e) {
 											throw new RuntimeException(e);
@@ -569,9 +568,9 @@ public class FTPRequestHandlerTest {
 						int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
-								final FTPTransfertServerImpl transfertServerImpl = new FTPTransfertServerImpl(
+								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
 										"127.0.0.1", ftpClient
-												.getTransfertServer()
+												.getTransferServer()
 												.getPublicPort());
 								new Thread(new Runnable() {
 
@@ -579,7 +578,7 @@ public class FTPRequestHandlerTest {
 									public void run() {
 										try {
 											transfertServerImpl
-													.readStringContent();
+													.readStringData();
 											transfertServerImpl.close();
 										} catch (SocketException e) {
 											throw new RuntimeException(e);
@@ -601,8 +600,9 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("PASV", ftpClient,
 					new FTPClientSocketMockup()).execute();
-			FTPRequestHandlerImpl.parseStringRequest("NLST /tmp/boom",
-					ftpClient, ftpClientSocketMockup).execute();
+			FTPRequestHandlerImpl.parseStringRequest(
+					"NLST /tmp/fichierNonPresent", ftpClient,
+					ftpClientSocketMockup).execute();
 		} catch (RequestHandlerException e) {
 			fail(e.getMessage());
 		}
@@ -687,9 +687,9 @@ public class FTPRequestHandlerTest {
 						int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
-								final FTPTransfertServerImpl transfertServerImpl = new FTPTransfertServerImpl(
+								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
 										"127.0.0.1", ftpClient
-												.getTransfertServer()
+												.getTransferServer()
 												.getPublicPort());
 								new Thread(new Runnable() {
 
@@ -697,7 +697,7 @@ public class FTPRequestHandlerTest {
 									public void run() {
 										try {
 											transfertServerImpl
-													.writeContent("Test");
+													.writeData("Test");
 											transfertServerImpl.close();
 										} catch (SocketException e) {
 											throw new RuntimeException(e);
@@ -809,16 +809,16 @@ public class FTPRequestHandlerTest {
 						int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
-								final FTPTransfertServerImpl transfertServerImpl = new FTPTransfertServerImpl(
+								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
 										"127.0.0.1", ftpClient
-												.getTransfertServer()
+												.getTransferServer()
 												.getPublicPort());
 								new Thread(new Runnable() {
 
 									@Override
 									public void run() {
 										try {
-											transfertServerImpl.readContent();
+											transfertServerImpl.readData();
 											transfertServerImpl.close();
 										} catch (SocketException e) {
 											throw new RuntimeException(e);
@@ -868,9 +868,9 @@ public class FTPRequestHandlerTest {
 						int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
-								final FTPTransfertServerImpl transfertServerImpl = new FTPTransfertServerImpl(
+								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
 										"127.0.0.1", ftpClient
-												.getTransfertServer()
+												.getTransferServer()
 												.getPublicPort());
 								new Thread(new Runnable() {
 
@@ -878,7 +878,7 @@ public class FTPRequestHandlerTest {
 									public void run() {
 										try {
 											transfertServerImpl
-													.readStringContent();
+													.readStringData();
 											transfertServerImpl.close();
 										} catch (SocketException e) {
 											throw new RuntimeException(e);
@@ -910,9 +910,9 @@ public class FTPRequestHandlerTest {
 						int code = parseMessageCode(message);
 						if (code == 150) {
 							try {
-								final FTPTransfertServerImpl transfertServerImpl = new FTPTransfertServerImpl(
+								final FTPTransferSocket transfertServerImpl = new FTPTransferSocketImpl(
 										"127.0.0.1", ftpClient
-												.getTransfertServer()
+												.getTransferServer()
 												.getPublicPort());
 								new Thread(new Runnable() {
 
@@ -920,7 +920,7 @@ public class FTPRequestHandlerTest {
 									public void run() {
 										try {
 											transfertServerImpl
-													.writeContent("Test");
+													.writeData("Test");
 											transfertServerImpl.close();
 										} catch (SocketException e) {
 											throw new RuntimeException(e);

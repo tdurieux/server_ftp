@@ -26,7 +26,7 @@ public class JUnitRunner {
 			System.out.println(failure.toString());
 
 		/* Test TransfertServer */
-		result = JUnitCore.runClasses(TransfertServerTest.class);
+		result = JUnitCore.runClasses(FTPTransferSocketTest.class);
 
 		for (Failure failure : result.getFailures())
 			System.out.println(failure.toString());

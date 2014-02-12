@@ -3,9 +3,31 @@ package lille1.car2014.durieux_toulet.ftp_server;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 
-public interface FTPTransfertClient {
+/**
+ * FTP Transfert Socket is used to read and write on data socket connection.
+ * 
+ * @author Thomas Durieux
+ * @author Toulet Cyrille
+ */
+public interface FTPTransferSocket {
+
+	/**
+	 * Get the public transfert server port
+	 * 
+	 * @return The transfer server port
+	 */
+	int getPublicPort();
+
+	/**
+	 * Start the transfert data server (passive mode)
+	 * 
+	 * @throws SocketException
+	 */
+
+	void startServer() throws ServerSocketException;
 
 	/**
 	 * Write data on the socket
@@ -16,6 +38,16 @@ public interface FTPTransfertClient {
 	 *             when unable to write message
 	 */
 	void writeData(byte[] bytes) throws SocketException;
+
+	/**
+	 * Write data on the socket
+	 * 
+	 * @param data
+	 *            Message to write
+	 * @throws SocketException
+	 *             when unable to write message
+	 */
+	void writeData(String data) throws SocketException;
 
 	/**
 	 * Write data on the socket
@@ -35,6 +67,15 @@ public interface FTPTransfertClient {
 	 *             Unable to read client data
 	 */
 	byte[] readData() throws SocketException;
+	
+	/**
+	 * Read data on socket
+	 * 
+	 * @return String of message read
+	 * @throws SocketException
+	 *             Unable to read client data
+	 */
+	String readStringData() throws SocketException;
 
 	/**
 	 * Read on data connection and write the content into a stream
@@ -47,10 +88,10 @@ public interface FTPTransfertClient {
 	void readData(OutputStream fileOutputStream) throws SocketException;
 
 	/**
-	 * Close connection with the client
+	 * Close transfert server
 	 * 
 	 * @throws SocketException
-	 *             Unable to close data connection
+	 *             when unable to close connection
 	 */
 	void close() throws SocketException;
 

@@ -10,14 +10,14 @@ import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 
 /**
- * All commands of the client is interpreted by the class
+ * FTP client used to store the session data of a ftp client
  * 
  * @author Durieux Thomas
  * @author Toulet Cyrille
  */
 public class FTPClientImpl implements FTPClient {
 	/* Transfert server */
-	private FTPTransfertServer transfertServer;
+	private FTPTransferSocket transfertSocket;
 
 	/* Parameters */
 	private boolean isConnected = false;
@@ -54,6 +54,7 @@ public class FTPClientImpl implements FTPClient {
 		this.typeCharactor = typeCharactor;
 
 	}
+
 	/**
 	 * @see FTPClient
 	 */
@@ -100,26 +101,24 @@ public class FTPClientImpl implements FTPClient {
 	 * @see FTPClient
 	 */
 	@Override
-	public int createNewTransfert() throws SocketException {
+	public int createNewTransfer() throws SocketException {
 		// Create transfert server
-		final FTPTransfertServer transfertHandler = new FTPTransfertServerImpl();
-		this.transfertServer = transfertHandler;
+		this.transfertSocket = new FTPTransferSocketImpl();
 
 		// Return server port
-		return transfertHandler.getPublicPort();
+		return transfertSocket.getPublicPort();
 	}
 
 	/**
 	 * @see FTPClient
 	 */
 	@Override
-	public int createNewTransfert(String address, int port)
+	public int createNewTransfer(String address, int port)
 			throws SocketException {
 		// Create transfert server
-		FTPTransfertServer transfertHandler;
 		try {
-			transfertHandler = new FTPTransfertServerImpl(address, port);
-			this.transfertServer = transfertHandler;
+			this.transfertSocket = new FTPTransferSocketImpl(address, port);
+			;
 
 			// Return server port
 			return port;
@@ -132,8 +131,8 @@ public class FTPClientImpl implements FTPClient {
 	 * @see FTPClient
 	 */
 	@Override
-	public FTPTransfertServer getTransfertServer() {
-		return this.transfertServer;
+	public FTPTransferSocket getTransferServer() {
+		return this.transfertSocket;
 	}
 
 	/**

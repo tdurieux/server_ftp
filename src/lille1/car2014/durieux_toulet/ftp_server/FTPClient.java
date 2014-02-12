@@ -5,7 +5,7 @@ import java.util.Map;
 import lille1.car2014.durieux_toulet.exception.SocketException;
 
 /**
- * FTP client interface
+ * FTP client used to store the session data of a ftp client
  * 
  * @author Durieux Thomas
  * @author Toulet Cyrille
@@ -32,7 +32,7 @@ public interface FTPClient {
 	boolean connect(String password);
 
 	/**
-	 * Tell if client is connected
+	 * Checks if client is connected
 	 * 
 	 * @return true if a client is connected, false else
 	 */
@@ -53,55 +53,55 @@ public interface FTPClient {
 	String getTypeCharactor();
 
 	/**
-	 * Get options
+	 * Get options map
 	 * 
 	 * @return Options map
 	 */
 	Map<String, String> getOptions();
 
 	/**
-	 * Get current dirrectory
+	 * Get current directory
 	 * 
-	 * @return Current dirrectory
+	 * @return Current directory
 	 */
 	String getCurrentDir();
 
 	/**
-	 * Set current dirrectory
+	 * Set current directory
 	 * 
 	 * @param currentDir
-	 *            Current dirrectory
+	 *            Current directory
 	 */
 	void setCurrentDir(String currentDir);
 
 	/**
-	 * Create transfert server
+	 * Create transfer server
 	 * 
 	 * @param port
 	 *            Server port
 	 * @param ip
-	 *            IP Adresse
+	 *            IP Address
 	 * @throws SocketException
 	 *             when unable to create connection
-	 * @return Transfert server port
+	 * @return Transfer server port
 	 */
-	int createNewTransfert(String ip, int port) throws SocketException;
+	int createNewTransfer(String ip, int port) throws SocketException;
 
 	/**
-	 * Create transfert server
+	 * Create transfer server
 	 * 
 	 * @throws SocketException
 	 *             when unable to create connection
-	 * @return Transfert server port
+	 * @return Transfer server port
 	 */
-	int createNewTransfert() throws SocketException;
+	int createNewTransfer() throws SocketException;
 
 	/**
-	 * Get transfert server
+	 * Get transfer server
 	 * 
-	 * @return Transfert server
+	 * @return Transfer server
 	 */
-	FTPTransfertServer getTransfertServer();
+	FTPTransferSocket getTransferServer();
 
 	/**
 	 * Set file to rename

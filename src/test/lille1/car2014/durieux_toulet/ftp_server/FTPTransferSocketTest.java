@@ -4,23 +4,19 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
 import lille1.car2014.durieux_toulet.config.FTPConfiguration;
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
-import lille1.car2014.durieux_toulet.ftp_server.FTPTransfertClient;
-import lille1.car2014.durieux_toulet.ftp_server.FTPTransfertClientImpl;
-import lille1.car2014.durieux_toulet.ftp_server.FTPTransfertServer;
-import lille1.car2014.durieux_toulet.ftp_server.FTPTransfertServerImpl;
+import lille1.car2014.durieux_toulet.ftp_server.FTPTransferSocket;
+import lille1.car2014.durieux_toulet.ftp_server.FTPTransferSocketImpl;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TransfertServerTest {
+public class FTPTransferSocketTest {
 
 	@Before
 	public void setUp() {
@@ -34,7 +30,7 @@ public class TransfertServerTest {
 	@Test
 	public void testTransfertServerActiveModeNotValid() {
 		try {
-			FTPTransfertServer transfertServer = new FTPTransfertServerImpl(
+			FTPTransferSocket transfertServer = new FTPTransferSocketImpl(
 					"127.0.0.1", 8743);
 			fail("Server does not exist");
 		} catch (ServerSocketException e) {
@@ -48,7 +44,7 @@ public class TransfertServerTest {
 		try {
 			ServerSocket server = new ServerSocket(0);
 
-			FTPTransfertServer transfertServer = new FTPTransfertServerImpl(
+			FTPTransferSocket transfertServer = new FTPTransferSocketImpl(
 					"127.0.0.1", server.getLocalPort());
 			transfertServer.close();
 			server.close();
@@ -60,7 +56,7 @@ public class TransfertServerTest {
 	@Test
 	public void testTransfertServerPassiveMode() {
 		try {
-			FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
+			FTPTransferSocket transfertServer = new FTPTransferSocketImpl();
 			transfertServer.close();
 		} catch (SocketException e) {
 			fail("Server can be started");
@@ -70,7 +66,7 @@ public class TransfertServerTest {
 	@Test
 	public void testGetPublicPort() {
 		try {
-			FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
+			FTPTransferSocket transfertServer = new FTPTransferSocketImpl();
 			transfertServer.getPublicPort();
 		} catch (SocketException e) {
 			fail("Server can be started");
@@ -78,25 +74,14 @@ public class TransfertServerTest {
 	}
 
 	@Test
-	public void testGetTransfertClient() {
-		try {
-			FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
-			transfertServer.getTransfertClient();
-			transfertServer.close();
-		} catch (SocketException e) {
-			fail("Server can be started");
-		}
-	}
-
-	@Test
-	public void testWriteContentString() throws IOException,
+	public void testwriteDataString() throws IOException,
 			RequestHandlerException {
 		try {
 			ServerSocket server = new ServerSocket(0);
 
-			FTPTransfertServer transfertServer = new FTPTransfertServerImpl(
+			FTPTransferSocket transfertServer = new FTPTransferSocketImpl(
 					"127.0.0.1", server.getLocalPort());
-			transfertServer.writeContent("Test");
+			transfertServer.writeData("Test");
 			transfertServer.close();
 			server.close();
 		} catch (SocketException e) {
@@ -105,14 +90,14 @@ public class TransfertServerTest {
 	}
 
 	@Test
-	public void testWriteContentByteArray() throws IOException,
+	public void testwriteDataByteArray() throws IOException,
 			RequestHandlerException {
 		try {
 			ServerSocket server = new ServerSocket(0);
 
-			FTPTransfertServer transfertServer = new FTPTransfertServerImpl(
+			FTPTransferSocket transfertServer = new FTPTransferSocketImpl(
 					"127.0.0.1", server.getLocalPort());
-			transfertServer.writeContent("Test".getBytes());
+			transfertServer.writeData("Test".getBytes());
 			transfertServer.close();
 			server.close();
 		} catch (SocketException e) {
@@ -123,11 +108,9 @@ public class TransfertServerTest {
 	@Test
 	public void testReadStringContent() {
 		try {
-			final FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
-			Socket socket = new Socket("127.0.0.1",
-					transfertServer.getPublicPort());
-			final FTPTransfertClient transfertClient = new FTPTransfertClientImpl(
-					socket);
+			final FTPTransferSocket transfertServer = new FTPTransferSocketImpl();
+			final FTPTransferSocket transfertClient = new FTPTransferSocketImpl(
+					"127.0.0.1", transfertServer.getPublicPort());
 			new Thread("TestReadStingContent") {
 				@Override
 				public void run() {
@@ -140,7 +123,7 @@ public class TransfertServerTest {
 			}.start();
 
 			try {
-				String content = transfertServer.readStringContent();
+				String content = transfertServer.readStringData();
 				assertEquals("Test", content);
 			} catch (Exception e) {
 				fail("Unable to read content");
@@ -150,21 +133,15 @@ public class TransfertServerTest {
 			transfertClient.close();
 		} catch (SocketException e3) {
 			fail("Request error");
-		} catch (UnknownHostException e1) {
-			fail("Unable to create socket");
-		} catch (IOException e1) {
-			fail("Unable to create socket");
 		}
 	}
 
 	@Test
 	public void testReadContent() throws SocketException, IOException {
 		try {
-			final FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
-			Socket socket = new Socket("127.0.0.1",
-					transfertServer.getPublicPort());
-			final FTPTransfertClient transfertClient = new FTPTransfertClientImpl(
-					socket);
+			final FTPTransferSocket transfertServer = new FTPTransferSocketImpl();
+			final FTPTransferSocket transfertClient = new FTPTransferSocketImpl(
+					"127.0.0.1", transfertServer.getPublicPort());
 			new Thread("testReadContent") {
 				@Override
 				public void run() {
@@ -177,7 +154,7 @@ public class TransfertServerTest {
 			}.start();
 
 			try {
-				String content = new String(transfertServer.readContent());
+				String content = new String(transfertServer.readData());
 
 				assertEquals("Test", content);
 			} catch (Exception e) {
@@ -188,29 +165,27 @@ public class TransfertServerTest {
 			transfertClient.close();
 		} catch (SocketException e3) {
 			fail("Request error");
-		} catch (UnknownHostException e1) {
-			fail("Unable to create socket");
-		} catch (IOException e1) {
-			fail("Unable to create socket");
 		}
 	}
 
 	@Test
-	public void testClose() throws SocketException {
-		FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
-		transfertServer.close();
+	public void testClose() {
+		try {
+			FTPTransferSocket transfertServer = new FTPTransferSocketImpl();
+			transfertServer.close();
+		} catch (SocketException e) {
+			fail("Unable to start transfert server");
+		} 
 	}
 
 	@Test
-	public void testWriteContentFileInputStream() {
+	public void testwriteDataFileInputStream() {
 		try {
-			final FTPTransfertServer transfertServer = new FTPTransfertServerImpl();
-			Socket socket = new Socket("127.0.0.1",
-					transfertServer.getPublicPort());
-			final FTPTransfertClient transfertClient = new FTPTransfertClientImpl(
-					socket);
+			final FTPTransferSocket transfertServer = new FTPTransferSocketImpl();
+			final FTPTransferSocket transfertClient = new FTPTransferSocketImpl(
+					"127.0.0.1", transfertServer.getPublicPort());
 
-			new Thread("testWriteContentFileInputStream") {
+			new Thread("testwriteDataFileInputStream") {
 				@Override
 				public void run() {
 					try {
@@ -222,8 +197,8 @@ public class TransfertServerTest {
 			}.start();
 
 			try {
-				transfertServer.writeContent(FTPConfiguration.class
-						.getResource("db_user.ini").openStream());
+				transfertServer.writeData(FTPConfiguration.class.getResource(
+						"db_user.ini").openStream());
 
 			} catch (Exception e) {
 				transfertServer.close();
@@ -235,10 +210,6 @@ public class TransfertServerTest {
 			transfertClient.close();
 		} catch (SocketException e3) {
 			fail("Request error");
-		} catch (UnknownHostException e1) {
-			fail("Unable to create socket");
-		} catch (IOException e1) {
-			fail("Unable to create socket");
 		}
 	}
 

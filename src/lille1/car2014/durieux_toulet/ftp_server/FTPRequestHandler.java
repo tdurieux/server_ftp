@@ -3,7 +3,7 @@ package lille1.car2014.durieux_toulet.ftp_server;
 import lille1.car2014.durieux_toulet.exception.RequestHandlerException;
 
 /**
- * Handle requests of FTP client
+ * FTP Request Handler used to parse and execute ftp command
  * 
  * @author Durieux Thomas
  * @author Toulet Cyrille

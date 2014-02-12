@@ -11,7 +11,7 @@ import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**
- * FTP client socket interface
+ * FTP client socket used to read and write the client socket
  * 
  * @author Durieux Thomas
  * @author Toulet Cyrille
