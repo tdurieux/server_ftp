@@ -2,6 +2,7 @@
 
 ## Authors
 Durieux Thomas
+
 Toulet Cyrille
 
 14/02/2014
@@ -25,7 +26,7 @@ Il a été réalisé en Java et implémente les principales fonctionnalités du 
 - ServerSocketException: Exception lancée par les différents serveur (serveur permettant aux clients de se connecter et le serveur permettant de créer des connections de données en mode passif)
 - SocketException: Exception lancée par les différents sockets (connexion interrompue, impossibilité de se connecter au serveur,...)
 
-Les exceptions sont logguée le plus haut possible grâce à la classe LoggerUtilities qui permet de logguer des données à différents niveaux de priorité.
+Les exceptions sont logguées le plus haut possible grâce à la classe LoggerUtilities qui permet de logguer facilement des données à différents niveaux de priorité.
 
 ## Fonctionalités
 
@@ -109,8 +110,11 @@ try {
 ### Utilisateurs
 La liste des utilisateurs se trouve dans src/conf/db_user.ini.
 Les utilisateurs sont stockés de cette manière nom_utilisateur=mot_de_passe
+
 Exemple:
+``` INI
 user=pass
+```
 
 ### Démarer le server FTP
 ```
