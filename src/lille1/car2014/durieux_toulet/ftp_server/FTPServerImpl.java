@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 
 import lille1.car2014.durieux_toulet.config.FTPConfiguration;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
-import lille1.car2014.durieux_toulet.exception.SocketException;
 import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**
@@ -18,12 +17,11 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  * @author Toulet Cyrille
  */
 public class FTPServerImpl implements FTPServer {
-    /* Parameters */
+	/* Parameters */
 	private final int port;
 	private ServerSocket serverSocket;
 	private ExecutorService executor;
 	private boolean isStarted;
-
 
 	/**
 	 * Constructor with default port
@@ -32,20 +30,20 @@ public class FTPServerImpl implements FTPServer {
 		this.port = 21;
 	}
 
-
 	/**
 	 * Constructor with custom port
-	 * @param port The server port
+	 * 
+	 * @param port
+	 *            The server port
 	 */
 	public FTPServerImpl(final int port) {
 		this.port = port;
 		isStarted = false;
 	}
 
-
-    /**
-     * @see FTPServer
-     */
+	/**
+	 * @see FTPServer
+	 */
 	@Override
 	public void startServer() throws ServerSocketException {
 		if (isStarted) {
@@ -81,10 +79,9 @@ public class FTPServerImpl implements FTPServer {
 		}
 	}
 
-
-    /**
-     * @see FTPServer
-     */
+	/**
+	 * @see FTPServer
+	 */
 	@Override
 	public void closeServer() throws ServerSocketException {
 		if (!isStarted) {
@@ -99,19 +96,17 @@ public class FTPServerImpl implements FTPServer {
 		}
 	}
 
-
-    /**
-     * @see FTPServer
-     */
+	/**
+	 * @see FTPServer
+	 */
 	@Override
 	public int getPort() {
 		return port;
 	}
 
-
-    /**
-     * @see FTPServer
-     */
+	/**
+	 * @see FTPServer
+	 */
 	@Override
 	public boolean isStarted() {
 		return isStarted;

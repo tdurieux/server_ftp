@@ -13,19 +13,20 @@ public class UserDatabaseImpl implements UserDatabase {
 	/**
 	 * Constructor
 	 */
-	public UserDatabaseImpl() {}
+	public UserDatabaseImpl() {
+	}
 
-    /**
-     * @see UserDatabase
-     */
+	/**
+	 * @see UserDatabase
+	 */
 	@Override
 	public boolean userExist(String username) {
 		return FTPUserDatabase.INSTANCE.getProperty(username) != null;
 	}
 
-    /**
-     * @see UserDatabase
-     */
+	/**
+	 * @see UserDatabase
+	 */
 	@Override
 	public boolean loginUser(String username, String password) {
 		String passwd = FTPUserDatabase.INSTANCE.getProperty(username);

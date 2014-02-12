@@ -12,8 +12,7 @@ public interface FTPRequestHandler {
 
 	/**
 	 * Execute the function associate to a command
-	 * @param command the command send by the client
-	 * @param parameters parameters of the command
+	 * 
 	 * @throws RequestHandlerException
 	 */
 	void execute() throws RequestHandlerException;

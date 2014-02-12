@@ -9,35 +9,44 @@ package lille1.car2014.durieux_toulet.exception;
 public class SocketException extends Exception {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2356561647022566566L;
+
+	/**
 	 * Constructor
 	 */
 	public SocketException() {
 		super();
 	}
 
-
 	/**
 	 * Constructor
-	 * @param message Message of exception
+	 * 
+	 * @param message
+	 *            Message of exception
 	 */
 	public SocketException(final String message) {
 		super(message);
 	}
 
-
 	/**
 	 * Constructor
-	 * @param t Throwable exception
+	 * 
+	 * @param t
+	 *            Throwable exception
 	 */
 	public SocketException(final Throwable t) {
 		super(t);
 	}
 
-
 	/**
 	 * Constructor
-	 * @param message Message of exception
-	 * @param t Throwable exception
+	 * 
+	 * @param message
+	 *            Message of exception
+	 * @param t
+	 *            Throwable exception
 	 */
 	public SocketException(final String message, final Throwable t) {
 		super(message, t);

@@ -30,20 +30,24 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  */
 public class FTPRequestHandlerImpl implements FTPRequestHandler {
 
-    /* Parameters */
+	/* Parameters */
 	private String command;
 	private String[] args;
 	private FTPClient ftpClient;
 	private FTPClientSocket clientSocket;
 
-
-    /**
-     * Constructor
-     * @param command FTP command
-     * @param args Arguments
-     * @param ftpClient The FTP client
-     * @param clientSocket The client socket
-     */
+	/**
+	 * Constructor
+	 * 
+	 * @param command
+	 *            FTP command
+	 * @param args
+	 *            Arguments
+	 * @param ftpClient
+	 *            The FTP client
+	 * @param clientSocket
+	 *            The client socket
+	 */
 	public FTPRequestHandlerImpl(String command, String[] args,
 			FTPClient ftpClient, FTPClientSocket clientSocket) {
 		this.command = command;
@@ -52,15 +56,19 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		this.clientSocket = clientSocket;
 	}
 
-
-    /**
-     * Parse request
-     * @param request The request string
-     * @param ftpClient The FTP client
-     * @param ftpClientSocket The FTP client socket
-     * @return FTPRequestHandler The FTP request handler
-     * @throws RequestHandlerException when unable to parse request
-     */
+	/**
+	 * Parse request
+	 * 
+	 * @param request
+	 *            The request string
+	 * @param ftpClient
+	 *            The FTP client
+	 * @param clientSocket
+	 *            The FTP client socket
+	 * @return FTPRequestHandler The FTP request handler
+	 * @throws RequestHandlerException
+	 *             when unable to parse request
+	 */
 	public static FTPRequestHandler parseStringRequest(final String request,
 			final FTPClient ftpClient, FTPClientSocket clientSocket)
 			throws RequestHandlerException {
@@ -75,10 +83,9 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				clientSocket);
 	}
 
-
-    /**
-     * @see FTPRequestHandler
-     */
+	/**
+	 * @see FTPRequestHandler
+	 */
 	@Override
 	public void execute() throws RequestHandlerException {
 		// list all methods of this class
@@ -100,6 +107,7 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			if (types.length > args.length) {
 				continue;
 			}
+			// create the call parameters
 			final Object[] objectArray = new Object[types.length];
 			for (int j = 0; j < types.length; j++) {
 				final String type = types[j].getName();
@@ -145,11 +153,12 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		throw new RequestHandlerException("Command not found " + command);
 	}
 
-	
-    /**
+	/**
 	 * Define the primary encoding of the communication
-	 * @param typeCharacter The type caracter (A|E|I|L)
-     * @return True if able to set the primary caracter, false else
+	 * 
+	 * @param typeCharacter
+	 *            The type caracter (A|E|I|L)
+	 * @return True if able to set the primary caracter, false else
 	 */
 	private boolean setPrimaryTypeCaracter(final String typeCharacter) {
 		switch (typeCharacter) {
@@ -172,12 +181,14 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		return true;
 	}
 
-
-    /**
-     * Request encoding
-     * @param typeCharacter The encoding char
-     * @param secondTypeCharacter The network type char
-     */
+	/**
+	 * Request encoding
+	 * 
+	 * @param typeCharacter
+	 *            The encoding char
+	 * @param secondTypeCharacter
+	 *            The network type char
+	 */
 	@FTPRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
 	private void requestType(final String typeCharacter,
 			final String secondTypeCharacter) {
@@ -203,10 +214,12 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		clientSocket.writeMessage("200 Type accepted");
 	}
 
-
 	/**
-	 * Define the primary encoding of the communication and send response to the client
-	 * @param typeCharacter The encoding caracter
+	 * Define the primary encoding of the communication and send response to the
+	 * client
+	 * 
+	 * @param typeCharacter
+	 *            The encoding caracter
 	 */
 	@FTPRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
 	private void requestType(final String typeCharacter) {
@@ -216,11 +229,13 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			clientSocket.writeMessage("400 Type not accepted");
 	}
 
-
 	/**
 	 * Login the user
-	 * @param password The password of the user
-	 * @throws RequestHandlerException when unable to connect user
+	 * 
+	 * @param password
+	 *            The password of the user
+	 * @throws RequestHandlerException
+	 *             when unable to connect user
 	 */
 	@FTPRequestAnnotation(name = "PASS", connected = false)
 	private void requestConnect(final String password)
@@ -233,10 +248,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Define the username of the client
-	 * @param username The username of the client
+	 * 
+	 * @param username
+	 *            The username of the client
 	 */
 	@FTPRequestAnnotation(name = "USER", connected = false)
 	private void requestUser(final String username) {
@@ -250,7 +266,6 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 
 	}
 
-
 	/**
 	 * Close the connection
 	 */
@@ -262,10 +277,9 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			clientSocket.close();
 		} catch (SocketException e) {
 			// unable to client client connection
+			LoggerUtilities.error("Unable to close client connection", e);
 		}
-
 	}
-
 
 	/**
 	 * Request the os type
@@ -277,18 +291,19 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		clientSocket.writeMessage("215 UNIX Type: L8");
 	}
 
-
 	/**
 	 * Save an option
-	 * @param key The name of the option
-	 * @param value The value of the option
+	 * 
+	 * @param key
+	 *            The name of the option
+	 * @param value
+	 *            The value of the option
 	 */
 	@FTPRequestAnnotation(name = "OPTS", connected = true, anonymous = true)
 	private void requestOptions(final String key, final String value) {
 		ftpClient.getOptions().put(key, value);
 		clientSocket.writeMessage("200 Accept option");
 	}
-
 
 	/**
 	 * Get the current directory
@@ -299,12 +314,13 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				+ '"');
 	}
 
-
-    /**
-     * Path builder
-     * @param dirs Directory to parse
-     * @return The path array
-     */
+	/**
+	 * Path builder
+	 * 
+	 * @param An
+	 *            Array of a splited path
+	 * @return An absolute path
+	 */
 	private String arrayToPath(String[] dirs) {
 		String path = "";
 		for (int i = 0; i < dirs.length; i++) {
@@ -317,10 +333,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		return ftpClient.getCurrentDir() + "/" + path;
 	}
 
-
 	/**
 	 * Change the current directory to dir
-	 * @param dir The new current direcotry
+	 * 
+	 * @param dir
+	 *            The new current direcotry
 	 */
 	@FTPRequestAnnotation(name = "CWD", connected = true, anonymous = true)
 	private void requestSetCurrentDirecory(String... dirs) {
@@ -336,10 +353,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Change the current directory to parent directory
-	 * @param dir The new current direcotry
+	 * 
+	 * @param dir
+	 *            The new current direcotry
 	 */
 	@FTPRequestAnnotation(name = "CDUP", connected = true, anonymous = true)
 	private void requestUpCurrentDirecory() {
@@ -353,10 +371,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				+ f.getAbsolutePath());
 	}
 
-
 	/**
 	 * Send the port of the data connection (active mode)
-	 * @param adressString IP address
+	 * 
+	 * @param adressString
+	 *            IP address
 	 */
 	@FTPRequestAnnotation(name = "PORT", connected = true, anonymous = true)
 	private void requestPort(String addressStirng) {
@@ -378,7 +397,6 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Send the port of the data connection (passive mode)
 	 */
@@ -396,7 +414,6 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Send the port of the data connection (passive mode)
 	 */
@@ -409,7 +426,6 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			clientSocket.writeMessage("451 Cannot ABOR.");
 		}
 	}
-
 
 	/**
 	 * Get the port of the data connection (extended passive mode)
@@ -426,10 +442,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * List all files of the directory dir
-	 * @param dirs The directory to list
+	 * 
+	 * @param dirs
+	 *            The directory to list
 	 */
 	@FTPRequestAnnotation(name = "List", connected = true, anonymous = true)
 	private void requestListFiles(String... dirs) {
@@ -445,9 +462,6 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 				ftpClient.getTransfertServer().writeContent(
 						this.createList(path));
 				clientSocket.writeMessage("226 List transefered");
-			} catch (final RequestHandlerException e) {
-				LoggerUtilities.error(e);
-				clientSocket.writeMessage("426 Unable to send file list");
 			} catch (SocketException e) {
 				LoggerUtilities.error(e);
 				clientSocket.writeMessage("426 Unable to send file list");
@@ -462,7 +476,6 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * List all file of the current directory
 	 */
@@ -471,10 +484,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		this.requestListFiles("");
 	}
 
-
 	/**
 	 * List all file name of the directory dir
-	 * @param dirs The directory to list
+	 * 
+	 * @param dirs
+	 *            The directory to list
 	 */
 	@FTPRequestAnnotation(name = "NLST", connected = true, anonymous = true)
 	private void requestListFileName(final String... dirs) {
@@ -499,9 +513,6 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 					clientSocket.writeMessage("226 " + files.length
 							+ " matches total");
 				}
-			} catch (final RequestHandlerException e) {
-				LoggerUtilities.error(e);
-				clientSocket.writeMessage("426 Unable to send file list");
 			} catch (SocketException e) {
 				LoggerUtilities.error(e);
 				clientSocket.writeMessage("426 Unable to send file list");
@@ -516,7 +527,6 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * List all file name of the current directory
 	 */
@@ -525,11 +535,12 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		this.requestListFileName("");
 	}
 
-
-    /**
-     * Get all file size of the directory dir
-	 * @param dirs The directory to list
-     */
+	/**
+	 * Get all file size of the directory dir
+	 * 
+	 * @param dirs
+	 *            The directory to list
+	 */
 	@FTPRequestAnnotation(name = "SIZE", connected = true, anonymous = true)
 	private void requestGetFileSize(final String... dirs) {
 		String path = arrayToPath(dirs);
@@ -537,10 +548,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		clientSocket.writeMessage("226 " + f.length());
 	}
 
-
 	/**
 	 * Send the content of a file to the client
-	 * @param file The file to send
+	 * 
+	 * @param file
+	 *            The file to send
 	 */
 	@FTPRequestAnnotation(name = "RETR", connected = true, anonymous = true)
 	private void requestDownloadFile(final String... dirs) {
@@ -571,10 +583,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Send the content of a file to the server
-	 * @param file The name of file to store
+	 * 
+	 * @param file
+	 *            The name of file to store
 	 */
 	@FTPRequestAnnotation(name = "STOR", connected = true, anonymous = false)
 	private void requestUploadFile(final String[] dirs) {
@@ -603,10 +616,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Get last modification date
-	 * @param file The name of the file
+	 * 
+	 * @param file
+	 *            The name of the file
 	 */
 	@FTPRequestAnnotation(name = "MDTM", connected = true, anonymous = true)
 	private void requestGetLastModificationDate(final String... dirs) {
@@ -624,10 +638,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Create a folder
-	 * @param folderName The folder name
+	 * 
+	 * @param folderName
+	 *            The folder name
 	 */
 	@FTPRequestAnnotation(name = "MKD", connected = true, anonymous = false)
 	private void requestCreateFolder(final String... dirs) {
@@ -640,10 +655,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Remove a folder
-	 * @param folderName The folder name
+	 * 
+	 * @param folderName
+	 *            The folder name
 	 */
 	@FTPRequestAnnotation(name = "RMD", connected = true, anonymous = false)
 	private void requestRemoveFolder(final String... dirs) {
@@ -656,10 +672,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Remove a file
-	 * @param folderName The folder name
+	 * 
+	 * @param folderName
+	 *            The folder name
 	 */
 	@FTPRequestAnnotation(name = "DELE", connected = true, anonymous = false)
 	private void requestRemoveFile(final String... dirs) {
@@ -672,10 +689,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Rename a file
-	 * @param folderName The old file name
+	 * 
+	 * @param folderName
+	 *            The old file name
 	 */
 	@FTPRequestAnnotation(name = "RNFR", connected = true, anonymous = false)
 	private void requestFileToRename(final String... dirs) {
@@ -684,10 +702,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		clientSocket.writeMessage("350 File to rename: " + path);
 	}
 
-
 	/**
 	 * Rename a file
-	 * @param folderName The new folder name
+	 * 
+	 * @param folderName
+	 *            The new folder name
 	 */
 	@FTPRequestAnnotation(name = "RNTO", connected = true)
 	private void requestRename(final String... dirs) {
@@ -701,10 +720,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 		}
 	}
 
-
 	/**
 	 * Create the list of all file of the direcotry dir
-	 * @param dir The directory to list
+	 * 
+	 * @param dir
+	 *            The directory to list
 	 * @return A string containing all file of the dir
 	 */
 	private String createList(final String dir) {

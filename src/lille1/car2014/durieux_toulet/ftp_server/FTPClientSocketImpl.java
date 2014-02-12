@@ -20,42 +20,44 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 	private Socket clientSocket;
 	private FTPClient ftpClient;
 
-
-    /**
-     * Constructor
-     * @param clientSocket The client socket
-     */
+	/**
+	 * Constructor
+	 * 
+	 * @param clientSocket
+	 *            The client socket
+	 */
 	public FTPClientSocketImpl(Socket clientSocket) {
 		this.clientSocket = clientSocket;
 		ftpClient = new FTPClientImpl();
 	}
 
-
-    /**
-     * Get output stream writer
-     * @return The output stream writer
-     * @throws IOException when unable to get the stream
-     */
+	/**
+	 * Get output stream writer
+	 * 
+	 * @return The output stream writer
+	 * @throws IOException
+	 *             when unable to get the stream
+	 */
 	private OutputStreamWriter getOutputStreamWriter() throws IOException {
 		return new OutputStreamWriter(this.clientSocket.getOutputStream(),
 				Charset.forName("UTF-8"));
 	}
 
-
-    /**
-     * Get input stream reader
-     * @return The input stream reader
-     * @throws IOException when unable to get the stream
-     */
+	/**
+	 * Get input stream reader
+	 * 
+	 * @return The input stream reader
+	 * @throws IOException
+	 *             when unable to get the stream
+	 */
 	private InputStreamReader getInputStreamReader() throws IOException {
 		return new InputStreamReader(this.clientSocket.getInputStream(),
 				Charset.forName("UTF-8"));
 	}
 
-
-    /**
-     * @see FTPClientSocket
-     */
+	/**
+	 * @see FTPClientSocket
+	 */
 	@Override
 	public void writeMessage(final String message) {
 		OutputStreamWriter writer;
@@ -73,10 +75,9 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 		}
 	}
 
-
-    /**
-     * @see FTPClientSocket
-     */
+	/**
+	 * @see FTPClientSocket
+	 */
 	@Override
 	public void readMessage() {
 		try {
@@ -92,9 +93,9 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 					System.out.println(userInput);
 
 					// Try to parse request
-					FTPRequestHandler ftpRequestHandlerImpl = FTPRequestHandlerImpl
+					FTPRequestHandler ftpRequestHandler = FTPRequestHandlerImpl
 							.parseStringRequest(userInput, ftpClient, this);
-					ftpRequestHandlerImpl.execute();
+					ftpRequestHandler.execute();
 				} catch (final RequestHandlerException e) {
 					// Log errors
 					LoggerUtilities.error(e);
@@ -109,10 +110,9 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 		}
 	}
 
-
-    /**
-     * @see FTPClientSocket
-     */
+	/**
+	 * @see FTPClientSocket
+	 */
 	@Override
 	public void close() throws SocketException {
 		try {
@@ -122,10 +122,9 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 		}
 	}
 
-
-    /**
-     * @see FTPClientSocket
-     */
+	/**
+	 * @see FTPClientSocket
+	 */
 	@Override
 	public void startListeningClient() {
 		// Write welcome message
@@ -135,14 +134,14 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
 		this.readMessage();
 	}
 
-
-    /**
-     * @see FTPClientSocket
-     */
+	/**
+	 * @see FTPClientSocket
+	 */
 	@Override
 	public void run() {
 		// Log client creation
-		LoggerUtilities.log("New client " + clientSocket.getRemoteSocketAddress());
+		LoggerUtilities.log("New client "
+				+ clientSocket.getRemoteSocketAddress());
 		startListeningClient();
 	}
 

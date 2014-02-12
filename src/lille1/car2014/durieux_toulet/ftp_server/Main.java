@@ -18,9 +18,9 @@ public class Main {
 
 		// Load default server config
 		try {
-			defaultPort = FTPConfiguration.INSTANCE.getIntProperty("defaultPort");
-		}
-        catch (Exception e) {
+			defaultPort = FTPConfiguration.INSTANCE
+					.getIntProperty("defaultPort");
+		} catch (Exception e) {
 			defaultPort = 2121;
 		}
 
@@ -30,8 +30,7 @@ public class Main {
 		// Start server
 		try {
 			server.startServer();
-		} 
-        catch (final ServerSocketException e) {
+		} catch (final ServerSocketException e) {
 			// Log error
 			LoggerUtilities.error(e);
 

@@ -17,24 +17,25 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
  * @author Durieux Thomas
  * @author Toulet Cyrille
  */
-public class PropertiesUtilityImpl implements PropertiesUtility{
+public class PropertiesUtilityImpl implements PropertiesUtility {
 
-    /* Instance */
+	/* Instance */
 	private final Properties properties;
 
-
-    /**
-     * Constructor
-     * @param fileName The property file name
-     */
+	/**
+	 * Constructor
+	 * 
+	 * @param fileName
+	 *            The property file name
+	 */
 	public PropertiesUtilityImpl(final String fileName) {
-        /* Set instance */
+		/* Set instance */
 		properties = new Properties();
 
-        /*Set file */
-        File f = new File(fileName);
+		/* Set file */
+		File f = new File(fileName);
 
-        /* Check */
+		/* Check */
 		if (!f.exists()) {
 			try {
 				properties.store(new FileOutputStream(f), null);
@@ -52,16 +53,17 @@ public class PropertiesUtilityImpl implements PropertiesUtility{
 		}
 	}
 
-
-    /**
-     * Constructor
-     * @param openStream The property file stream
-     */
+	/**
+	 * Constructor
+	 * 
+	 * @param openStream
+	 *            The property file stream
+	 */
 	public PropertiesUtilityImpl(InputStream openStream) {
-        /* Set instance */
+		/* Set instance */
 		properties = new Properties();
 
-        /* Use open stream */
+		/* Use open stream */
 		try {
 			properties.load(openStream);
 		} catch (IOException e) {
@@ -69,28 +71,25 @@ public class PropertiesUtilityImpl implements PropertiesUtility{
 		}
 	}
 
-
-    /**
-     * @see PropertiesUtility
-     */
+	/**
+	 * @see PropertiesUtility
+	 */
 	@Override
 	public String getProperty(final String key) {
 		return properties.getProperty(key);
 	}
 
-
-    /**
-     * @see PropertiesUtility
-     */
+	/**
+	 * @see PropertiesUtility
+	 */
 	@Override
 	public boolean getBooleanProperty(final String key) {
 		return Boolean.parseBoolean(properties.getProperty(key));
 	}
 
-
-    /**
-     * @see PropertiesUtility
-     */
+	/**
+	 * @see PropertiesUtility
+	 */
 	@Override
 	public int getIntProperty(final String key) {
 		return Integer.parseInt(properties.getProperty(key));

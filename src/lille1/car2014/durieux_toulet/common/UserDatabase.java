@@ -12,7 +12,9 @@ public interface UserDatabase {
 
 	/**
 	 * Tell if user exists or not
-	 * @param username Username
+	 * 
+	 * @param username
+	 *            Username
 	 * @return True if user exists, false else
 	 */
 	boolean userExist(String username);
@@ -20,8 +22,10 @@ public interface UserDatabase {
 	/**
 	 * Signin
 	 * 
-	 * @param username Username
-	 * @param password Password
+	 * @param username
+	 *            Username
+	 * @param password
+	 *            Password
 	 * @return Succes
 	 */
 	boolean loginUser(String username, String password);

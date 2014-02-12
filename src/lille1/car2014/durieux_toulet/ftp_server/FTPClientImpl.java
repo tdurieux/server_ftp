@@ -8,7 +8,6 @@ import java.util.Map;
 import lille1.car2014.durieux_toulet.common.UserDatabase;
 import lille1.car2014.durieux_toulet.exception.ServerSocketException;
 import lille1.car2014.durieux_toulet.exception.SocketException;
-import lille1.car2014.durieux_toulet.exception.FTPClientException;
 
 /**
  * All commands of the client is interpreted by the class
@@ -17,10 +16,10 @@ import lille1.car2014.durieux_toulet.exception.FTPClientException;
  * @author Toulet Cyrille
  */
 public class FTPClientImpl implements FTPClient {
-    /* Transfert server */
-	private FTPTransfertServerImpl transfertServer;
+	/* Transfert server */
+	private FTPTransfertServer transfertServer;
 
-    /* Parameters */
+	/* Parameters */
 	private boolean isConnected = false;
 	private String typeCharactor;
 	private String username;
@@ -30,7 +29,6 @@ public class FTPClientImpl implements FTPClient {
 
 	/**
 	 * Constructor
-	 * @param clientSocket The FTP client socket
 	 */
 	public FTPClientImpl() {
 		// Create relative path
@@ -40,38 +38,41 @@ public class FTPClientImpl implements FTPClient {
 		this.setCurrentDir(currentRelativePath.toAbsolutePath().toString());
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public boolean isConnected() {
 		return this.isConnected;
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public void setTypeCharactor(final String typeCharactor) {
 		this.typeCharactor = typeCharactor;
 
 	}
+	/**
+	 * @see FTPClient
+	 */
+	@Override
+	public String getTypeCharactor() {
+		return typeCharactor;
+	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public void setUsername(final String username) {
 		this.username = username;
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public boolean connect(final String password) {
 		// If correct password
@@ -87,38 +88,35 @@ public class FTPClientImpl implements FTPClient {
 		}
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public Map<String, String> getOptions() {
 		return this.options;
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public int createNewTransfert() throws SocketException {
 		// Create transfert server
-		final FTPTransfertServerImpl transfertHandler = new FTPTransfertServerImpl();
+		final FTPTransfertServer transfertHandler = new FTPTransfertServerImpl();
 		this.transfertServer = transfertHandler;
 
 		// Return server port
 		return transfertHandler.getPublicPort();
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public int createNewTransfert(String address, int port)
 			throws SocketException {
 		// Create transfert server
-		FTPTransfertServerImpl transfertHandler;
+		FTPTransfertServer transfertHandler;
 		try {
 			transfertHandler = new FTPTransfertServerImpl(address, port);
 			this.transfertServer = transfertHandler;
@@ -130,55 +128,49 @@ public class FTPClientImpl implements FTPClient {
 		}
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
-	public FTPTransfertServerImpl getTransfertServer() {
+	public FTPTransfertServer getTransfertServer() {
 		return this.transfertServer;
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public String getCurrentDir() {
 		return this.currentDir;
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public void setCurrentDir(final String currentDir) {
 		this.currentDir = currentDir;
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public void setFileToRename(String path) {
 		this.fileToRename = path;
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public String getFileToRename() {
 		return fileToRename;
 	}
 
-
-    /**
-     * @see FTPClient
-     */
+	/**
+	 * @see FTPClient
+	 */
 	@Override
 	public String getUsername() {
 		return username;

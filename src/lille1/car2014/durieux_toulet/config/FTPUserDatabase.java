@@ -7,8 +7,7 @@ package lille1.car2014.durieux_toulet.config;
  * @author Toulet Cyrille
  */
 public interface FTPUserDatabase extends PropertiesUtility {
-    /* Set instance */
-	PropertiesUtility INSTANCE = new PropertiesUtilityImpl (
-		FTPUserDatabase.class.getResourceAsStream ("db_user.ini")
-    );
+	/* Set instance */
+	PropertiesUtility INSTANCE = new PropertiesUtilityImpl(
+			FTPUserDatabase.class.getResourceAsStream("db_user.ini"));
 }
