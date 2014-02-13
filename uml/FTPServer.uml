@@ -1,47 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_67LzYJHSEeOOA9qVpCSlmA" name="model">
-  <packagedElement xmi:type="uml:Package" xmi:id="_JI85oJHTEeOOA9qVpCSlmA" name="lille1.car2014.durieux_toulet.ftp_server">
-    <packagedElement xmi:type="uml:Interface" xmi:id="_haXPEJHTEeOOA9qVpCSlmA" name="FTPClient"/>
-    <packagedElement xmi:type="uml:Interface" xmi:id="_lDM-AJHTEeOOA9qVpCSlmA" name="FTPClientSocket"/>
-    <packagedElement xmi:type="uml:Interface" xmi:id="_m2fgkJHTEeOOA9qVpCSlmA" name="FTPRequestHandler"/>
-    <packagedElement xmi:type="uml:Interface" xmi:id="_p3LDUJHTEeOOA9qVpCSlmA" name="FTPServer"/>
-    <packagedElement xmi:type="uml:Interface" xmi:id="_rw92gJHTEeOOA9qVpCSlmA" name="FTPTransfertClient"/>
-    <packagedElement xmi:type="uml:Interface" xmi:id="_t1R3oJHTEeOOA9qVpCSlmA" name="FTPTransfertServer"/>
-    <packagedElement xmi:type="uml:Class" xmi:id="_0oQnUJHTEeOOA9qVpCSlmA" name="FTPClientImpl">
-      <ownedAttribute xmi:type="uml:Property" xmi:id="_heRCMJHUEeOOA9qVpCSlmA" name="fTPTransfertServer" type="_t1R3oJHTEeOOA9qVpCSlmA" association="_heRpQJHUEeOOA9qVpCSlmA">
-        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_heRCMZHUEeOOA9qVpCSlmA" value="1"/>
-        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_heRCMpHUEeOOA9qVpCSlmA" value="1"/>
-      </ownedAttribute>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Class" xmi:id="_3PS7AJHTEeOOA9qVpCSlmA" clientDependency="_aLpJIJHUEeOOA9qVpCSlmA" name="FTPClientSocketImpl">
-      <ownedAttribute xmi:type="uml:Property" xmi:id="_ItjhoJHUEeOOA9qVpCSlmA" name="fTPClient" type="_haXPEJHTEeOOA9qVpCSlmA" association="_ItlW0JHUEeOOA9qVpCSlmA">
-        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ItjhoZHUEeOOA9qVpCSlmA" value="1"/>
-        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ItjhopHUEeOOA9qVpCSlmA" value="1"/>
-      </ownedAttribute>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Class" xmi:id="_5-XwYJHTEeOOA9qVpCSlmA" name="FTPRequestHandlerImpl"/>
-    <packagedElement xmi:type="uml:Class" xmi:id="_8eb5YJHTEeOOA9qVpCSlmA" clientDependency="_RvNIUJHUEeOOA9qVpCSlmA" name="FTPServerImpl"/>
-    <packagedElement xmi:type="uml:Class" xmi:id="__vG_8JHTEeOOA9qVpCSlmA" name="FTPTransfertClientImpl"/>
-    <packagedElement xmi:type="uml:Class" xmi:id="_CSh-8JHUEeOOA9qVpCSlmA" clientDependency="_ieDEMJHUEeOOA9qVpCSlmA" name="FTPTransfertServerImpl"/>
-    <packagedElement xmi:type="uml:Association" xmi:id="_ItlW0JHUEeOOA9qVpCSlmA" name="FTPClient" memberEnd="_ItlW0ZHUEeOOA9qVpCSlmA _ItjhoJHUEeOOA9qVpCSlmA">
-      <ownedEnd xmi:type="uml:Property" xmi:id="_ItlW0ZHUEeOOA9qVpCSlmA" name="fTPClientSocket" type="_3PS7AJHTEeOOA9qVpCSlmA" association="_ItlW0JHUEeOOA9qVpCSlmA">
-        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ItlW0pHUEeOOA9qVpCSlmA" value="1"/>
-        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ItlW05HUEeOOA9qVpCSlmA" value="1"/>
-      </ownedEnd>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Usage" xmi:id="_RvNIUJHUEeOOA9qVpCSlmA" name="FTPClientSocket" client="_8eb5YJHTEeOOA9qVpCSlmA" supplier="_3PS7AJHTEeOOA9qVpCSlmA"/>
-    <packagedElement xmi:type="uml:Usage" xmi:id="_aLpJIJHUEeOOA9qVpCSlmA" name="FTPRequestHandler" client="_3PS7AJHTEeOOA9qVpCSlmA" supplier="_m2fgkJHTEeOOA9qVpCSlmA"/>
-    <packagedElement xmi:type="uml:Association" xmi:id="_heRpQJHUEeOOA9qVpCSlmA" name="fTPClientImpl_fTPTransfertServer_1" memberEnd="_heSQUJHUEeOOA9qVpCSlmA _heRCMJHUEeOOA9qVpCSlmA">
-      <ownedEnd xmi:type="uml:Property" xmi:id="_heSQUJHUEeOOA9qVpCSlmA" name="fTPClientImpl" type="_0oQnUJHTEeOOA9qVpCSlmA" association="_heRpQJHUEeOOA9qVpCSlmA">
-        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_heSQUZHUEeOOA9qVpCSlmA" value="1"/>
-        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_heSQUpHUEeOOA9qVpCSlmA" value="1"/>
-      </ownedEnd>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Usage" xmi:id="_ieDEMJHUEeOOA9qVpCSlmA" name="Usage1" client="_CSh-8JHUEeOOA9qVpCSlmA" supplier="__vG_8JHTEeOOA9qVpCSlmA"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Package" xmi:id="_QwJ7kJHTEeOOA9qVpCSlmA" name="lille1.car2014.durieux_toulet.common"/>
-  <packagedElement xmi:type="uml:Package" xmi:id="_XBk2UJHTEeOOA9qVpCSlmA" name="lille1.car2014.durieux_toulet.config"/>
-  <packagedElement xmi:type="uml:Package" xmi:id="_ZrpP4JHTEeOOA9qVpCSlmA" name="lille1.car2014.durieux_toulet.logs"/>
   <packagedElement xmi:type="uml:Interaction" xmi:id="_pGFvMJHUEeOOA9qVpCSlmA" name="FTP">
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_-Ls3AJHUEeOOA9qVpCSlmA" name="MessageSend" covered="_teItgJHUEeOOA9qVpCSlmA" message="_-LsP8JHUEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_-Ls3AZHUEeOOA9qVpCSlmA" name="MessageRecv" covered="_4XAUgJHUEeOOA9qVpCSlmA" message="_-LsP8JHUEeOOA9qVpCSlmA"/>
@@ -138,9 +96,7 @@
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_LWsNcJHcEeOOA9qVpCSlmA" name="MessageRecv24" covered="_bMXw4JHVEeOOA9qVpCSlmA" message="_LWqYQJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ActionExecutionSpecification" xmi:id="_Y8Co0JHcEeOOA9qVpCSlmA" name="ActionExecSpec27" covered="_MQjVAJHZEeOOA9qVpCSlmA" finish="_Y8DP4JHcEeOOA9qVpCSlmA" start="_bNVWAJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_bNVWAJHcEeOOA9qVpCSlmA" name="MessageRecv" covered="_MQjVAJHZEeOOA9qVpCSlmA" message="_bNS5wJHcEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_ivuJYJHcEeOOA9qVpCSlmA" name="MessageSend26" covered="_MQjVAJHZEeOOA9qVpCSlmA" message="_ivsUMJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_9u7XQJHbEeOOA9qVpCSlmA" name="ActionExecSpec22Finish" covered="_bMXw4JHVEeOOA9qVpCSlmA" execution="_9u6wMZHbEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_ivuwcJHcEeOOA9qVpCSlmA" name="MessageRecv27" covered="_fw8EEJHcEeOOA9qVpCSlmA" message="_ivsUMJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_bNUH4JHcEeOOA9qVpCSlmA" name="MessageSend25" covered="_YwJwoJHWEeOOA9qVpCSlmA" message="_bNS5wJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ActionExecutionSpecification" xmi:id="_DBy_EJHcEeOOA9qVpCSlmA" name="ActionExecSpec25" covered="_YwJwoJHWEeOOA9qVpCSlmA" finish="_5GRfMJHdEeOOA9qVpCSlmA" start="_VR4rQZHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_VR4rQZHcEeOOA9qVpCSlmA" name="MessageRecv26" covered="_YwJwoJHWEeOOA9qVpCSlmA" message="_VR3dIJHcEeOOA9qVpCSlmA"/>
@@ -150,26 +106,14 @@
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_QzoXQJHcEeOOA9qVpCSlmA" name="MessageSend23" covered="_bMXw4JHVEeOOA9qVpCSlmA" message="_QznJIJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ActionExecutionSpecification" xmi:id="__RJ_AJHbEeOOA9qVpCSlmA" name="ActionExecSpec23" covered="_bMXw4JHVEeOOA9qVpCSlmA" finish="__RJ_AZHbEeOOA9qVpCSlmA" start="_QzoXQJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_pJjj0JHdEeOOA9qVpCSlmA" name="MessageSend29" covered="_YwJwoJHWEeOOA9qVpCSlmA" message="_pJiVsJHdEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_srNiIJHcEeOOA9qVpCSlmA" name="ActionExecSpec28Start" covered="_fw8EEJHcEeOOA9qVpCSlmA" execution="_mt6dQJHcEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:ActionExecutionSpecification" xmi:id="_mt6dQJHcEeOOA9qVpCSlmA" name="ActionExecSpec28" covered="_fw8EEJHcEeOOA9qVpCSlmA" finish="_mt6dQZHcEeOOA9qVpCSlmA" start="_srNiIJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_AiPMYJHcEeOOA9qVpCSlmA" name="ActionExecSpec24Finish" covered="_HI8e0JHVEeOOA9qVpCSlmA" execution="_AiOlUJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="__RJ_AZHbEeOOA9qVpCSlmA" name="ActionExecSpec23Finish" covered="_bMXw4JHVEeOOA9qVpCSlmA" execution="__RJ_AJHbEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_oUARUJHcEeOOA9qVpCSlmA" name="MessageSend27" covered="_MQjVAJHZEeOOA9qVpCSlmA" message="_oT_DMJHcEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:ActionExecutionSpecification" xmi:id="_reGOwJHcEeOOA9qVpCSlmA" name="ActionExecSpec29" covered="_fw8EEJHcEeOOA9qVpCSlmA" finish="_RYT8MJHdEeOOA9qVpCSlmA" start="_oUBfcJHcEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_oUBfcJHcEeOOA9qVpCSlmA" name="MessageRecv" covered="_fw8EEJHcEeOOA9qVpCSlmA" message="_oT_DMJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ActionExecutionSpecification" xmi:id="_kyKFwJHdEeOOA9qVpCSlmA" name="ActionExecSpec32" covered="_HI8e0JHVEeOOA9qVpCSlmA" finish="_2WCMMJHdEeOOA9qVpCSlmA" start="_pJkK4JHdEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_pJkK4JHdEeOOA9qVpCSlmA" name="MessageRecv28" covered="_HI8e0JHVEeOOA9qVpCSlmA" message="_pJiVsJHdEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_vCbRIJHcEeOOA9qVpCSlmA" name="MessageSend" covered="_fw8EEJHcEeOOA9qVpCSlmA" message="_vCaDAJHcEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_RYT8MJHdEeOOA9qVpCSlmA" name="ActionExecSpec29Finish" covered="_fw8EEJHcEeOOA9qVpCSlmA" execution="_reGOwJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_2WCMMJHdEeOOA9qVpCSlmA" name="MessageSend30" covered="_HI8e0JHVEeOOA9qVpCSlmA" message="_2WA-EJHdEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ActionExecutionSpecification" xmi:id="_zB_okJHdEeOOA9qVpCSlmA" name="ActionExecSpec33" covered="_bMXw4JHVEeOOA9qVpCSlmA" finish="_zCAPoJHdEeOOA9qVpCSlmA" start="_2WCzQJHdEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_2WCzQJHdEeOOA9qVpCSlmA" name="MessageRecv29" covered="_bMXw4JHVEeOOA9qVpCSlmA" message="_2WA-EJHdEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_SAZP4JHdEeOOA9qVpCSlmA" name="ActionExecSpec30Start" covered="_fw8EEJHcEeOOA9qVpCSlmA" execution="_uN6D8JHcEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:ActionExecutionSpecification" xmi:id="_uN6D8JHcEeOOA9qVpCSlmA" name="ActionExecSpec30" covered="_fw8EEJHcEeOOA9qVpCSlmA" finish="_uN6rAJHcEeOOA9qVpCSlmA" start="_SAZP4JHdEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_vEqFwJHcEeOOA9qVpCSlmA" name="MessageRecv" covered="_fw8EEJHcEeOOA9qVpCSlmA" message="_vCaDAJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_zCAPoJHdEeOOA9qVpCSlmA" name="ActionExecSpec33Finish" covered="_bMXw4JHVEeOOA9qVpCSlmA" execution="_zB_okJHdEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_uN6rAJHcEeOOA9qVpCSlmA" name="ActionExecSpec30Finish" covered="_fw8EEJHcEeOOA9qVpCSlmA" execution="_uN6D8JHcEeOOA9qVpCSlmA"/>
-    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_mt6dQZHcEeOOA9qVpCSlmA" name="ActionExecSpec28Finish" covered="_fw8EEJHcEeOOA9qVpCSlmA" execution="_mt6dQJHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_Y8DP4JHcEeOOA9qVpCSlmA" name="ActionExecSpec27Finish" covered="_MQjVAJHZEeOOA9qVpCSlmA" execution="_Y8Co0JHcEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:ActionExecutionSpecification" xmi:id="_3uqMAJHdEeOOA9qVpCSlmA" name="ActionExecSpec35" covered="_HI8e0JHVEeOOA9qVpCSlmA" finish="_6aCNIJHdEeOOA9qVpCSlmA" start="_5GRfMZHdEeOOA9qVpCSlmA"/>
     <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_UAYKoJHdEeOOA9qVpCSlmA" name="MessageSend28" covered="_YwJwoJHWEeOOA9qVpCSlmA" message="_UAW8gJHdEeOOA9qVpCSlmA"/>
@@ -217,8 +161,7 @@
     <lifeline xmi:type="uml:Lifeline" xmi:id="_bMXw4JHVEeOOA9qVpCSlmA" name=":UIFTPClient" coveredBy="_ju7n0JHVEeOOA9qVpCSlmA _ju7AwJHVEeOOA9qVpCSlmA _uL-OcJHVEeOOA9qVpCSlmA _Dt0mUJHWEeOOA9qVpCSlmA _DtzYMJHWEeOOA9qVpCSlmA _Rf_VsZHWEeOOA9qVpCSlmA _Rf_VsJHWEeOOA9qVpCSlmA _Ss-GMJHWEeOOA9qVpCSlmA _RAaoUJHXEeOOA9qVpCSlmA _RAaBQJHXEeOOA9qVpCSlmA _ShFJ0JHXEeOOA9qVpCSlmA _etp0YJHXEeOOA9qVpCSlmA _etpNUJHXEeOOA9qVpCSlmA _gXUg4JHXEeOOA9qVpCSlmA _q9XdEJHYEeOOA9qVpCSlmA _q9W2AJHYEeOOA9qVpCSlmA _sTFS0JHYEeOOA9qVpCSlmA _4i-XIZHYEeOOA9qVpCSlmA _4i-XIJHYEeOOA9qVpCSlmA _MUQeYJHbEeOOA9qVpCSlmA _9u7XQJHbEeOOA9qVpCSlmA _9u6wMZHbEeOOA9qVpCSlmA __RJ_AZHbEeOOA9qVpCSlmA __RJ_AJHbEeOOA9qVpCSlmA _LWsNcJHcEeOOA9qVpCSlmA _QzoXQJHcEeOOA9qVpCSlmA _zCAPoJHdEeOOA9qVpCSlmA _zB_okJHdEeOOA9qVpCSlmA _04U4EZHdEeOOA9qVpCSlmA _04U4EJHdEeOOA9qVpCSlmA _2WCzQJHdEeOOA9qVpCSlmA _6aC0MJHdEeOOA9qVpCSlmA _SaqUkJHeEeOOA9qVpCSlmA _0a_mYJHeEeOOA9qVpCSlmA _0a-_UJHeEeOOA9qVpCSlmA _2vh00JHeEeOOA9qVpCSlmA"/>
     <lifeline xmi:type="uml:Lifeline" xmi:id="_YwJwoJHWEeOOA9qVpCSlmA" name=":FTPRequestHandler" coveredBy="_baP_YZHWEeOOA9qVpCSlmA _hUoTIJHWEeOOA9qVpCSlmA _jAwdwJHWEeOOA9qVpCSlmA _yHdXIJHWEeOOA9qVpCSlmA _ImWmEJHXEeOOA9qVpCSlmA _2tzasJHXEeOOA9qVpCSlmA _-tZugJHXEeOOA9qVpCSlmA _E8g8IJHYEeOOA9qVpCSlmA _XyF7AJHYEeOOA9qVpCSlmA _bub0wJHYEeOOA9qVpCSlmA _ILgLMJHZEeOOA9qVpCSlmA _YfjWkJHbEeOOA9qVpCSlmA _ekIIIJHbEeOOA9qVpCSlmA _zdyeoJHbEeOOA9qVpCSlmA _DBy_EJHcEeOOA9qVpCSlmA _Hp3WYJHcEeOOA9qVpCSlmA _VR4rQZHcEeOOA9qVpCSlmA _bNUH4JHcEeOOA9qVpCSlmA _UAYKoJHdEeOOA9qVpCSlmA _pJjj0JHdEeOOA9qVpCSlmA _5GRfMJHdEeOOA9qVpCSlmA _NvcioJHeEeOOA9qVpCSlmA _WA-7AJHeEeOOA9qVpCSlmA _mWDsAJHeEeOOA9qVpCSlmA _qEjXAJHeEeOOA9qVpCSlmA"/>
     <lifeline xmi:type="uml:Lifeline" xmi:id="_Jw3b8JHYEeOOA9qVpCSlmA" name=":UserDatabase" coveredBy="_NAJbYJHYEeOOA9qVpCSlmA _NAKCcZHYEeOOA9qVpCSlmA _NAKCcJHYEeOOA9qVpCSlmA _OO2qMJHYEeOOA9qVpCSlmA _QtTpoJHYEeOOA9qVpCSlmA _UAeDgJHYEeOOA9qVpCSlmA"/>
-    <lifeline xmi:type="uml:Lifeline" xmi:id="_MQjVAJHZEeOOA9qVpCSlmA" name=":FTPTransfertSocket" coveredBy="_qHPmAZHbEeOOA9qVpCSlmA _FHbO0JHcEeOOA9qVpCSlmA _FHcc8JHcEeOOA9qVpCSlmA _FHb14JHcEeOOA9qVpCSlmA _Y8DP4JHcEeOOA9qVpCSlmA _Y8Co0JHcEeOOA9qVpCSlmA _bNVWAJHcEeOOA9qVpCSlmA _ivuJYJHcEeOOA9qVpCSlmA _oUARUJHcEeOOA9qVpCSlmA _KGEdoZHdEeOOA9qVpCSlmA _KGEdoJHdEeOOA9qVpCSlmA _UCm_QJHdEeOOA9qVpCSlmA"/>
-    <lifeline xmi:type="uml:Lifeline" xmi:id="_fw8EEJHcEeOOA9qVpCSlmA" name=":FTPTransfertClient" coveredBy="_ivuwcJHcEeOOA9qVpCSlmA _mt6dQZHcEeOOA9qVpCSlmA _mt6dQJHcEeOOA9qVpCSlmA _oUBfcJHcEeOOA9qVpCSlmA _reGOwJHcEeOOA9qVpCSlmA _srNiIJHcEeOOA9qVpCSlmA _uN6rAJHcEeOOA9qVpCSlmA _uN6D8JHcEeOOA9qVpCSlmA _vCbRIJHcEeOOA9qVpCSlmA _vEqFwJHcEeOOA9qVpCSlmA _RYT8MJHdEeOOA9qVpCSlmA _SAZP4JHdEeOOA9qVpCSlmA"/>
+    <lifeline xmi:type="uml:Lifeline" xmi:id="_MQjVAJHZEeOOA9qVpCSlmA" name=":FTPTransferSocket" coveredBy="_qHPmAZHbEeOOA9qVpCSlmA _FHbO0JHcEeOOA9qVpCSlmA _FHcc8JHcEeOOA9qVpCSlmA _FHb14JHcEeOOA9qVpCSlmA _Y8DP4JHcEeOOA9qVpCSlmA _Y8Co0JHcEeOOA9qVpCSlmA _bNVWAJHcEeOOA9qVpCSlmA _KGEdoZHdEeOOA9qVpCSlmA _KGEdoJHdEeOOA9qVpCSlmA _UCm_QJHdEeOOA9qVpCSlmA"/>
     <message xmi:type="uml:Message" xmi:id="_-LsP8JHUEeOOA9qVpCSlmA" name="1:CreateFTPServer" messageSort="createMessage" receiveEvent="_-Ls3AZHUEeOOA9qVpCSlmA" sendEvent="_-Ls3AJHUEeOOA9qVpCSlmA"/>
     <message xmi:type="uml:Message" xmi:id="_PIPQoJHVEeOOA9qVpCSlmA" name="2:StartFTPServer" receiveEvent="_PIQewJHVEeOOA9qVpCSlmA" sendEvent="_PIP3sJHVEeOOA9qVpCSlmA"/>
     <message xmi:type="uml:Message" xmi:id="_uL8ZQJHVEeOOA9qVpCSlmA" name="3:Connection" receiveEvent="_uL9nYJHVEeOOA9qVpCSlmA" sendEvent="_uL-OcJHVEeOOA9qVpCSlmA"/>
@@ -248,9 +191,6 @@
     <message xmi:type="uml:Message" xmi:id="_QznJIJHcEeOOA9qVpCSlmA" name="27:RETR text.txt" receiveEvent="_Qzo-UJHcEeOOA9qVpCSlmA" sendEvent="_QzoXQJHcEeOOA9qVpCSlmA"/>
     <message xmi:type="uml:Message" xmi:id="_VR3dIJHcEeOOA9qVpCSlmA" name="28:execute" receiveEvent="_VR4rQZHcEeOOA9qVpCSlmA" sendEvent="_VR4rQJHcEeOOA9qVpCSlmA"/>
     <message xmi:type="uml:Message" xmi:id="_bNS5wJHcEeOOA9qVpCSlmA" name="29:writeContent(File(text.txt))" receiveEvent="_bNVWAJHcEeOOA9qVpCSlmA" sendEvent="_bNUH4JHcEeOOA9qVpCSlmA"/>
-    <message xmi:type="uml:Message" xmi:id="_ivsUMJHcEeOOA9qVpCSlmA" name="30:createFTPTransfertClient" messageSort="createMessage" receiveEvent="_ivuwcJHcEeOOA9qVpCSlmA" sendEvent="_ivuJYJHcEeOOA9qVpCSlmA"/>
-    <message xmi:type="uml:Message" xmi:id="_oT_DMJHcEeOOA9qVpCSlmA" name="31:writeContent" receiveEvent="_oUBfcJHcEeOOA9qVpCSlmA" sendEvent="_oUARUJHcEeOOA9qVpCSlmA"/>
-    <message xmi:type="uml:Message" xmi:id="_vCaDAJHcEeOOA9qVpCSlmA" name="32:close" receiveEvent="_vEqFwJHcEeOOA9qVpCSlmA" sendEvent="_vCbRIJHcEeOOA9qVpCSlmA"/>
     <message xmi:type="uml:Message" xmi:id="_UAW8gJHdEeOOA9qVpCSlmA" name="33:close" receiveEvent="_UCm_QJHdEeOOA9qVpCSlmA" sendEvent="_UAYKoJHdEeOOA9qVpCSlmA"/>
     <message xmi:type="uml:Message" xmi:id="_pJiVsJHdEeOOA9qVpCSlmA" name="writeMessage(150 accpeted)" receiveEvent="_pJkK4JHdEeOOA9qVpCSlmA" sendEvent="_pJjj0JHdEeOOA9qVpCSlmA"/>
     <message xmi:type="uml:Message" xmi:id="_2WA-EJHdEeOOA9qVpCSlmA" name="35:150 accepted" receiveEvent="_2WCzQJHdEeOOA9qVpCSlmA" sendEvent="_2WCMMJHdEeOOA9qVpCSlmA"/>
@@ -261,5 +201,86 @@
     <message xmi:type="uml:Message" xmi:id="_mWCd4JHeEeOOA9qVpCSlmA" name="40:writeMessage(427 close)" receiveEvent="_mWETEJHeEeOOA9qVpCSlmA" sendEvent="_mWDsAJHeEeOOA9qVpCSlmA"/>
     <message xmi:type="uml:Message" xmi:id="_qEhh0JHeEeOOA9qVpCSlmA" name="42:close" receiveEvent="_qGyLoJHeEeOOA9qVpCSlmA" sendEvent="_qEjXAJHeEeOOA9qVpCSlmA"/>
     <message xmi:type="uml:Message" xmi:id="_2tRyEJHeEeOOA9qVpCSlmA" name="41:427 close" receiveEvent="_2vh00JHeEeOOA9qVpCSlmA" sendEvent="_2tTnQJHeEeOOA9qVpCSlmA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_dW0WkJRDEeO_vciCwpxP_w" name="lille1.car2014.durieux_toulet">
+    <packagedElement xmi:type="uml:Package" xmi:id="_QwJ7kJHTEeOOA9qVpCSlmA" name="common">
+      <packagedElement xmi:type="uml:Class" xmi:id="_hG59AJRDEeO_vciCwpxP_w" clientDependency="_U7YwcJRFEeO_vciCwpxP_w" name="UserDatabseImpl">
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_U7YwcJRFEeO_vciCwpxP_w" name="InterfaceRealization1" client="_hG59AJRDEeO_vciCwpxP_w" supplier="_mIXEsJRDEeO_vciCwpxP_w" contract="_mIXEsJRDEeO_vciCwpxP_w"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Interface" xmi:id="_mIXEsJRDEeO_vciCwpxP_w" name="UserDatabase"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_ZrpP4JHTEeOOA9qVpCSlmA" name="logs">
+      <packagedElement xmi:type="uml:Class" xmi:id="_5FWTIJRDEeO_vciCwpxP_w" name="LoggerUtilities"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_XBk2UJHTEeOOA9qVpCSlmA" name="config">
+      <packagedElement xmi:type="uml:Class" xmi:id="_CT5tYJREEeO_vciCwpxP_w" clientDependency="_VwqyoJRFEeO_vciCwpxP_w" name="PropertiesUtilityImpl">
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_VwqyoJRFEeO_vciCwpxP_w" name="InterfaceRealization1" client="_CT5tYJREEeO_vciCwpxP_w" supplier="_Fe1_YJREEeO_vciCwpxP_w" contract="_Fe1_YJREEeO_vciCwpxP_w"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Interface" xmi:id="_Fe1_YJREEeO_vciCwpxP_w" name="PropertyUtility"/>
+      <packagedElement xmi:type="uml:Interface" xmi:id="_HuXyAJREEeO_vciCwpxP_w" name="FTPConfiguration">
+        <generalization xmi:type="uml:Generalization" xmi:id="_W7K24JRFEeO_vciCwpxP_w" general="_Fe1_YJREEeO_vciCwpxP_w"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Interface" xmi:id="_K2-hsJREEeO_vciCwpxP_w" name="FTPUserDatabase">
+        <generalization xmi:type="uml:Generalization" xmi:id="_XV8uYJRFEeO_vciCwpxP_w" general="_Fe1_YJREEeO_vciCwpxP_w"/>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_JI85oJHTEeOOA9qVpCSlmA" name="ftp_server">
+      <packagedElement xmi:type="uml:Interface" xmi:id="_haXPEJHTEeOOA9qVpCSlmA" name="FTPClient"/>
+      <packagedElement xmi:type="uml:Interface" xmi:id="_lDM-AJHTEeOOA9qVpCSlmA" name="FTPClientSocket"/>
+      <packagedElement xmi:type="uml:Interface" xmi:id="_m2fgkJHTEeOOA9qVpCSlmA" name="FTPRequestHandler"/>
+      <packagedElement xmi:type="uml:Interface" xmi:id="_p3LDUJHTEeOOA9qVpCSlmA" name="FTPServer"/>
+      <packagedElement xmi:type="uml:Interface" xmi:id="_t1R3oJHTEeOOA9qVpCSlmA" name="FTPTransferSocket"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_0oQnUJHTEeOOA9qVpCSlmA" clientDependency="_BabSQJRFEeO_vciCwpxP_w" name="FTPClientImpl">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_heRCMJHUEeOOA9qVpCSlmA" name="fTPTransfertServer" type="_t1R3oJHTEeOOA9qVpCSlmA" association="_heRpQJHUEeOOA9qVpCSlmA">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_heRCMZHUEeOOA9qVpCSlmA" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_heRCMpHUEeOOA9qVpCSlmA" value="1"/>
+        </ownedAttribute>
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_BabSQJRFEeO_vciCwpxP_w" name="InterfaceRealization1" client="_0oQnUJHTEeOOA9qVpCSlmA" supplier="_haXPEJHTEeOOA9qVpCSlmA" contract="_haXPEJHTEeOOA9qVpCSlmA"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_3PS7AJHTEeOOA9qVpCSlmA" clientDependency="_DEm8IJRFEeO_vciCwpxP_w" name="FTPClientSocketImpl">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_ItjhoJHUEeOOA9qVpCSlmA" name="fTPClient" type="_haXPEJHTEeOOA9qVpCSlmA" association="_ItlW0JHUEeOOA9qVpCSlmA">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ItjhoZHUEeOOA9qVpCSlmA" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ItjhopHUEeOOA9qVpCSlmA" value="1"/>
+        </ownedAttribute>
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_DEm8IJRFEeO_vciCwpxP_w" name="InterfaceRealization1" client="_3PS7AJHTEeOOA9qVpCSlmA" supplier="_lDM-AJHTEeOOA9qVpCSlmA" contract="_lDM-AJHTEeOOA9qVpCSlmA"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_5-XwYJHTEeOOA9qVpCSlmA" clientDependency="_CCq-AJRFEeO_vciCwpxP_w" name="FTPRequestHandlerImpl">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_yhERUJREEeO_vciCwpxP_w" name="fTPClientSocketImpl" type="_lDM-AJHTEeOOA9qVpCSlmA" association="_yhE4YJREEeO_vciCwpxP_w">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_yhERUZREEeO_vciCwpxP_w" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_yhERUpREEeO_vciCwpxP_w" value="1"/>
+        </ownedAttribute>
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_CCq-AJRFEeO_vciCwpxP_w" name="InterfaceRealization1" client="_5-XwYJHTEeOOA9qVpCSlmA" supplier="_m2fgkJHTEeOOA9qVpCSlmA" contract="_m2fgkJHTEeOOA9qVpCSlmA"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_8eb5YJHTEeOOA9qVpCSlmA" clientDependency="_RvNIUJHUEeOOA9qVpCSlmA _D2oO8JRFEeO_vciCwpxP_w" name="FTPServerImpl">
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_D2oO8JRFEeO_vciCwpxP_w" name="InterfaceRealization1" client="_8eb5YJHTEeOOA9qVpCSlmA" supplier="_p3LDUJHTEeOOA9qVpCSlmA" contract="_p3LDUJHTEeOOA9qVpCSlmA"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_ItlW0JHUEeOOA9qVpCSlmA" name="FTPClient" memberEnd="_ItlW0ZHUEeOOA9qVpCSlmA _ItjhoJHUEeOOA9qVpCSlmA">
+        <ownedEnd xmi:type="uml:Property" xmi:id="_ItlW0ZHUEeOOA9qVpCSlmA" name="fTPClientSocket" type="_5-XwYJHTEeOOA9qVpCSlmA" association="_ItlW0JHUEeOOA9qVpCSlmA">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ItlW0pHUEeOOA9qVpCSlmA" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ItlW05HUEeOOA9qVpCSlmA" value="1"/>
+        </ownedEnd>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Usage" xmi:id="_RvNIUJHUEeOOA9qVpCSlmA" name="FTPClientSocket" client="_8eb5YJHTEeOOA9qVpCSlmA" supplier="_3PS7AJHTEeOOA9qVpCSlmA"/>
+      <packagedElement xmi:type="uml:Association" xmi:id="_heRpQJHUEeOOA9qVpCSlmA" name="fTPClientImpl_fTPTransfertServer_1" memberEnd="_heSQUJHUEeOOA9qVpCSlmA _heRCMJHUEeOOA9qVpCSlmA">
+        <ownedEnd xmi:type="uml:Property" xmi:id="_heSQUJHUEeOOA9qVpCSlmA" name="fTPClientImpl" type="_0oQnUJHTEeOOA9qVpCSlmA" association="_heRpQJHUEeOOA9qVpCSlmA">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_heSQUZHUEeOOA9qVpCSlmA" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_heSQUpHUEeOOA9qVpCSlmA" value="1"/>
+        </ownedEnd>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_yhE4YJREEeO_vciCwpxP_w" name="fTPRequestHandlerImpl_fTPClientSocketImpl_1" memberEnd="_yhE4YZREEeO_vciCwpxP_w _yhERUJREEeO_vciCwpxP_w">
+        <ownedEnd xmi:type="uml:Property" xmi:id="_yhE4YZREEeO_vciCwpxP_w" name="fTPRequestHandlerImpl" type="_5-XwYJHTEeOOA9qVpCSlmA" association="_yhE4YJREEeO_vciCwpxP_w">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_yhE4YpREEeO_vciCwpxP_w" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_yhE4Y5REEeO_vciCwpxP_w" value="1"/>
+        </ownedEnd>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_Gile4JRFEeO_vciCwpxP_w" clientDependency="_J9gtoJRFEeO_vciCwpxP_w" name="FTPTransferSocket">
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_J9gtoJRFEeO_vciCwpxP_w" name="InterfaceRealization1" client="_Gile4JRFEeO_vciCwpxP_w" supplier="_t1R3oJHTEeOOA9qVpCSlmA" contract="_t1R3oJHTEeOOA9qVpCSlmA"/>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_TGe5wJREEeO_vciCwpxP_w" name="exception">
+      <packagedElement xmi:type="uml:Class" xmi:id="_Xa-00JREEeO_vciCwpxP_w" name="RequestHandlerException"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_dFuxIJREEeO_vciCwpxP_w" name="ServerSocketException"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_fWlZcJREEeO_vciCwpxP_w" name="SocketException"/>
+    </packagedElement>
   </packagedElement>
 </uml:Model>
