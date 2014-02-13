@@ -6,7 +6,7 @@ package lille1.car2014.durieux_toulet.exception;
  * @author Durieux
  * @author Toulet Cyrille
  */
-public class SocketException extends Exception {
+public class SocketException extends RuntimeException {
 
 	/**
 	 * 

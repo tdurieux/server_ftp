@@ -6,7 +6,7 @@ package lille1.car2014.durieux_toulet.exception;
  * @author Durieux Thomas
  * @author Toulet Cyrille
  */
-public class RequestHandlerException extends Exception {
+public class RequestHandlerException extends RuntimeException {
 
 	/**
 	 * 

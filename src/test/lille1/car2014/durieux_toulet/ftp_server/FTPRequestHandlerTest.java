@@ -303,7 +303,7 @@ public class FTPRequestHandlerTest {
 					new FTPClientSocketMockup()).execute();
 			FTPRequestHandlerImpl.parseStringRequest("PASS pass", ftpClient,
 					new FTPClientSocketMockup()).execute();
-			FTPRequestHandlerImpl.parseStringRequest("TYPE E asda", ftpClient,
+			FTPRequestHandlerImpl.parseStringRequest("TYPE E F", ftpClient,
 					ftpClientSocketMockup).execute();
 		} catch (final RequestHandlerException e) {
 			fail(e.getMessage());

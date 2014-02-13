@@ -105,8 +105,11 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 			}
 			// Check the signature of the methods
 			final Class<?>[] types = method.getParameterTypes();
-			if (types.length > args.length) {
-				continue;
+			if (types.length != args.length) {
+				if (!(types.length < args.length && types.length > 0 && types[0]
+						.getName().equals("[Ljava.lang.String;"))) {
+					continue;
+				}
 			}
 			// create the call parameters
 			final Object[] objectArray = new Object[types.length];
@@ -186,56 +189,40 @@ public class FTPRequestHandlerImpl implements FTPRequestHandler {
 	}
 
 	/**
-	 * Request encoding
+	 * Define the encoding of the communication and send response to the client
 	 * 
-	 * @param typeCharacter
-	 *            The encoding char
-	 * @param secondTypeCharacter
-	 *            The network type char
+	 * @param typeCharacters
 	 */
 	@FTPRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
-	private void requestType(final String typeCharacter,
-			final String secondTypeCharacter) {
-		if (secondTypeCharacter.length() != 1) {
+	private void requestType(final String... typeCharacters) {
+		if (typeCharacters.length <= 0 || typeCharacters.length > 2) {
 			clientSocket.writeMessage("400 Type not accepted");
 			return;
 		}
-		if (!setPrimaryTypeCaracter(typeCharacter)) {
+		if (typeCharacters.length == 2) {
+			String secondTypeCharacter = typeCharacters[1];
+			switch (secondTypeCharacter.charAt(0)) {
+			case 'N':
+				ftpClient.setTypeCharactor("Non-print");
+				break;
+			case 'T':
+				ftpClient.setTypeCharactor("Telnet");
+				break;
+			case 'C':
+				ftpClient.setTypeCharactor("ASA");
+				break;
+			default:
+				clientSocket.writeMessage("400 Type not accepted");
+				return;
+			}
+		}
+
+		if (!setPrimaryTypeCaracter(typeCharacters[0])) {
 			clientSocket.writeMessage("400 Type not accepted");
 			return;
 		}
 
-		switch (secondTypeCharacter.charAt(0)) {
-		case 'N':
-			ftpClient.setTypeCharactor("Non-print");
-			break;
-		case 'T':
-			ftpClient.setTypeCharactor("Telnet");
-			break;
-		case 'C':
-			ftpClient.setTypeCharactor("ASA");
-			break;
-		default:
-			clientSocket.writeMessage("400 Type not accepted");
-			return;
-		}
 		clientSocket.writeMessage("200 Type accepted");
-	}
-
-	/**
-	 * Define the primary encoding of the communication and send response to the
-	 * client
-	 * 
-	 * @param typeCharacter
-	 *            The encoding caracter
-	 */
-	@FTPRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
-	private void requestType(final String typeCharacter) {
-		if (setPrimaryTypeCaracter(typeCharacter)) {
-			clientSocket.writeMessage("200 Type accepted");
-		} else {
-			clientSocket.writeMessage("400 Type not accepted");
-		}
 	}
 
 	/**
