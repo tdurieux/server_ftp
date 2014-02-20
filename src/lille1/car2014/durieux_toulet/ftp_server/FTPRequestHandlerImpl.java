@@ -24,766 +24,735 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**
  * FTP Request Handler used to parse and execute ftp command
- * 
+ *
  * @author Durieux Thomas
  * @author Toulet Cyrille
  */
 public class FTPRequestHandlerImpl implements FTPRequestHandler {
 
-	/* Parameters */
-	private final String command;
-	private final String[] args;
-	private final FTPClient ftpClient;
-	private final FTPClientSocket clientSocket;
+  /* Parameters */
+  private final String command;
+  private final String[] args;
+  private final FTPClient ftpClient;
+  private final FTPClientSocket clientSocket;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param command
-	 *            FTP command
-	 * @param args
-	 *            Arguments
-	 * @param ftpClient
-	 *            The FTP client
-	 * @param clientSocket
-	 *            The client socket
-	 */
-	public FTPRequestHandlerImpl(final String command, final String[] args,
-			final FTPClient ftpClient, final FTPClientSocket clientSocket) {
-		this.command = command;
-		this.args = args;
-		this.ftpClient = ftpClient;
-		this.clientSocket = clientSocket;
-	}
+  /**
+   * Constructor
+   *
+   * @param command FTP command
+   * @param args Arguments
+   * @param ftpClient The FTP client
+   * @param clientSocket The client socket
+   */
+  public FTPRequestHandlerImpl(final String command, final String[] args,
+          final FTPClient ftpClient, final FTPClientSocket clientSocket) {
+    this.command = command;
+    this.args = args;
+    this.ftpClient = ftpClient;
+    this.clientSocket = clientSocket;
+  }
 
-	/**
-	 * Parse request
-	 * 
-	 * @param request
-	 *            The request string
-	 * @param ftpClient
-	 *            The FTP client
-	 * @param clientSocket
-	 *            The FTP client socket
-	 * @return FTPRequestHandler The FTP request handler
-	 * @throws RequestHandlerException
-	 *             when unable to parse request
-	 */
-	public static FTPRequestHandler parseStringRequest(final String request,
-			final FTPClient ftpClient, final FTPClientSocket clientSocket)
-			throws RequestHandlerException {
-		final String[] requestSplitted = request.split(" ");
-		final String command = requestSplitted[0];
-		if (requestSplitted.length > 1) {
-			return new FTPRequestHandlerImpl(command, Arrays.copyOfRange(
-					requestSplitted, 1, requestSplitted.length), ftpClient,
-					clientSocket);
-		}
+  /**
+   * Parse request
+   *
+   * @param request The request string
+   * @param ftpClient The FTP client
+   * @param clientSocket The FTP client socket
+   * @return FTPRequestHandler The FTP request handler
+   * @throws RequestHandlerException when unable to parse request
+   */
+  public static FTPRequestHandler parseStringRequest(final String request,
+          final FTPClient ftpClient, final FTPClientSocket clientSocket)
+          throws RequestHandlerException {
+    final String[] requestSplitted = request.split(" ");
+    final String command = requestSplitted[0];
+    if (requestSplitted.length > 1) {
+      return new FTPRequestHandlerImpl(command, Arrays.copyOfRange(
+              requestSplitted, 1, requestSplitted.length), ftpClient,
+              clientSocket);
+    }
 
-		return new FTPRequestHandlerImpl(command, new String[0], ftpClient,
-				clientSocket);
-	}
+    return new FTPRequestHandlerImpl(command, new String[0], ftpClient,
+            clientSocket);
+  }
 
-	/**
-	 * @see FTPRequestHandler
-	 */
-	@Override
-	public void execute() throws RequestHandlerException {
-		// list all methods of this class
-		final Method[] allMethods = this.getClass().getDeclaredMethods();
-		for (int i = 0; i < allMethods.length; i++) {
-			final Method method = allMethods[i];
-			final FTPRequestAnnotation annotation = method
-					.getAnnotation(FTPRequestAnnotation.class);
-			// verify that the annotation have on annotation
-			if (annotation == null) {
-				continue;
-			}
-			if (annotation.name().toLowerCase()
-					.compareTo(command.toLowerCase()) != 0) {
-				continue;
-			}
-			// Check the signature of the methods
-			final Class<?>[] types = method.getParameterTypes();
-			if (types.length != args.length) {
-				if (!(types.length < args.length && types.length > 0 && types[0]
-						.getName().equals("[Ljava.lang.String;"))) {
-					continue;
-				}
-			}
-			// create the call parameters
-			final Object[] objectArray = new Object[types.length];
-			for (int j = 0; j < types.length; j++) {
-				final String type = types[j].getName();
-				if (type.compareTo(args[j].getClass().getName()) == 0) {
-					objectArray[j] = args[j];
-				} else if (type.compareTo("[Ljava.lang.String;") == 0) {
-					final String[] stringArgs = new String[args.length - j];
-					for (int k = j, l = 0; k < args.length; k++, l++) {
-						stringArgs[l] = args[k];
-					}
-					objectArray[j] = stringArgs;
-					break;
-				} else {
-					throw new RequestHandlerException("Arguement not valid "
-							+ args[j]);
-				}
-			}
+  /**
+   * @see FTPRequestHandler
+   */
+  @Override
+  public void execute() throws RequestHandlerException {
+    // list all methods of this class
+    final Method[] allMethods = this.getClass().getDeclaredMethods();
+    for (int i = 0; i < allMethods.length; i++) {
+      final Method method = allMethods[i];
+      final FTPRequestAnnotation annotation = method
+              .getAnnotation(FTPRequestAnnotation.class);
+      // verify that the annotation have on annotation
+      if (annotation == null) {
+        continue;
+      }
+      if (annotation.name().toLowerCase()
+              .compareTo(command.toLowerCase()) != 0) {
+        continue;
+      }
+      // Check the signature of the methods
+      final Class<?>[] types = method.getParameterTypes();
+      if (types.length != args.length) {
+        if (!(types.length < args.length && types.length > 0 && types[0]
+                .getName().equals("[Ljava.lang.String;"))) {
+          continue;
+        }
+      }
+      // create the call parameters
+      final Object[] objectArray = new Object[types.length];
+      for (int j = 0; j < types.length; j++) {
+        final String type = types[j].getName();
+        if (type.compareTo(args[j].getClass().getName()) == 0) {
+          objectArray[j] = args[j];
+        } else if (type.compareTo("[Ljava.lang.String;") == 0) {
+          final String[] stringArgs = new String[args.length - j];
+          for (int k = j, l = 0; k < args.length; k++, l++) {
+            stringArgs[l] = args[k];
+          }
+          objectArray[j] = stringArgs;
+          break;
+        } else {
+          throw new RequestHandlerException("Arguement not valid "
+                  + args[j]);
+        }
+      }
 
-			// if the user must be connected before doing an command
-			if ((annotation.connected() && !ftpClient.isConnected())) {
-				if (!FTPConfiguration.INSTANCE
-						.getBooleanProperty("allowAnonymous")
-						|| !annotation.anonymous()
-						|| !ftpClient.getUsername().equals("anonymous")) {
-					clientSocket.writeMessage("530 Not logged in.");
-					return;
-				}
-			}
-			// invoke the methos
-			try {
-				method.invoke(this, objectArray);
-				return;
-			} catch (final IllegalAccessException e) {
-				throw new RequestHandlerException("Command not found "
-						+ command, e);
-			} catch (final IllegalArgumentException e) {
-				throw new RequestHandlerException("Arguement not valid ", e);
-			} catch (final InvocationTargetException e) {
-				throw new RequestHandlerException("Error execution " + command
-						+ " error: " + e.getMessage(), e);
-			}
-		}
-		throw new RequestHandlerException("Command not found " + command);
-	}
+      // if the user must be connected before doing an command
+      if ((annotation.connected() && !ftpClient.isConnected())) {
+        if (!FTPConfiguration.INSTANCE
+                .getBooleanProperty("allowAnonymous")
+                || !annotation.anonymous()
+                || !ftpClient.getUsername().equals("anonymous")) {
+          clientSocket.writeMessage("530 Not logged in.");
+          return;
+        }
+      }
+      // invoke the methos
+      try {
+        method.invoke(this, objectArray);
+        return;
+      } catch (final IllegalAccessException e) {
+        throw new RequestHandlerException("Command not found "
+                + command, e);
+      } catch (final IllegalArgumentException e) {
+        throw new RequestHandlerException("Arguement not valid ", e);
+      } catch (final InvocationTargetException e) {
+        throw new RequestHandlerException("Error execution " + command
+                + " error: " + e.getMessage(), e);
+      }
+    }
+    throw new RequestHandlerException("Command not found " + command);
+  }
 
-	/**
-	 * Define the primary encoding of the communication
-	 * 
-	 * @param typeCharacter
-	 *            The type caracter (A|E|I|L)
-	 * @return True if able to set the primary caracter, false else
-	 */
-	private boolean setPrimaryTypeCaracter(final String typeCharacter) {
-		if (typeCharacter.length() != 1) {
-			return false;
-		}
-		switch (typeCharacter.charAt(0)) {
-		case 'A':
-			ftpClient.setTypeCharactor("ASCII");
-			break;
-		case 'E':
-			ftpClient.setTypeCharactor("EBCDIC");
-			break;
-		case 'I':
-			ftpClient.setTypeCharactor("image");
-			break;
-		case 'L':
-			ftpClient.setTypeCharactor("local");
-			break;
-		default:
-			return false;
-		}
+  /**
+   * Define the primary encoding of the communication
+   *
+   * @param typeCharacter The type caracter (A|E|I|L)
+   * @return True if able to set the primary caracter, false else
+   */
+  private boolean setPrimaryTypeCaracter(final String typeCharacter) {
+    if (typeCharacter.length() != 1) {
+      return false;
+    }
+    switch (typeCharacter.charAt(0)) {
+      case 'A':
+        ftpClient.setTypeCharactor("ASCII");
+        break;
+      case 'E':
+        ftpClient.setTypeCharactor("EBCDIC");
+        break;
+      case 'I':
+        ftpClient.setTypeCharactor("image");
+        break;
+      case 'L':
+        ftpClient.setTypeCharactor("local");
+        break;
+      default:
+        return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	/**
-	 * Define the encoding of the communication and send response to the client
-	 * 
-	 * @param typeCharacters
-	 */
-	@FTPRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
-	private void requestType(final String... typeCharacters) {
-		if (typeCharacters.length <= 0 || typeCharacters.length > 2) {
-			clientSocket.writeMessage("400 Type not accepted");
-			return;
-		}
-		if (typeCharacters.length == 2) {
-			String secondTypeCharacter = typeCharacters[1];
-			switch (secondTypeCharacter.charAt(0)) {
-			case 'N':
-				ftpClient.setTypeCharactor("Non-print");
-				break;
-			case 'T':
-				ftpClient.setTypeCharactor("Telnet");
-				break;
-			case 'C':
-				ftpClient.setTypeCharactor("ASA");
-				break;
-			default:
-				clientSocket.writeMessage("400 Type not accepted");
-				return;
-			}
-		}
+  /**
+   * Define the encoding of the communication and send response to the client
+   *
+   * @param typeCharacters
+   */
+  @FTPRequestAnnotation(name = "TYPE", connected = true, anonymous = true)
+  private void requestType(final String... typeCharacters) {
+    if (typeCharacters.length <= 0 || typeCharacters.length > 2) {
+      clientSocket.writeMessage("400 Type not accepted");
+      return;
+    }
+    if (typeCharacters.length == 2) {
+      String secondTypeCharacter = typeCharacters[1];
+      switch (secondTypeCharacter.charAt(0)) {
+        case 'N':
+          ftpClient.setTypeCharactor("Non-print");
+          break;
+        case 'T':
+          ftpClient.setTypeCharactor("Telnet");
+          break;
+        case 'C':
+          ftpClient.setTypeCharactor("ASA");
+          break;
+        default:
+          clientSocket.writeMessage("400 Type not accepted");
+          return;
+      }
+    }
 
-		if (!setPrimaryTypeCaracter(typeCharacters[0])) {
-			clientSocket.writeMessage("400 Type not accepted");
-			return;
-		}
+    if (!setPrimaryTypeCaracter(typeCharacters[0])) {
+      clientSocket.writeMessage("400 Type not accepted");
+      return;
+    }
 
-		clientSocket.writeMessage("200 Type accepted");
-	}
+    clientSocket.writeMessage("200 Type accepted");
+  }
 
-	/**
-	 * Login the user
-	 * 
-	 * @param password
-	 *            The password of the user
-	 * @throws RequestHandlerException
-	 *             when unable to connect user
-	 */
-	@FTPRequestAnnotation(name = "PASS", connected = false)
-	private void requestConnect(final String password)
-			throws RequestHandlerException {
-		// connect the user
-		if (ftpClient.connect(password)) {
-			clientSocket.writeMessage("230 Connected");
-		} else {
-			clientSocket.writeMessage("430 Invalid username/password");
-		}
-	}
+  /**
+   * Login the user
+   *
+   * @param password The password of the user
+   * @throws RequestHandlerException when unable to connect user
+   */
+  @FTPRequestAnnotation(name = "PASS", connected = false)
+  private void requestConnect(final String password)
+          throws RequestHandlerException {
+    // connect the user
+    if (ftpClient.connect(password)) {
+      clientSocket.writeMessage("230 Connected");
+    } else {
+      clientSocket.writeMessage("430 Invalid username/password");
+    }
+  }
 
-	/**
-	 * Define the username of the client
-	 * 
-	 * @param username
-	 *            The username of the client
-	 */
-	@FTPRequestAnnotation(name = "USER", connected = false)
-	private void requestUser(final String username) {
-		ftpClient.setUsername(username);
-		if (FTPConfiguration.INSTANCE.getBooleanProperty("allowAnonymous")
-				&& username.compareTo("anonymous") == 0) {
-			clientSocket.writeMessage("230 anonymous");
-		} else {
-			clientSocket.writeMessage("331 User accepted");
-		}
+  /**
+   * Define the username of the client
+   *
+   * @param username The username of the client
+   */
+  @FTPRequestAnnotation(name = "USER", connected = false)
+  private void requestUser(final String username) {
+    ftpClient.setUsername(username);
+    if (FTPConfiguration.INSTANCE.getBooleanProperty("allowAnonymous")
+            && username.compareTo("anonymous") == 0) {
+      clientSocket.writeMessage("230 anonymous");
+    } else {
+      clientSocket.writeMessage("331 User accepted");
+    }
 
-	}
+  }
 
-	/**
-	 * Close the connection
-	 */
-	@FTPRequestAnnotation(name = "QUIT", connected = false)
-	private void closeConnection() {
-		// Print close message
-		clientSocket.writeMessage("426 Close connection");
-		try {
-			clientSocket.close();
-		} catch (final SocketException e) {
-			// unable to client client connection
-			LoggerUtilities.error("Unable to close client connection", e);
-		}
-	}
+  /**
+   * Close the connection
+   */
+  @FTPRequestAnnotation(name = "QUIT", connected = false)
+  private void closeConnection() {
+    // Print close message
+    clientSocket.writeMessage("221 Logout");
+    try {
+      clientSocket.close();
+    } catch (final SocketException e) {
+      // unable to client client connection
+      LoggerUtilities.error("Unable to close client connection", e);
+    }
+  }
 
-	/**
-	 * Request the os type
-	 */
-	@FTPRequestAnnotation(name = "SYST", connected = true, anonymous = true)
-	private void requestSYST() {
-		// final String OS = System.getProperty("os.name").toLowerCase();
-		// this.ftpClient.writeMessage("215 " + OS);
-		clientSocket.writeMessage("215 UNIX Type: L8");
-	}
+  /**
+   * Request the os type
+   */
+  @FTPRequestAnnotation(name = "SYST", connected = true, anonymous = true)
+  private void requestSYST() {
+    // final String OS = System.getProperty("os.name").toLowerCase();
+    // this.ftpClient.writeMessage("215 " + OS);
+    clientSocket.writeMessage("215 UNIX Type: L8");
+  }
 
-	/**
-	 * Save an option
-	 * 
-	 * @param key
-	 *            The name of the option
-	 * @param value
-	 *            The value of the option
-	 */
-	@FTPRequestAnnotation(name = "OPTS", connected = true, anonymous = true)
-	private void requestOptions(final String key, final String value) {
-		ftpClient.getOptions().put(key, value);
-		clientSocket.writeMessage("200 Accept option");
-	}
+  /**
+   * Save an option
+   *
+   * @param key The name of the option
+   * @param value The value of the option
+   */
+  @FTPRequestAnnotation(name = "OPTS", connected = true, anonymous = true)
+  private void requestOptions(final String key, final String value) {
+    ftpClient.getOptions().put(key, value);
+    clientSocket.writeMessage("200 Accept option");
+  }
 
-	/**
-	 * Get the current directory
-	 */
-	@FTPRequestAnnotation(name = "PWD", connected = true, anonymous = true)
-	private void requestCurrentDirectory() {
-		clientSocket.writeMessage("257 " + '"' + ftpClient.getCurrentDir()
-				+ '"');
-	}
+  /**
+   * Get the current directory
+   */
+  @FTPRequestAnnotation(name = "PWD", connected = true, anonymous = true)
+  private void requestCurrentDirectory() {
+    clientSocket.writeMessage("257 " + '"' + ftpClient.getCurrentDir()
+            + '"');
+  }
 
-	/**
-	 * Path builder
-	 * 
-	 * @param An
-	 *            Array of a splited path
-	 * @return An absolute path
-	 */
-	private String arrayToPath(final String[] dirs) {
-		String path = "";
-		for (int i = 0; i < dirs.length; i++) {
-			final String dir = dirs[i];
-			path += dir + (i != dirs.length - 1 ? " " : "");
-		}
-		if (path.length() > 0 && path.charAt(0) == '/') {
-			return path;
-		}
-		return ftpClient.getCurrentDir() + "/" + path;
-	}
+  /**
+   * Path builder
+   *
+   * @param An Array of a splited path
+   * @return An absolute path
+   */
+  private String arrayToPath(final String[] dirs) {
+    String path = "";
+    for (int i = 0; i < dirs.length; i++) {
+      final String dir = dirs[i];
+      path += dir + (i != dirs.length - 1 ? " " : "");
+    }
+    if (path.length() > 0 && path.charAt(0) == '/') {
+      return path;
+    }
+    return ftpClient.getCurrentDir() + "/" + path;
+  }
 
-	/**
-	 * Change the current directory to dir
-	 * 
-	 * @param dir
-	 *            The new current direcotry
-	 */
-	@FTPRequestAnnotation(name = "CWD", connected = true, anonymous = true)
-	private void requestSetCurrentDirecory(final String... dirs) {
-		final String path = arrayToPath(dirs);
-		final File f = new File(path);
-		if (!f.exists() || !f.isDirectory()) {
-			clientSocket
-					.writeMessage("550 Can't change directory: No such file or directory");
-		} else {
-			ftpClient.setCurrentDir(f.getAbsolutePath());
-			clientSocket.writeMessage("250 OK. Current directory is "
-					+ f.getAbsolutePath());
-		}
-	}
+  /**
+   * Change the current directory to dir
+   *
+   * @param dir The new current direcotry
+   */
+  @FTPRequestAnnotation(name = "CWD", connected = true, anonymous = true)
+  private void requestSetCurrentDirecory(final String... dirs) {
+    final String path = arrayToPath(dirs);
+    final File f = new File(path);
+    if (!f.exists() || !f.isDirectory()) {
+      clientSocket
+              .writeMessage("550 Can't change directory: No such file or directory");
+    } else {
+      ftpClient.setCurrentDir(f.getAbsolutePath());
+      clientSocket.writeMessage("250 OK. Current directory is "
+              + f.getAbsolutePath());
+    }
+  }
 
-	/**
-	 * Change the current directory to parent directory
-	 * 
-	 * @param dir
-	 *            The new current direcotry
-	 */
-	@FTPRequestAnnotation(name = "CDUP", connected = true, anonymous = true)
-	private void requestUpCurrentDirecory() {
-		final File f = new File(ftpClient.getCurrentDir() + "/..");
-		if (!f.exists() || !f.isDirectory()) {
-			clientSocket
-					.writeMessage("550 Can't change directory to test: No such file or directory");
-		}
-		ftpClient.setCurrentDir(f.getAbsolutePath());
-		clientSocket.writeMessage("250 OK. Current directory is "
-				+ f.getAbsolutePath());
-	}
+  /**
+   * Change the current directory to parent directory
+   *
+   * @param dir The new current direcotry
+   */
+  @FTPRequestAnnotation(name = "CDUP", connected = true, anonymous = true)
+  private void requestUpCurrentDirecory() {
+    final File f = new File(ftpClient.getCurrentDir() + "/..");
+    if (!f.exists() || !f.isDirectory()) {
+      clientSocket
+              .writeMessage("550 Can't change directory to test: No such file or directory");
+    }
+    ftpClient.setCurrentDir(f.getAbsolutePath());
+    clientSocket.writeMessage("250 OK. Current directory is "
+            + f.getAbsolutePath());
+  }
 
-	/**
-	 * Send the port of the data connection (active mode)
-	 * 
-	 * @param adressString
-	 *            IP address
-	 */
-	@FTPRequestAnnotation(name = "PORT", connected = true, anonymous = true)
-	private void requestPort(final String addressStirng) {
-		try {
-			final String[] addressArray = addressStirng.split(",");
-			if (addressArray.length != 6) {
-				clientSocket.writeMessage("425 Can't open data connection.");
-				return;
-			}
-			final String address = addressArray[0] + "." + addressArray[1]
-					+ "." + addressArray[2] + "." + addressArray[3];
-			final int port = Integer.parseInt(addressArray[4]) * 256
-					+ Integer.parseInt(addressArray[5]);
-			ftpClient.createNewTransfer(address, port);
-			clientSocket.writeMessage("227 Entering Active Mode");
-		} catch (final SocketException e) {
-			LoggerUtilities.error(e);
-			clientSocket.writeMessage("425 Can't open data connection.");
-		}
-	}
+  /**
+   * Send the port of the data connection (active mode)
+   *
+   * @param adressString IP address
+   */
+  @FTPRequestAnnotation(name = "PORT", connected = true, anonymous = true)
+  private void requestPort(final String addressStirng) {
+    try {
+      final String[] addressArray = addressStirng.split(",");
+      if (addressArray.length != 6) {
+        clientSocket.writeMessage("425 Can't open data connection.");
+        return;
+      }
+      final String address = addressArray[0] + "." + addressArray[1]
+              + "." + addressArray[2] + "." + addressArray[3];
+      final int port = Integer.parseInt(addressArray[4]) * 256
+              + Integer.parseInt(addressArray[5]);
+      ftpClient.createNewTransfer(address, port);
+      clientSocket.writeMessage("227 Entering Active Mode");
+    } catch (final SocketException e) {
+      LoggerUtilities.error(e);
+      clientSocket.writeMessage("425 Can't open data connection.");
+    }
+  }
 
-	/**
-	 * Send the port of the data connection (passive mode)
-	 */
-	@FTPRequestAnnotation(name = "PASV", connected = true, anonymous = true)
-	private void requestPassiveMode() {
-		try {
-			final int port = ftpClient.createNewTransfer();
-			final int p1 = (port / 256);
-			final int p2 = port - p1 * 256;
-			clientSocket.writeMessage("227 Entering Passive Mode (127,0,0,1,"
-					+ p1 + "," + p2 + ")");
-		} catch (final SocketException e) {
-			LoggerUtilities.error(e);
-			clientSocket.writeMessage("425 Can't open data connection.");
-		}
-	}
+  /**
+   * Send the port of the data connection (passive mode)
+   */
+  @FTPRequestAnnotation(name = "PASV", connected = true, anonymous = true)
+  private void requestPassiveMode() {
+    try {
+      final int port = ftpClient.createNewTransfer();
+      final int p1 = (port / 256);
+      final int p2 = port - p1 * 256;
+      clientSocket.writeMessage("227 Entering Passive Mode (127,0,0,1,"
+              + p1 + "," + p2 + ")");
+    } catch (final SocketException e) {
+      LoggerUtilities.error(e);
+      clientSocket.writeMessage("425 Can't open data connection.");
+    }
+  }
 
-	/**
-	 * Send the port of the data connection (passive mode)
-	 */
-	@FTPRequestAnnotation(name = "ABOR", connected = true, anonymous = true)
-	private void requestABOR() {
-		try {
-			ftpClient.getTransferServer().close();
-			clientSocket.writeMessage("226 ABORTED.");
-		} catch (final SocketException e) {
-			clientSocket.writeMessage("451 Cannot ABOR.");
-		}
-	}
+  /**
+   * Send the port of the data connection (passive mode)
+   */
+  @FTPRequestAnnotation(name = "ABOR", connected = true, anonymous = true)
+  private void requestABOR() {
+    try {
+      ftpClient.getTransferServer().close();
+      clientSocket.writeMessage("226 ABORTED.");
+    } catch (final SocketException e) {
+      clientSocket.writeMessage("451 Cannot ABOR.");
+    }
+  }
 
-	/**
-	 * Get the port of the data connection (extended passive mode)
-	 */
-	@FTPRequestAnnotation(name = "EPSV", connected = true, anonymous = true)
-	private void requestExtendedPassiveMode() {
-		try {
-			final int port = ftpClient.createNewTransfer();
-			clientSocket.writeMessage("229 Entering Extended Passive Mode (|||"
-					+ port + "|)");
-		} catch (final SocketException e) {
-			LoggerUtilities.error(e);
-			clientSocket.writeMessage("425 Can't open data connection.");
-		}
-	}
+  /**
+   * Get the port of the data connection (extended passive mode)
+   */
+  @FTPRequestAnnotation(name = "EPSV", connected = true, anonymous = true)
+  private void requestExtendedPassiveMode() {
+    try {
+      final int port = ftpClient.createNewTransfer();
+      clientSocket.writeMessage("229 Entering Extended Passive Mode (|||"
+              + port + "|)");
+    } catch (final SocketException e) {
+      LoggerUtilities.error(e);
+      clientSocket.writeMessage("425 Can't open data connection.");
+    }
+  }
 
-	/**
-	 * List all files of the directory dir
-	 * 
-	 * @param dirs
-	 *            The directory to list
-	 */
-	@FTPRequestAnnotation(name = "List", connected = true, anonymous = true)
-	private void requestListFiles(final String... dirs) {
-		if (dirs[0].compareTo("-a") == 0) {
-			dirs[0] = "";
-		}
-		final String path = arrayToPath(dirs);
+  /**
+   * List all files of the directory dir
+   *
+   * @param dirs The directory to list
+   */
+  @FTPRequestAnnotation(name = "List", connected = true, anonymous = true)
+  private void requestListFiles(final String... dirs) {
+    if (dirs[0].compareTo("-a") == 0) {
+      dirs[0] = "";
+    }
+    final String path = arrayToPath(dirs);
 
-		if (ftpClient.getTransferServer() == null) {
-			clientSocket.writeMessage("443 No data connection");
-		} else {
-			clientSocket.writeMessage("150 Accepted data connection");
-			try {
-				ftpClient.getTransferServer().writeData(createList(path));
-				clientSocket.writeMessage("226 List transefered");
-			} catch (final SocketException e) {
-				LoggerUtilities.error(e);
-				clientSocket.writeMessage("426 Unable to send file list");
-			}
-			try {
-				ftpClient.getTransferServer().close();
-			} catch (final SocketException e1) {
-				LoggerUtilities.error(e1);
-				clientSocket
-						.writeMessage("451 Unable to close the transfert Server");
-			}
-		}
-	}
+    if (ftpClient.getTransferServer() == null) {
+      clientSocket.writeMessage("443 No data connection");
+    } else {
+      clientSocket.writeMessage("150 Accepted data connection");
+      try {
+        ftpClient.getTransferServer().writeData(createList(path));
+        clientSocket.writeMessage("226 List transefered");
+      } catch (final SocketException e) {
+        LoggerUtilities.error(e);
+        clientSocket.writeMessage("426 Unable to send file list");
+      }
+      try {
+        ftpClient.getTransferServer().close();
+      } catch (final SocketException e1) {
+        LoggerUtilities.error(e1);
+        clientSocket
+                .writeMessage("451 Unable to close the transfert Server");
+      }
+    }
+  }
 
-	/**
-	 * List all file of the current directory
-	 */
-	@FTPRequestAnnotation(name = "List", connected = true, anonymous = true)
-	private void requestListFiles() {
-		this.requestListFiles("");
-	}
+  /**
+   * List all file of the current directory
+   */
+  @FTPRequestAnnotation(name = "List", connected = true, anonymous = true)
+  private void requestListFiles() {
+    this.requestListFiles("");
+  }
 
-	/**
-	 * List all file name of the directory dir
-	 * 
-	 * @param dirs
-	 *            The directory to list
-	 */
-	@FTPRequestAnnotation(name = "NLST", connected = true, anonymous = true)
-	private void requestListFileName(final String... dirs) {
-		final String path = arrayToPath(dirs);
-		if (ftpClient.getTransferServer() == null) {
-			clientSocket.writeMessage("443 No data connection");
-		} else {
-			try {
-				final File folder = new File(path);
-				if (!folder.exists() || !folder.isDirectory()) {
-					clientSocket.writeMessage("504 Only accept folder");
-					return;
-				} else {
-					clientSocket.writeMessage("150 Accepted data connection");
-					final String[] files = folder.list();
-					String listFilename = "";
-					for (int i = 0; i < files.length; i++) {
-						listFilename += files[i]
-								+ ((i != files.length - 1) ? "\n" : "");
+  /**
+   * List all file name of the directory dir
+   *
+   * @param dirs The directory to list
+   */
+  @FTPRequestAnnotation(name = "NLST", connected = true, anonymous = true)
+  private void requestListFileName(final String... dirs) {
+    final String path = arrayToPath(dirs);
+    if (ftpClient.getTransferServer() == null) {
+      clientSocket.writeMessage("443 No data connection");
+    } else {
+      try {
+        final File folder = new File(path);
+        if (!folder.exists() || !folder.isDirectory()) {
+          clientSocket.writeMessage("504 Only accept folder");
+          return;
+        } else {
+          clientSocket.writeMessage("150 Accepted data connection");
+          final String[] files = folder.list();
+          String listFilename = "";
+          for (int i = 0; i < files.length; i++) {
+            listFilename += files[i]
+                    + ((i != files.length - 1) ? "\n" : "");
 
-					}
-					ftpClient.getTransferServer().writeData(listFilename);
-					clientSocket.writeMessage("226 " + files.length
-							+ " matches total");
-				}
-			} catch (final SocketException e) {
-				LoggerUtilities.error(e);
-				clientSocket.writeMessage("426 Unable to send file list");
-			}
-			try {
-				ftpClient.getTransferServer().close();
-			} catch (final SocketException e1) {
-				LoggerUtilities.error(e1);
-				clientSocket
-						.writeMessage("451 Unable to close the transfert Server");
-			}
-		}
-	}
+          }
+          ftpClient.getTransferServer().writeData(listFilename);
+          clientSocket.writeMessage("226 " + files.length
+                  + " matches total");
+        }
+      } catch (final SocketException e) {
+        LoggerUtilities.error(e);
+        clientSocket.writeMessage("426 Unable to send file list");
+      }
+      try {
+        ftpClient.getTransferServer().close();
+      } catch (final SocketException e1) {
+        LoggerUtilities.error(e1);
+        clientSocket
+                .writeMessage("451 Unable to close the transfert Server");
+      }
+    }
+  }
 
-	/**
-	 * List all file name of the current directory
-	 */
-	@FTPRequestAnnotation(name = "NLST", connected = true, anonymous = true)
-	private void requestListFileName() {
-		this.requestListFileName("");
-	}
+  /**
+   * List all file name of the current directory
+   */
+  @FTPRequestAnnotation(name = "NLST", connected = true, anonymous = true)
+  private void requestListFileName() {
+    this.requestListFileName("");
+  }
 
-	/**
-	 * Get all file size of the directory dir
-	 * 
-	 * @param dirs
-	 *            The directory to list
-	 */
-	@FTPRequestAnnotation(name = "SIZE", connected = true, anonymous = true)
-	private void requestGetFileSize(final String... dirs) {
-		final String path = arrayToPath(dirs);
-		final File f = new File(path);
-		clientSocket.writeMessage("226 " + f.length());
-	}
+  /**
+   * Get all file size of the directory dir
+   *
+   * @param dirs The directory to list
+   */
+  @FTPRequestAnnotation(name = "SIZE", connected = true, anonymous = true)
+  private void requestGetFileSize(final String... dirs) {
+    final String path = arrayToPath(dirs);
+    final File f = new File(path);
+    clientSocket.writeMessage("226 " + f.length());
+  }
 
-	/**
-	 * Send the content of a file to the client
-	 * 
-	 * @param file
-	 *            The file to send
-	 */
-	@FTPRequestAnnotation(name = "RETR", connected = true, anonymous = true)
-	private void requestDownloadFile(final String... dirs) {
-		final String path = arrayToPath(dirs);
-		if (ftpClient.getTransferServer() == null) {
-			clientSocket.writeMessage("443 No data connection");
-		} else {
-			clientSocket.writeMessage("150 Accepted data connection");
-			try {
-				final FileInputStream fis = new FileInputStream(path);
-				ftpClient.getTransferServer().writeData(fis);
-				clientSocket.writeMessage("226 File successfully transferred");
-			} catch (final IOException e) {
-				LoggerUtilities.error(e);
-				clientSocket.writeMessage("426 Unable to send file");
-			} catch (final SocketException e) {
-				LoggerUtilities.error(e);
-				clientSocket.writeMessage("426 Unable to send file");
-			}
-			try {
-				ftpClient.getTransferServer().close();
-			} catch (final SocketException e1) {
-				LoggerUtilities.error(e1);
-				clientSocket
-						.writeMessage("451 Unable to close the transfert Server");
-			}
+  /**
+   * Send the content of a file to the client
+   *
+   * @param file The file to send
+   */
+  @FTPRequestAnnotation(name = "RETR", connected = true, anonymous = true)
+  private void requestDownloadFile(final String... dirs) {
+    final String path = arrayToPath(dirs);
+    if (ftpClient.getTransferServer() == null) {
+      clientSocket.writeMessage("443 No data connection");
+    } else {
+      clientSocket.writeMessage("150 Accepted data connection");
+      try {
+        final FileInputStream fis = new FileInputStream(path);
+        ftpClient.getTransferServer().writeData(fis);
+        clientSocket.writeMessage("226 File successfully transferred");
+      } catch (final IOException e) {
+        LoggerUtilities.error(e);
+        clientSocket.writeMessage("426 Unable to send file");
+      } catch (final SocketException e) {
+        LoggerUtilities.error(e);
+        clientSocket.writeMessage("426 Unable to send file");
+      }
+      try {
+        ftpClient.getTransferServer().close();
+      } catch (final SocketException e1) {
+        LoggerUtilities.error(e1);
+        clientSocket
+                .writeMessage("451 Unable to close the transfert Server");
+      }
 
-		}
-	}
+    }
+  }
 
-	/**
-	 * Send the content of a file to the server
-	 * 
-	 * @param file
-	 *            The name of file to store
-	 */
-	@FTPRequestAnnotation(name = "STOR", connected = true, anonymous = false)
-	private void requestUploadFile(final String[] dirs) {
-		final String path = arrayToPath(dirs);
-		if (ftpClient.getTransferServer() == null) {
-			clientSocket.writeMessage("443 No data connection");
-		} else {
-			clientSocket.writeMessage("150 Accepted data connection");
-			try {
-				final FileOutputStream out = new FileOutputStream(path);
-				ftpClient.getTransferServer().readData(out);
-				out.close();
-				clientSocket.writeMessage("226 File successfully transferred");
-			} catch (final IOException e) {
-				LoggerUtilities.error(e);
-			} catch (final SocketException e) {
-				clientSocket.writeMessage("426 Unable to transfer file");
-			}
-			try {
-				ftpClient.getTransferServer().close();
-			} catch (final SocketException e1) {
-				LoggerUtilities.error(e1);
-				clientSocket
-						.writeMessage("451 Unable to close the transfert Server");
-			}
-		}
-	}
+  /**
+   * Send the content of a file to the server
+   *
+   * @param file The name of file to store
+   */
+  @FTPRequestAnnotation(name = "STOR", connected = true, anonymous = false)
+  private void requestUploadFile(final String[] dirs) {
+    final String path = arrayToPath(dirs);
+    if (ftpClient.getTransferServer() == null) {
+      clientSocket.writeMessage("443 No data connection");
+    } else {
+      clientSocket.writeMessage("150 Accepted data connection");
+      try {
+        final FileOutputStream out = new FileOutputStream(path);
+        ftpClient.getTransferServer().readData(out);
+        out.close();
+        clientSocket.writeMessage("226 File successfully transferred");
+      } catch (final IOException e) {
+        LoggerUtilities.error(e);
+      } catch (final SocketException e) {
+        clientSocket.writeMessage("426 Unable to transfer file");
+      }
+      try {
+        ftpClient.getTransferServer().close();
+      } catch (final SocketException e1) {
+        LoggerUtilities.error(e1);
+        clientSocket
+                .writeMessage("451 Unable to close the transfert Server");
+      }
+    }
+  }
 
-	/**
-	 * Get last modification date
-	 * 
-	 * @param file
-	 *            The name of the file
-	 */
-	@FTPRequestAnnotation(name = "MDTM", connected = true, anonymous = true)
-	private void requestGetLastModificationDate(final String... dirs) {
-		final String path = arrayToPath(dirs);
-		try {
-			final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm",
-					Locale.ENGLISH);
-			final Date lastModificationDate = new Date(Files
-					.getLastModifiedTime(Paths.get(path)).toMillis());
-			clientSocket
-					.writeMessage("226 " + sdf.format(lastModificationDate));
-		} catch (final IOException e) {
-			clientSocket
-					.writeMessage("451 Unable to access to last modification date.");
-		}
-	}
+  /**
+   * Get last modification date
+   *
+   * @param file The name of the file
+   */
+  @FTPRequestAnnotation(name = "MDTM", connected = true, anonymous = true)
+  private void requestGetLastModificationDate(final String... dirs) {
+    final String path = arrayToPath(dirs);
+    try {
+      final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM HH:mm",
+              Locale.ENGLISH);
+      final Date lastModificationDate = new Date(Files
+              .getLastModifiedTime(Paths.get(path)).toMillis());
+      clientSocket
+              .writeMessage("226 " + sdf.format(lastModificationDate));
+    } catch (final IOException e) {
+      clientSocket
+              .writeMessage("451 Unable to access to last modification date.");
+    }
+  }
 
-	/**
-	 * Create a folder
-	 * 
-	 * @param folderName
-	 *            The folder name
-	 */
-	@FTPRequestAnnotation(name = "MKD", connected = true, anonymous = false)
-	private void requestCreateFolder(final String... dirs) {
-		final String path = arrayToPath(dirs);
-		final boolean success = (new File(path)).mkdirs();
-		if (success) {
-			clientSocket.writeMessage("226 Folder created: " + path);
-		} else {
-			clientSocket.writeMessage("451 Folder not created: " + path);
-		}
-	}
+  /**
+   * Create a folder
+   *
+   * @param folderName The folder name
+   */
+  @FTPRequestAnnotation(name = "MKD", connected = true, anonymous = false)
+  private void requestCreateFolder(final String... dirs) {
+    final String path = arrayToPath(dirs);
+    final boolean success = (new File(path)).mkdirs();
+    if (success) {
+      clientSocket.writeMessage("226 Folder created: " + path);
+    } else {
+      clientSocket.writeMessage("451 Folder not created: " + path);
+    }
+  }
 
-	/**
-	 * Remove a folder
-	 * 
-	 * @param folderName
-	 *            The folder name
-	 */
-	@FTPRequestAnnotation(name = "RMD", connected = true, anonymous = false)
-	private void requestRemoveFolder(final String... dirs) {
-		final String path = arrayToPath(dirs);
-		final boolean success = (new File(path)).delete();
-		if (success) {
-			clientSocket.writeMessage("226 Folder removed: " + path);
-		} else {
-			clientSocket.writeMessage("451 Folder not removed: " + path);
-		}
-	}
+  /**
+   * Remove a folder
+   *
+   * @param folderName The folder name
+   */
+  @FTPRequestAnnotation(name = "RMD", connected = true, anonymous = false)
+  private void requestRemoveFolder(final String... dirs) {
+    final String path = arrayToPath(dirs);
+    final boolean success = (new File(path)).delete();
+    if (success) {
+      clientSocket.writeMessage("226 Folder removed: " + path);
+    } else {
+      clientSocket.writeMessage("451 Folder not removed: " + path);
+    }
+  }
 
-	/**
-	 * Remove a file
-	 * 
-	 * @param folderName
-	 *            The folder name
-	 */
-	@FTPRequestAnnotation(name = "DELE", connected = true, anonymous = false)
-	private void requestRemoveFile(final String... dirs) {
-		final String path = arrayToPath(dirs);
-		final boolean success = (new File(path)).delete();
-		if (success) {
-			clientSocket.writeMessage("226 File removed: " + path);
-		} else {
-			clientSocket.writeMessage("451 File not removed: " + path);
-		}
-	}
+  /**
+   * Remove a file
+   *
+   * @param folderName The folder name
+   */
+  @FTPRequestAnnotation(name = "DELE", connected = true, anonymous = false)
+  private void requestRemoveFile(final String... dirs) {
+    final String path = arrayToPath(dirs);
+    final boolean success = (new File(path)).delete();
+    if (success) {
+      clientSocket.writeMessage("226 File removed: " + path);
+    } else {
+      clientSocket.writeMessage("451 File not removed: " + path);
+    }
+  }
 
-	/**
-	 * Rename a file
-	 * 
-	 * @param folderName
-	 *            The old file name
-	 */
-	@FTPRequestAnnotation(name = "RNFR", connected = true, anonymous = false)
-	private void requestFileToRename(final String... dirs) {
-		final String path = arrayToPath(dirs);
-		ftpClient.setFileToRename(path);
-		clientSocket.writeMessage("350 File to rename: " + path);
-	}
+  /**
+   * Rename a file
+   *
+   * @param folderName The old file name
+   */
+  @FTPRequestAnnotation(name = "RNFR", connected = true, anonymous = false)
+  private void requestFileToRename(final String... dirs) {
+    final String path = arrayToPath(dirs);
+    ftpClient.setFileToRename(path);
+    clientSocket.writeMessage("350 File to rename: " + path);
+  }
 
-	/**
-	 * Rename a file
-	 * 
-	 * @param folderName
-	 *            The new folder name
-	 */
-	@FTPRequestAnnotation(name = "RNTO", connected = true)
-	private void requestRename(final String... dirs) {
-		final String path = arrayToPath(dirs);
-		final boolean success = (new File(ftpClient.getFileToRename()))
-				.renameTo((new File(path)));
-		if (success) {
-			clientSocket.writeMessage("250 Folder renamed: " + path);
-		} else {
-			clientSocket.writeMessage("451 Folder not renamed: " + path);
-		}
-	}
+  /**
+   * Rename a file
+   *
+   * @param folderName The new folder name
+   */
+  @FTPRequestAnnotation(name = "RNTO", connected = true)
+  private void requestRename(final String... dirs) {
+    final String path = arrayToPath(dirs);
+    final boolean success = (new File(ftpClient.getFileToRename()))
+            .renameTo((new File(path)));
+    if (success) {
+      clientSocket.writeMessage("250 Folder renamed: " + path);
+    } else {
+      clientSocket.writeMessage("451 Folder not renamed: " + path);
+    }
+  }
 
-	/**
-	 * Create the list of all file of the direcotry dir
-	 * 
-	 * @param dir
-	 *            The directory to list
-	 * @return A string containing all file of the dir
-	 */
-	private String createList(final String dir) {
-		String result = "";
-		final File folder = new File(dir);
-		if (!folder.exists() || !folder.isDirectory()) {
-			return "not good";
-		}
-		final File[] files = folder.listFiles();
-		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd HH:ss",
-				Locale.ENGLISH);
-		for (int i = 0; i < files.length; i++) {
-			final File file = files[i];
-			result += (file.isDirectory() ? "d" : "-");
+  /**
+   * Create the list of all file of the direcotry dir
+   *
+   * @param dir The directory to list
+   * @return A string containing all file of the dir
+   */
+  private String createList(final String dir) {
+    String result = "";
+    final File folder = new File(dir);
+    if (!folder.exists() || !folder.isDirectory()) {
+      return "not good";
+    }
+    final File[] files = folder.listFiles();
+    final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd HH:ss",
+            Locale.ENGLISH);
+    for (int i = 0; i < files.length; i++) {
+      final File file = files[i];
+      result += (file.isDirectory() ? "d" : "-");
 
-			String owner = "unknown";
-			String group = "group";
-			String permissionsString = (file.isDirectory() ? "d" : "-")
-					+ (file.canRead() ? 'r' : '-')
-					+ (file.canWrite() ? 'w' : '-')
-					+ (file.canExecute() ? 'x' : '-') + "r--r--";
-			try {
-				final PosixFileAttributes attr = Files.readAttributes(
-						Paths.get(file.getAbsolutePath()),
-						PosixFileAttributes.class);
-				group = attr.group().getName();
-				owner = attr.owner().getName();
-				final Set<PosixFilePermission> permissions = attr.permissions();
-				permissionsString = (permissions
-						.contains(PosixFilePermission.OWNER_READ) ? "r" : "-")
-						+ (permissions
-								.contains(PosixFilePermission.OWNER_WRITE) ? "w"
-								: "-")
-						+ (permissions
-								.contains(PosixFilePermission.OWNER_EXECUTE) ? "x"
-								: "-")
-						+ (permissions.contains(PosixFilePermission.GROUP_READ) ? "r"
-								: "-")
-						+ (permissions
-								.contains(PosixFilePermission.GROUP_WRITE) ? "w"
-								: "-")
-						+ (permissions
-								.contains(PosixFilePermission.GROUP_EXECUTE) ? "x"
-								: "-")
-						+ (permissions
-								.contains(PosixFilePermission.OTHERS_READ) ? "r"
-								: "-")
-						+ (permissions
-								.contains(PosixFilePermission.OTHERS_WRITE) ? "w"
-								: "-")
-						+ (permissions
-								.contains(PosixFilePermission.OTHERS_EXECUTE) ? "x"
-								: "-");
-			} catch (final InvalidPathException e) {
-			} catch (final IOException e2) {
-			}
+      String owner = "unknown";
+      String group = "group";
+      String permissionsString = (file.isDirectory() ? "d" : "-")
+              + (file.canRead() ? 'r' : '-')
+              + (file.canWrite() ? 'w' : '-')
+              + (file.canExecute() ? 'x' : '-') + "r--r--";
+      try {
+        final PosixFileAttributes attr = Files.readAttributes(
+                Paths.get(file.getAbsolutePath()),
+                PosixFileAttributes.class);
+        group = attr.group().getName();
+        owner = attr.owner().getName();
+        final Set<PosixFilePermission> permissions = attr.permissions();
+        permissionsString = (permissions
+                .contains(PosixFilePermission.OWNER_READ) ? "r" : "-")
+                + (permissions
+                .contains(PosixFilePermission.OWNER_WRITE) ? "w"
+                : "-")
+                + (permissions
+                .contains(PosixFilePermission.OWNER_EXECUTE) ? "x"
+                : "-")
+                + (permissions.contains(PosixFilePermission.GROUP_READ) ? "r"
+                : "-")
+                + (permissions
+                .contains(PosixFilePermission.GROUP_WRITE) ? "w"
+                : "-")
+                + (permissions
+                .contains(PosixFilePermission.GROUP_EXECUTE) ? "x"
+                : "-")
+                + (permissions
+                .contains(PosixFilePermission.OTHERS_READ) ? "r"
+                : "-")
+                + (permissions
+                .contains(PosixFilePermission.OTHERS_WRITE) ? "w"
+                : "-")
+                + (permissions
+                .contains(PosixFilePermission.OTHERS_EXECUTE) ? "x"
+                : "-");
+      } catch (final InvalidPathException e) {
+      } catch (final IOException e2) {
+      }
 
-			result += permissionsString + " 1 " + owner + " " + group + " "
-					+ file.length() + " " + sdf.format(file.lastModified())
-					+ " " + file.getName() + "\r\n";
-		}
-		return result;
-	}
-
+      result += permissionsString + " 1 " + owner + " " + group + " "
+              + file.length() + " " + sdf.format(file.lastModified())
+              + " " + file.getName() + "\r\n";
+    }
+    return result;
+  }
 }
