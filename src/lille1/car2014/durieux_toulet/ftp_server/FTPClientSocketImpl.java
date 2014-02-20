@@ -29,8 +29,6 @@ public class FTPClientSocketImpl implements Runnable, FTPClientSocket {
    */
   public FTPClientSocketImpl(final Socket clientSocket) {
     this.clientSocket = clientSocket;
-    System.out.println(clientSocket.isConnected());
-    System.out.println(clientSocket.isInputShutdown());
     ftpClient = new FTPClientImpl();
   }
 

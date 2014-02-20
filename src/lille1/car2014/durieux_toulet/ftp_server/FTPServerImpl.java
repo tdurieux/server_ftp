@@ -12,103 +12,103 @@ import lille1.car2014.durieux_toulet.logs.LoggerUtilities;
 
 /**
  * Create on new FTP server and start waiting client connection
- * 
+ *
  * @author Thomas Durieux
  * @author Toulet Cyrille
  */
 public class FTPServerImpl implements FTPServer {
-	/* Attributes */
-	private final int port;
-	private ServerSocket serverSocket;
-	private ExecutorService executor;
-	private boolean isStarted;
+  /* Attributes */
 
-	/**
-	 * Constructor with default port
-	 */
-	public FTPServerImpl() {
-		port = 21;
-	}
+  private final int port;
+  private ServerSocket serverSocket;
+  private ExecutorService executor;
+  private boolean isStarted;
 
-	/**
-	 * Constructor with custom port
-	 * 
-	 * @param port
-	 *            The server port
-	 */
-	public FTPServerImpl(final int port) {
-		this.port = port;
-		isStarted = false;
-	}
+  /**
+   * Constructor with default port
+   */
+  public FTPServerImpl() {
+    port = 21;
+  }
 
-	/**
-	 * @see FTPServer
-	 */
-	@Override
-	public void startServer() throws ServerSocketException {
-		if (isStarted) {
-			throw new ServerSocketException("The FTP server is already started");
-		}
-		try {
-			// Create socket
-			serverSocket = new ServerSocket(port);
-			isStarted = true;
-		} catch (final IOException e) {
-			throw new ServerSocketException("Port " + port
-					+ " already used or reserved by the system.", e);
-		}
+  /**
+   * Constructor with custom port
+   *
+   * @param port The server port
+   */
+  public FTPServerImpl(final int port) {
+    this.port = port;
+    isStarted = false;
+  }
 
-		// Log server starting
-		LoggerUtilities.log("FTP server started on port: " + port);
+  /**
+   * @see FTPServer
+   */
+  @Override
+  public void startServer() throws ServerSocketException {
+    if (isStarted) {
+      throw new ServerSocketException("The FTP server is already started");
+    }
+    try {
+      // Create socket
+      serverSocket = new ServerSocket(port);
+      isStarted = true;
+    } catch (final IOException e) {
+      throw new ServerSocketException("Port " + port
+              + " already used or reserved by the system.", e);
+    }
 
-		executor = Executors.newFixedThreadPool(FTPConfiguration.INSTANCE
-				.getIntProperty("maxConcurrentUser"));
-		// Listen for client connections
-		while (true) {
-			try {
-				final Socket clientSocket = serverSocket.accept();
+    // Log server starting
+    LoggerUtilities.log("FTP server started on port: " + port);
 
-				// Create client thread
-				executor.execute(new FTPClientSocketImpl(clientSocket));
-			} catch (final IOException e) {
-				// The connection with the client is already closed, nothing to
-				// do. The ftp client must stay alive and wait new client
-				// connection
-				LoggerUtilities.error(e);
-			}
-		}
-	}
+    executor = Executors.newFixedThreadPool(FTPConfiguration.INSTANCE
+            .getIntProperty("maxConcurrentUser"));
+    // Listen for client connections
+    while (true) {
+      try {
+        final Socket clientSocket = serverSocket.accept();
 
-	/**
-	 * @see FTPServer
-	 */
-	@Override
-	public void closeServer() throws ServerSocketException {
-		if (!isStarted) {
-			throw new ServerSocketException("The FTP server is not started");
-		}
-		executor.shutdownNow();
-		try {
-			serverSocket.close();
-			isStarted = false;
-		} catch (final IOException e) {
-			throw new ServerSocketException("Unable to close the FTP server", e);
-		}
-	}
+        // Create client thread
+        executor.execute(new FTPClientSocketImpl(clientSocket));
+      } catch (final IOException e) {
+        // The connection with the client is already closed, nothing to
+        // do. The ftp client must stay alive and wait new client
+        // connection
+        LoggerUtilities.error(e);
+      }
+    }
+  }
 
-	/**
-	 * @see FTPServer
-	 */
-	@Override
-	public int getPort() {
-		return port;
-	}
+  /**
+   * @see FTPServer
+   */
+  @Override
+  public void closeServer() throws ServerSocketException {
+    if (!isStarted) {
+      throw new ServerSocketException("The FTP server is not started");
+    }
+    executor.shutdownNow();
+    try {
+      serverSocket.close();
+      isStarted = false;
+    } catch (final IOException e) {
+      throw new ServerSocketException("Unable to close the FTP server", e);
+    }
+  }
 
-	/**
-	 * @see FTPServer
-	 */
-	@Override
-	public boolean isStarted() {
-		return isStarted;
-	}
+  /**
+   * @see FTPServer
+   */
+  @Override
+  public int getPort() {
+    return port;
+  }
+
+  /**
+   * @see FTPServer
+   */
+  @Override
+  public boolean isStarted() {
+    return isStarted;
+  }
 }
